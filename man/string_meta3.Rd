@@ -4,7 +4,8 @@
 \alias{string_meta3}
 \title{string_meta3}
 \usage{
-string_meta3(y, v, cluster, x = NULL, data, model.name = NA)
+string_meta3(y, v, cluster, x = NULL, data, model.name = NA,
+  intercept.constraints = NULL)
 }
 \arguments{
 \item{y}{a string. The name of the effect size variable}
@@ -18,6 +19,8 @@ string_meta3(y, v, cluster, x = NULL, data, model.name = NA)
 \item{data}{an object. data object}
 
 \item{model.name}{a string. The name of the model}
+
+\item{intercept.constraints}{a numeric. Set the value of the intercept}
 }
 \description{
 Allows three-level meta-analyses to be specified with strings

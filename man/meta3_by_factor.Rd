@@ -4,7 +4,8 @@
 \alias{meta3_by_factor}
 \title{meta3_by_factor}
 \usage{
-meta3_by_factor(y, v, cluster, factor, data, names = NULL)
+meta3_by_factor(y, v, cluster, factor, data, names = NULL,
+  output.models = F)
 }
 \arguments{
 \item{y}{a string. The name of the effect size variable}
@@ -18,6 +19,8 @@ meta3_by_factor(y, v, cluster, factor, data, names = NULL)
 \item{data}{an object The name of the data object}
 
 \item{names}{character vector. If given, default names will be replaced.}
+
+\item{output.models}{a bool. If true, models are provided in a list.}
 }
 \description{
 Creates summary statistics for three level meta-analyses across a factor.

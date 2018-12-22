@@ -13,3 +13,5 @@ Imports:
     metaSEM (>= 1.2.0),
     dplyr (>= 0.7.8),
     tibble (>= 1.4.2)
+Remotes:
+    JConigrave/papertools
