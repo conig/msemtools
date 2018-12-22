@@ -368,4 +368,7 @@ meta3_moderation = function(y,
 }
 
 utils::globalVariables(c(".","I2","I2_3","R2_2","R2_3","anova","estimate",
-                         "k","n" ,"lbound","ubound","slope","slope_ubound","result","model.name"))
+                         "k","n" ,"lbound","ubound","slope",
+                         "slope_ubound","result","model.name",
+                         "moderation","slope_lbound","y_internal",
+                         "v_internal","cluster_internal"))
