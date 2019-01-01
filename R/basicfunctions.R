@@ -71,7 +71,7 @@ extractData = function(model){
  }else{
    result$model.name = as.character(summary$call$model.name)
  }
-result$Mx_stats = summary$Mx.status1
+result$Mx_status = summary$Mx.status1
 
 return(as_tibble(result))
 }
@@ -106,7 +106,7 @@ extractSlopes = function(model){
 
 
 string_meta3 = function(y, v, cluster, x = NULL, data, model.name = NA,intercept.constraints = NULL) {
-
+ data_name = get_name(data)
   if (is.null(x)) {
     model = metaSEM::meta3(
       y = eval(parse(text = y)),
@@ -127,10 +127,14 @@ string_meta3 = function(y, v, cluster, x = NULL, data, model.name = NA,intercept
   }
 
   if(!summary(model)$Mx.status %in% c(0,1)){
-    model = metaSEM::rerun(model)
+    model = metaSEM::rerun(model, extraTries = 19)
   }
 
   model$call$model.name = model.name
+  model$call$y = y #fill in call details (these are otherwise populated with eval-parse crap).
+  model$call$v = v
+  model$call$cluster = cluster
+  model$call$data = data_name
 
   return(model)
 }
@@ -201,7 +205,6 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
 
 }
 
-
 #' meta3_moderation
 #'
 #' This function streamlines the moderation process. Moderation strategy varies based on whether a numeric, or factoral variable is supplied.
@@ -216,6 +219,7 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
 #' @importFrom dplyr filter %>% add_row
 #' @importFrom tibble as_tibble
 #' @importFrom stats anova
+#' @importFrom methods setClass representation
 #' @export meta3_moderation
 
 #y = "drink_yi"; v = "drink_vi"; cluster = "study_id"; moderators = c("gender_cat","females_p"); data = f; base = NULL; names = NULL
@@ -258,15 +262,22 @@ meta3_moderation = function(y,
       slope_lbound,
       slope_ubound,
       R2_2,
-      R2_3
+      R2_3,
+      Mx_status
     )
   }
 
   base_table = base %>% extractData %>%
     dplyr::mutate(moderation = "baseline") %>%
     get_vars %>%
-    dplyr::mutate("anova p-value" = NA) %>%
+    dplyr::mutate("anova p-value" = NA,
+                  type = "baseline") %>%
     list
+
+  model_list = list(base)
+  table_list = base_table
+
+  data = data.frame(data)
 
   amazing_result = lapply(moderators, function(x) {
     mod = data[, x]
@@ -283,7 +294,7 @@ meta3_moderation = function(y,
     }
 
     if (is.numeric(mod)) {
-      message("numeric")
+      #message("numeric")
       temp_model = string_meta3(
         y = y,
         v = v,
@@ -296,13 +307,14 @@ meta3_moderation = function(y,
       temp_table = extractData(temp_model) %>%
         dplyr::mutate(moderation = x) %>%
         get_vars %>%
-        dplyr::mutate("anova p-value" = temp_anova$p[2])
-      return(temp_table)
+        dplyr::mutate("anova p-value" = temp_anova$p[2],
+                      type = "numeric")
+      return(list(table = temp_table, model = temp_model))
     }
 
 
     if (is.factor(mod)) {
-      message("Factor")
+     # message("Factor")
       levels = levels(mod) #we remove the first level as it becomes the reference group
       cat_x = lapply(levels, function(y) {
         ifelse(mod == y, 1, 0)
@@ -339,7 +351,8 @@ meta3_moderation = function(y,
       temp_table = extractData(temp_model) %>%
         dplyr::mutate(moderation = x) %>%
         get_vars %>%
-        dplyr::mutate("anova p-value" = temp_anova$p[2])
+        dplyr::mutate("anova p-value" = temp_anova$p[2],
+                      type = "factor")
       if (nrow(temp_by_cat) != nrow(temp_slopes))
         warning(paste0("rows, "))
       for (i in seq_len(nrow(temp_slopes))) {
@@ -353,22 +366,62 @@ meta3_moderation = function(y,
             estimate = temp_slopes$est[i],
             lbound = temp_slopes$lbound[i],
             ubound = temp_slopes$ubound[i],
+            type = "factor level"
           )
       }
-      return(temp_table)
+      return(list(table = temp_table, model = temp_model))
     }
 
 
   })
+  amazing_tables = lapply(amazing_result, function(x) x$table)
+  amazing_models = lapply(amazing_result, function(x) x$model)
 
-  amazing_result = append(base_table, amazing_result) %>%
-    do.call("rbind", .)
+  final_models = append(model_list, amazing_models)
+  model_names = unlist(lapply(final_models, function(x) x$call$model.name))
+  names(final_models) = model_names
 
-  return(amazing_result)
+  final_tables = append(table_list, amazing_tables)
+  names(final_tables) = model_names
+
+  merged_table= final_tables %>%
+    do.call("rbind",.)
+
+  out = list(models = final_models,table = merged_table, cluster = cluster, data = as_tibble(data))
+  class(out) = c("meta_ninja")
+  return(out)
 }
 
-utils::globalVariables(c(".","I2","I2_3","R2_2","R2_3","anova","estimate",
-                         "k","n" ,"lbound","ubound","slope",
-                         "slope_ubound","result","model.name",
-                         "moderation","slope_lbound","y_internal",
-                         "v_internal","cluster_internal"))
+#' moderate
+#'
+#' This is a wrapper to perform meta3 moderations with. The original data file must be in the environment.
+#' @param model A meta3 model. The original data file must be available in the environment, with the same name.
+#' @param ... moderators, entered as objects
+#' @importForm dplyr %>%
+#' @export moderate
+
+moderate = function(model, ...) {
+  call = model$call %>%
+    as.list %>%
+    lapply(as.character)
+
+  data = call$data  %>%
+    get
+  y = call$y
+  v = call$v
+  cluster = call$cluster
+
+  moderators = substitute(list(...))[-1] %>%
+    sapply(deparse)
+
+  meta3_moderation(
+    y = y,
+    v = v,
+    cluster = cluster,
+    moderators = moderators,
+    data = data
+  )
+
+}
+
+

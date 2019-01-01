@@ -1,0 +1,38 @@
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage(
+"A ninja's swift gaze...
+Dark stones, shrouded in concern...
+leaves fall silently.
+                            [-_-]~")
+}
+#Define classes
+setClass("meta_ninja", representation(models = "list",table = "list",cluster = "character", data = "tbl"))
+
+#' meta_ninja methods
+#' @param x object to print
+#' @param ... additional arguments. Not currently used.
+#' @importFrom dplyr select %>% mutate
+#' @export
+print.meta_ninja = function(x,...){
+ x = x$table %>%
+   select(moderation, model.name, k, n, estimate, lbound, ubound, I2, I2_3, slope, slope_lbound, slope_ubound, R2_3, "anova p-value")
+print(x)
+}
+
+#' meta_ninja plot method
+#' @param x model to print
+#' @param y not used.
+#' @param ... additional arguments passed to ninjaForest.
+#' @export
+plot.meta_ninja = function(x,y,...){
+  ninjaForest(x,...)
+}
+
+
+#Define global variables
+utils::globalVariables(c(".","I2","I2_3","R2_2","R2_3","anova","estimate",
+                         "k","n" ,"lbound","ubound","slope",
+                         "slope_ubound","result","model.name",
+                         "moderation","slope_lbound","y_internal",
+                         "v_internal","cluster_internal","representation",
+                         "y","v","type","se","lower","upper","setting","est","aes", "Mx_status"))
