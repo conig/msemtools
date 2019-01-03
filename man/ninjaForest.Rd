@@ -4,9 +4,9 @@
 \alias{ninjaForest}
 \title{ninjaForest}
 \usage{
-ninjaForest(model, xlab = "effect size", transform = NULL,
+ninjaForest(model, xlab = "Effect size", transform = NULL,
   baseline_name = "All", factor.levels = NULL, vline = NULL,
-  cluster = NULL, author = NULL, year = NULL)
+  cluster = NULL, author = NULL, year = NULL, font = "serif")
 }
 \arguments{
 \item{model}{an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.}
@@ -26,6 +26,8 @@ ninjaForest(model, xlab = "effect size", transform = NULL,
 \item{author}{the name of the author column}
 
 \item{year}{the name of the year column}
+
+\item{font}{A string. The name of a font family. Defaults to serif.}
 }
 \description{
 This function is used for plotting
