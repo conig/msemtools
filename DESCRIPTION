@@ -1,6 +1,6 @@
 Package: msemtools
 Type: Package
-Title: Tools for metaSEM. Made for ninjas, by ninjas
+Title: metaSEM tools. Made for ninjas, by ninjas
 Version: 0.8.5
 Author: James Conigrave
 Maintainer: James Conigrave <jamesconigrave@gmail.com>
