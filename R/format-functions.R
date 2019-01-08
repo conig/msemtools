@@ -21,8 +21,11 @@ format_nicely = function(x,
     )
   }
   args = as.list(match.call())
-  df = x$table
+  base_table = x$table
+  df = base_table
   df$SE = papertools::digits(df$SE, round)
+  df$"Slope (95% CI)" = NA
+  df$"Slope SE" = NA
 
   if (!is.null(transform)) {
     if (is.null(t_name)) {
@@ -41,6 +44,8 @@ format_nicely = function(x,
       extra,
       Estimate = estimate,
       SE,
+      "Slope (95% CI)",
+      "Slope SE",
       I2,
       R2 = R2_2,
       "ANOVA p-value" = `anova p-value`
@@ -57,11 +62,23 @@ format_nicely = function(x,
       n,
       Estimate = estimate,
       SE,
+      "Slope (95% CI)",
+      "Slope SE",
       I2,
       R2 = R2_2,
       `ANOVA p-value` = `anova p-value`
     )
   }
+
+  if(any(!is.na(base_table$slope))){
+    df$`Slope (95% CI)` = papertools::glue_bracket(base_table$slope, base_table$slope_lbound, base_table$slope_ubound, round = round)
+    df$`Slope SE` = papertools::digits(base_table$slope_se, round)
+    df$`Slope (95% CI)`[df$`Slope (95% CI)` == papertools::glue_bracket(NA, NA, NA)] = NA
+  }else{
+      df$`Slope (95% CI)` = NULL
+      df$`Slope SE` = NULL
+    }
+
   df$indent = duplicated(df$indent)
 
   df$`ANOVA p-value` = ifelse(df$`ANOVA p-value` < 0.001,

@@ -14,7 +14,7 @@ extractData = function(model){
   coef = summary$coefficients %>% data.frame %>% rownames_to_column
   names(coef) = c("row","est","stde","lbound","ubound","z","p")
   names = c("model.name","k","n","estimate","SE","lbound","ubound","t2","t2p","I2","t2_3","t2_3p",
-            "I2_3","Q","Q_p","slope","slope_lbound","slope_ubound","slope_p","R2_2","R2_3","Mx_status")
+            "I2_3","Q","Q_p","slope","slope_se","slope_lbound","slope_ubound","slope_p","R2_2","R2_3","Mx_status")
   result = data.frame(matrix(ncol = length(names),nrow = 1))
   names(result) = names
   result$k = summary$no.studies
@@ -55,6 +55,7 @@ extractData = function(model){
 
   if(slopes > 0 & slopes < 2){
     result$slope = coef[coef$row == "Slope_1","est"] %>% safe_add
+    result$slope_se = coef[coef$row == "Slope_1","stde"] %>% safe_add
     result$slope_lbound = coef[coef$row == "Slope_1","lbound"] %>% safe_add
     result$slope_ubound = coef[coef$row == "Slope_1","ubound"] %>% safe_add
     result$slope_p = coef[coef$row == "Slope_1","p"] %>% safe_add
@@ -260,6 +261,7 @@ meta3_moderation = function(y,
       I2,
       I2_3,
       slope,
+      slope_se,
       slope_lbound,
       slope_ubound,
       R2_2,
@@ -391,6 +393,14 @@ meta3_moderation = function(y,
 
   out = list(models = final_models,table = merged_table, cluster = cluster, data = as_tibble(data))
   class(out) = c("meta_ninja")
+
+  #Flag to the users if models have a mx status of greater than one (which indicates issues)
+  problem_models =  out$table$model.name[which(out$table$Mx_status > 1)]
+  if(length(problem_models) > 0){
+    warning(paste0("The following models had Mx statuses greater that one which inidcates potential issues: '",
+                   paste(problem_models, collapse = "', '"),"'."))
+  }
+
   return(out)
 }
 

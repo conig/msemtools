@@ -1,22 +1,31 @@
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage(
-"A ninja's swift gaze...
+    "A ninja's swift gaze...
 Dark stones, shrouded in concern...
 leaves fall silently.
-                            [-_-]~")
+                            [-_-]~"
+  )
 }
 #Define classes
-setClass("meta_ninja", representation(models = "list",table = "list",cluster = "character", data = "tbl"))
+setClass(
+  "meta_ninja",
+  representation(
+    models = "list",
+    table = "list",
+    cluster = "character",
+    data = "tbl"
+  )
+)
 
 #' meta_ninja methods
 #' @param x object to print
 #' @param ... additional arguments. Not currently used.
 #' @importFrom dplyr select %>% mutate
 #' @export
-print.meta_ninja = function(x,...){
- x = x$table %>%
-   select(moderation, model.name, k, n, estimate, lbound, ubound, I2, I2_3, slope, slope_lbound, slope_ubound, R2_3, "anova p-value")
-print(x)
+print.meta_ninja = function(x, ...) {
+  x = x$table %>%
+    select(moderation, model.name, k, n, estimate, lbound, ubound, I2, I2_3, slope, slope_lbound, slope_ubound, R2_3, "anova p-value")
+  print(x)
 }
 
 #' meta_ninja plot method
@@ -24,8 +33,8 @@ print(x)
 #' @param y not used.
 #' @param ... additional arguments passed to ninjaForest.
 #' @export
-plot.meta_ninja = function(x,y,...){
-  ninjaForest(x,...)
+plot.meta_ninja = function(x, y, ...) {
+  ninjaForest(x, ...)
 }
 
 #' meta_ninja as.data.frame method
@@ -34,15 +43,49 @@ plot.meta_ninja = function(x,y,...){
 #' @param optional Rubbish
 #' @param ... extra arguments
 #' @export
-as.data.frame.meta_ninja = function(x, row.names = NULL, optional = NULL, ...){
+as.data.frame.meta_ninja = function(x,
+                                    row.names = NULL,
+                                    optional = NULL,
+                                    ...) {
   data.frame(x$table, row.names = row.names)
 }
 
 #Define global variables
-utils::globalVariables(c(".","I2","I2_3","R2_2","R2_3","SE","anova","estimate",
-                         "k","n" ,"lbound","ubound","slope",
-                         "slope_ubound","result","model.name",
-                         "moderation","slope_lbound","y_internal",
-                         "v_internal","cluster_internal","representation",
-                         "y","v","type","se","lower","upper","setting","est","aes", "Mx_status", "extra",
-                         "anova p-value"))
+utils::globalVariables(
+  c(
+    ".",
+    "I2",
+    "I2_3",
+    "R2_2",
+    "R2_3",
+    "SE",
+    "anova",
+    "estimate",
+    "k",
+    "n" ,
+    "lbound",
+    "ubound",
+    "slope",
+    "slope_ubound",
+    "result",
+    "model.name",
+    "moderation",
+    "slope_lbound",
+    "y_internal",
+    "v_internal",
+    "cluster_internal",
+    "representation",
+    "y",
+    "v",
+    "type",
+    "se",
+    "lower",
+    "upper",
+    "setting",
+    "est",
+    "aes",
+    "Mx_status",
+    "extra",
+    "anova p-value"
+  )
+)
