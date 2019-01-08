@@ -7,7 +7,7 @@
 format_nicely(x, round = 2, transform = NULL, t_name = NULL)
 }
 \arguments{
-\item{x}{a meta-ninja}
+\item{x}{a meta_ninja}
 
 \item{round}{a scalar.}
 
