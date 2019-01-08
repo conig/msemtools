@@ -49,7 +49,7 @@ ninjaForest = function(model,
 
   #this chunk sets up summary object
   df = model$table
-  b_model = model$models$baseline
+  b_model = model$models$Baseline
   #check that all moderators are factor, otherwise warn user
   numeric_moderators = data.frame(df[df$type == "numeric", "model.name"])
   if (nrow(numeric_moderators) > 0) {
@@ -65,7 +65,7 @@ ninjaForest = function(model,
 
   #### next we separte out the bits of the summary table we want to plot. We want to avoid
   baseline = df %>%
-    dplyr::filter(type %in% c("baseline"))
+    dplyr::filter(type %in% c("Baseline"))
 
   if (is.null(factor.levels)) {
     not_present = factor.levels[!factor.levels %in% df$model.name]
@@ -100,7 +100,7 @@ ninjaForest = function(model,
                   setting = "pooled")
   summary$year = seq_len(nrow(summary))
 
-  summary$cluster[summary$cluster == "baseline"] = baseline_name
+  summary$cluster[summary$cluster == "Baseline"] = baseline_name
 
   dat = b_model$data %>%
     dplyr::mutate(
@@ -110,7 +110,7 @@ ninjaForest = function(model,
       k = NA,
       n = NA
     ) %>%
-    mutate(type = "data", setting = "effects") %>%
+    dplyr::mutate(type = "data", setting = "effects") %>%
     dplyr::select(n, k, est = y, lower, upper, type, setting, cluster)
 
   dat$author = lapply(dat$cluster, function(x) {

@@ -241,7 +241,7 @@ meta3_moderation = function(y,
       v = v,
       x = NULL,
       cluster = cluster,
-      model.name = "baseline",
+      model.name = "Baseline",
       intercept.constraints = NULL
     )
 
@@ -269,10 +269,10 @@ meta3_moderation = function(y,
   }
 
   base_table = base %>% extractData %>%
-    dplyr::mutate(moderation = "baseline") %>%
+    dplyr::mutate(moderation = "Baseline") %>%
     get_vars %>%
     dplyr::mutate("anova p-value" = NA,
-                  type = "baseline") %>%
+                  type = "Baseline") %>%
     list
 
   model_list = list(base)
@@ -365,6 +365,7 @@ meta3_moderation = function(y,
             k = temp_by_cat$k[i],
             n = temp_by_cat$n[i],
             estimate = temp_slopes$est[i],
+            SE = temp_slopes$stde[i],
             lbound = temp_slopes$lbound[i],
             ubound = temp_slopes$ubound[i],
             type = "factor level"
