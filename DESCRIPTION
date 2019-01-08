@@ -1,7 +1,7 @@
 Package: msemtools
 Type: Package
 Title: metaSEM tools. Made for ninjas, by ninjas
-Version: 0.8.5
+Version: 0.8.6
 Author: James Conigrave
 Maintainer: James Conigrave <jamesconigrave@gmail.com>
 Description: The functions contained in this package are designed to streamline the meta-analysis process. MetaSEM is an extremely powerful package, however the base functions require the manual creation of summary tables. This package helps, by performing these processes for you.
@@ -16,6 +16,7 @@ Imports:
     methods (>= 3.5.1),
     ggplot2 (>= 3.1.0),
     stats (>= 3.5.1),
-    metafor(>= 2.0-0)
+    metafor(>= 2.0-0),
+    papertools
 Remotes:
     JConigrave/papertools

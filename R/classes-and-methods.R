@@ -28,11 +28,21 @@ plot.meta_ninja = function(x,y,...){
   ninjaForest(x,...)
 }
 
+#' meta_ninja as.data.frame method
+#' @param x an R object
+#' @param row.names NULL or a character vector
+#' @param optional Rubbish
+#' @param ... extra arguments
+#' @export
+as.data.frame.meta_ninja = function(x, row.names = NULL, optional = NULL, ...){
+  data.frame(x$table, row.names = row.names)
+}
 
 #Define global variables
-utils::globalVariables(c(".","I2","I2_3","R2_2","R2_3","anova","estimate",
+utils::globalVariables(c(".","I2","I2_3","R2_2","R2_3","SE","anova","estimate",
                          "k","n" ,"lbound","ubound","slope",
                          "slope_ubound","result","model.name",
                          "moderation","slope_lbound","y_internal",
                          "v_internal","cluster_internal","representation",
-                         "y","v","type","se","lower","upper","setting","est","aes", "Mx_status"))
+                         "y","v","type","se","lower","upper","setting","est","aes", "Mx_status", "extra",
+                         "anova p-value"))

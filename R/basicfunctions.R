@@ -254,6 +254,7 @@ meta3_moderation = function(y,
       k,
       n,
       estimate,
+      SE,
       lbound,
       ubound,
       I2,
@@ -397,7 +398,7 @@ meta3_moderation = function(y,
 #' This is a wrapper to perform meta3 moderations with. The original data file must be in the environment.
 #' @param model A meta3 model. The original data file must be available in the environment, with the same name.
 #' @param ... moderators, entered as objects
-#' @importForm dplyr %>%
+#' @importFrom dplyr %>%
 #' @export moderate
 
 moderate = function(model, ...) {
