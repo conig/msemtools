@@ -428,6 +428,7 @@ meta3_moderation = function(y,
 #' @param model A meta3 model. The original data file must be available in the environment, with the same name.
 #' @param ... moderators, entered as objects
 #' @importFrom dplyr %>%
+#' @importFrom Conigrave check_names
 #' @export moderate
 
 moderate = function(model, ...) {
@@ -444,8 +445,9 @@ moderate = function(model, ...) {
   moderators = substitute(list(...))[-1] %>%
     sapply(deparse)
 
-  #return(moderators)
+  Conigrave::check_names(moderators,data)
 
+  #return(moderators)
   meta3_moderation(
     y = y,
     v = v,

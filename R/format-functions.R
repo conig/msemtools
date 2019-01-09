@@ -82,7 +82,7 @@ format_nicely = function(x,
   df$indent = duplicated(df$indent)
 
   df$`ANOVA p-value` = ifelse(df$`ANOVA p-value` < 0.001,
-                              "0.001",
+                              "< 0.001",
                               papertools::digits(df$`ANOVA p-value`, 3))
   df$I2 = digits(df$I2, round)
   df$R2 = digits(df$R2, round)

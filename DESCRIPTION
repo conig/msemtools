@@ -17,6 +17,8 @@ Imports:
     ggplot2 (>= 3.1.0),
     stats (>= 3.5.1),
     metafor(>= 2.0-0),
+    Conigrave,
     papertools
 Remotes:
-    JConigrave/papertools
+    JConigrave/papertools,
+    JConigrave/Conigrave
