@@ -6,17 +6,22 @@
 #' @importFrom tibble rownames_to_column as_tibble
 #' @export extractData
 
-extractData = function(model){
+extractData = function(model, model.name = NULL){
+  names = c("model.name","k","n","estimate","SE","lbound","ubound","t2","t2p","I2","t2_3","t2_3p",
+            "I2_3","Q","Q_p","slope","slope_se","slope_lbound","slope_ubound","slope_p","R2_2","R2_3","Mx_status")
+  result = data.frame(matrix(ncol = length(names),nrow = 1))
+  names(result) = names
+
+  if(is.data.frame(model)){
+    result[1,] = c(as.character(model$model.name),0,0,rep(NA,length(names)-3))
+    return(result)
+  }
 
   safe_add = function(x) ifelse(length(x) >0, x,NA)
 
   summary = summary(model)
   coef = summary$coefficients %>% data.frame %>% rownames_to_column
   names(coef) = c("row","est","stde","lbound","ubound","z","p")
-  names = c("model.name","k","n","estimate","SE","lbound","ubound","t2","t2p","I2","t2_3","t2_3p",
-            "I2_3","Q","Q_p","slope","slope_se","slope_lbound","slope_ubound","slope_p","R2_2","R2_3","Mx_status")
-  result = data.frame(matrix(ncol = length(names),nrow = 1))
-  names(result) = names
   result$k = summary$no.studies
   result$n = summary$obsStat
 
@@ -127,9 +132,7 @@ string_meta3 = function(y, v, cluster, x = NULL, data, model.name = NA,intercept
     )
   }
 
-  if(!summary(model)$Mx.status %in% c(0,1)){
-    model = metaSEM::rerun(model, extraTries = 19)
-  }
+model = try_even_harder(model)
 
   model$call$model.name = model.name
   model$call$y = y #fill in call details (these are otherwise populated with eval-parse crap).
@@ -165,6 +168,9 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
   model_list = lapply(factor_levels, function(fc) {
     #message(fc)
     temp_data = data %>% filter(data[, factor] == fc)
+
+    rows = nrow(na.omit(temp_data[,c(y,v,cluster)]))
+    if(rows > 0){
     output = string_meta3(
       data = temp_data,
       y = y,
@@ -174,6 +180,10 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
       model.name = fc,
       intercept.constraints = NULL
     )
+
+    }else{
+      output = data.frame(model = "no rows", model.name = fc)
+    }
     output
   })
 
@@ -223,9 +233,9 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
 #' @importFrom methods setClass representation
 #' @export meta3_moderation
 
-#y = "drink_yi"; v = "drink_vi"; cluster = "study_id"; moderators = c("gender_cat","females_p"); data = f; base = NULL; names = NULL
+#y = "risk_short_yi"; v = "risk_short_vi"; cluster = "study_id"; moderators = c("Cultural adaptations"); data = f; base = NULL; names = NULL
 # msemtools::meta3_moderation("drink_yi","drink_vi","study_id","gender_cat",data = f)
-#x = msemtools::meta3_moderation("drink_yi","drink_vi","study_id",c("gender_cat"),data = f)
+#x = msemtools::meta3_moderation("drink_yi","drink_vi","study_id",c("State"),data = f)
 meta3_moderation = function(y,
                             v,
                             cluster,
@@ -283,7 +293,7 @@ meta3_moderation = function(y,
   data = data.frame(data)
 
   amazing_result = lapply(moderators, function(x) {
-    mod = data[, x]
+    mod = data[, make.names(x)] #create moderator variable
     if (!(is.numeric(mod) | is.factor(mod))) {
       stop(
         paste0(
@@ -295,7 +305,7 @@ meta3_moderation = function(y,
         )
       ,call.=F)
     }
-
+#if the moderator is numeric
     if (is.numeric(mod)) {
       #message("numeric")
       temp_model = string_meta3(
@@ -315,9 +325,8 @@ meta3_moderation = function(y,
       return(list(table = temp_table, model = temp_model))
     }
 
-
+#if the moderator is a factor
     if (is.factor(mod)) {
-     # message("Factor")
       levels = levels(mod) #we remove the first level as it becomes the reference group
       cat_x = lapply(levels, function(y) {
         ifelse(mod == y, 1, 0)
@@ -340,15 +349,18 @@ meta3_moderation = function(y,
         model.name = "temp_name",
         intercept.constraints = 0
       )
+
+      temp_model = try_even_harder(temp_model)
+
       temp_model$call$model.name = x
       temp_anova = anova(temp_model, base)
       temp_slopes = temp_model %>% extractSlopes
       temp_slopes$row = colnames(cat_x)
-      temp_by_cat = meta3_by_factor(
+      temp_by_cat = meta3_by_factor( #this is throwing an error.
         y = y,
         v = v,
         cluster = cluster,
-        factor = x,
+        factor = make.names(x),
         data = data
       )
       temp_table = extractData(temp_model) %>%
@@ -356,8 +368,9 @@ meta3_moderation = function(y,
         get_vars %>%
         dplyr::mutate("anova p-value" = temp_anova$p[2],
                       type = "factor")
-      if (nrow(temp_by_cat) != nrow(temp_slopes))
-        warning(paste0("rows, "))
+      if (nrow(temp_by_cat) != nrow(temp_slopes)){
+        warning(paste0("rows are not equal "))
+      }
       for (i in seq_len(nrow(temp_slopes))) {
         temp_table = temp_table %>%
           add_row(
@@ -375,7 +388,7 @@ meta3_moderation = function(y,
       }
       return(list(table = temp_table, model = temp_model))
     }
-
+#got past it
 
   })
   amazing_tables = lapply(amazing_result, function(x) x$table)
@@ -395,10 +408,15 @@ meta3_moderation = function(y,
   class(out) = c("meta_ninja")
 
   #Flag to the users if models have a mx status of greater than one (which indicates issues)
-  problem_models =  out$table$model.name[which(out$table$Mx_status > 1)]
+  model_names = out$table$model.name
+  model_scores = out$table$Mx_status
+  model_names = paste0(model_names,"[",model_scores,"]")
+  problem_models =  model_names[which(model_scores > 1)]
+
+
   if(length(problem_models) > 0){
-    warning(paste0("The following models had Mx statuses greater that one which inidcates potential issues: '",
-                   paste(problem_models, collapse = "', '"),"'."))
+    warning(paste0("The following models had Mx status greater that one which indicates potential issues: '",
+                   paste(problem_models, collapse = "', '"),"'."),call.=F)
   }
 
   return(out)
@@ -425,6 +443,8 @@ moderate = function(model, ...) {
 
   moderators = substitute(list(...))[-1] %>%
     sapply(deparse)
+
+  #return(moderators)
 
   meta3_moderation(
     y = y,

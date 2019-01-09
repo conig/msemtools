@@ -24,7 +24,7 @@ setClass(
 #' @export
 print.meta_ninja = function(x, ...) {
   x = x$table %>%
-    select(moderation, model.name, k, n, estimate, lbound, ubound, I2, I2_3, slope, slope_lbound, slope_ubound, R2_3, "anova p-value")
+    select(moderation, model.name, k, n, estimate, lbound, ubound, I2, I2_3, slope, slope_lbound, slope_ubound, R2_2, "anova p-value")
   print(x)
 }
 
@@ -49,6 +49,9 @@ as.data.frame.meta_ninja = function(x,
                                     ...) {
   data.frame(x$table, row.names = row.names)
 }
+
+
+
 
 #Define global variables
 utils::globalVariables(

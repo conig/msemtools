@@ -4,7 +4,7 @@
 \alias{extractData}
 \title{extractData}
 \usage{
-extractData(model)
+extractData(model, model.name = NULL)
 }
 \arguments{
 \item{model}{a numeric.}

@@ -52,6 +52,28 @@ find_author = function(data) {
 #' return's an object's name
 #' @param x the object to return the name
 
- get_name = function(x){
-   deparse(substitute(x))
- }
+get_name = function(x) {
+  deparse(substitute(x))
+}
+
+#' try_even_harder
+#'
+#' reruns models with problems
+#' @param model the model.
+#' @importFrom dplyr %>%
+#' @importFrom metaSEM rerun
+
+try_even_harder = function(model) {
+  if (!summary(model)$Mx.status %in% c(0, 1)) {
+    suppressMessages(model <- metaSEM::rerun(model))
+  }
+  if (!summary(model)$Mx.status %in% c(0, 1)) {
+    suppressMessages(model <- #all the rerun messages in bulk just get in the way.
+                       metaSEM::rerun(
+                         model,
+                         extraTries = 19,
+                         finetuneGradient = F
+                       ))
+  }
+  return(model)
+}
