@@ -6,7 +6,8 @@
 \usage{
 ninjaForest(model, xlab = "Effect size", transform = NULL,
   baseline_name = "All", factor.levels = NULL, vline = NULL,
-  cluster = NULL, author = NULL, year = NULL, font = "serif")
+  cluster = NULL, author = NULL, year = NULL, summary.shape = 23,
+  summary.size = 4, font = "serif")
 }
 \arguments{
 \item{model}{an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.}
@@ -26,6 +27,10 @@ ninjaForest(model, xlab = "Effect size", transform = NULL,
 \item{author}{the name of the author column}
 
 \item{year}{the name of the year column}
+
+\item{summary.shape}{a scalar ggplot2 geom_point shape value}
+
+\item{summary.size}{a scalar. Ggplot2 geom_point size value}
 
 \item{font}{A string. The name of a font family. Defaults to serif.}
 }

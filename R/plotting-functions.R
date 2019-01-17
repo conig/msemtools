@@ -11,6 +11,8 @@
 #' @param cluster study_id column
 #' @param author the name of the author column
 #' @param year the name of the year column
+#' @param summary.shape a scalar ggplot2 geom_point shape value
+#' @param summary.size a scalar. Ggplot2 geom_point size value
 #' @param font A string. The name of a font family. Defaults to serif.
 #' @export ninjaForest
 #' @importFrom dplyr filter select %>% mutate
@@ -29,6 +31,8 @@ ninjaForest = function(model,
                        cluster = NULL,
                        author = NULL,
                        year = NULL,
+                       summary.shape = 23,
+                       summary.size = 4,
                        font = "serif") {
   if (!"meta_ninja" %in% class(model)) {
     stop("ninjaForest must be provided objects of class 'meta-ninja")
@@ -163,20 +167,24 @@ ninjaForest = function(model,
     xmin = lower,
     xmax = upper
   )) + geom_point(color = "black") +
-    geom_point(
+    geom_errorbarh(height = .1) +
+
+    geom_vline(xintercept = vline, #add horizontal line
+               color = 'black',
+               linetype = 'dashed') +
+
+    geom_point( #add summary points
       data = dat[dat$type == "summary", ],
       color = 'black',
-      shape = 18,
-      size = 4.5
+      shape = summary.shape,
+      size = summary.size,
+      fill = "white"
     ) +
     #add the CI error bars
-    geom_errorbarh(height = .1) +
     #Specify the limits of the x-axis and relabel it to something more meaningful
     scale_x_continuous(name = xlab) +
     ylab(NULL) +
-    geom_vline(xintercept = vline,
-               color = 'black',
-               linetype = 'dashed') +
+
     facet_grid(setting ~ ., scales = 'free', space = 'free') +
     theme_classic()
 

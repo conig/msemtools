@@ -239,9 +239,10 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
 
 #data = males; names = NULL ; y = "drink_yi" ; v = "drink_vi" ; cluster = "study_id" ; moderators = c('Remoteness','State','Cultural adaptations','Confidential','Questionnaire')
 
-#y = "risk_short_yi"; v = "risk_short_vi"; cluster = "study_id"; moderators = c("Cultural adaptations"); data = f; base = NULL; names = NULL
+#y = "risk_long_yi"; v = "risk_long_vi"; cluster = "study_id"; moderators = c("Gender"); data = f; base = NULL; names = NULL
 # msemtools::meta3_moderation("drink_yi","drink_vi","study_id","gender_cat",data = f)
 #x = msemtools::meta3_moderation("drink_yi","drink_vi","study_id",c("State"),data = f)
+
 meta3_moderation = function(y,
                             v,
                             cluster,
@@ -300,7 +301,8 @@ meta3_moderation = function(y,
 
   amazing_result = lapply(moderators, function(x) {
     #message(x)
-    mod = data[, make.names(x)] #create moderator variable
+    temp_data = na.omit(data[,c(y,v,cluster,make.names(x))])
+    mod = temp_data[, make.names(x)] #create moderator variable
     if (!(is.numeric(mod) | is.factor(mod))) {
       stop(
         paste0(
@@ -320,7 +322,7 @@ meta3_moderation = function(y,
         v = v,
         cluster = cluster,
         x = x,
-        data = data,
+        data = temp_data,
         model.name = x
       )
       temp_anova = anova(temp_model, base)
@@ -334,9 +336,9 @@ meta3_moderation = function(y,
 
 #if the moderator is a factor
     if (is.factor(mod)) {
-      data[,make.names(x)] = droplevels(data[,make.names(x)])
+      temp_data[,make.names(x)] = droplevels(temp_data[,make.names(x)])
       mod = droplevels(mod) #get rid of empty levels
-      levels = levels(mod) #we remove the first level as it becomes the reference group
+      levels = levels(mod)
       cat_x = lapply(levels, function(y) {
         ifelse(mod == y, 1, 0)
       }) %>%
@@ -345,16 +347,16 @@ meta3_moderation = function(y,
 
       ##sting meta won't take cat_x due to its environment.
       #so we will mix up this approach.
-      data$y_internal = data[,y]
-      data$v_internal = data[,v]
-      data$cluster_internal = data[,cluster]
+      temp_data$y_internal = temp_data[,y]
+      temp_data$v_internal = temp_data[,v]
+      temp_data$cluster_internal = temp_data[,cluster]
 
       temp_model = metaSEM::meta3(
         y = y_internal,
         v = v_internal,
         cluster = cluster_internal,
         x = cat_x,
-        data = data,
+        data = temp_data,
         model.name = "temp_name",
         intercept.constraints = 0
       )
@@ -365,12 +367,12 @@ meta3_moderation = function(y,
       temp_anova = anova(temp_model, base)
       temp_slopes = temp_model %>% extractSlopes
       temp_slopes$row = colnames(cat_x)
-      temp_by_cat = meta3_by_factor( #this is throwing an error.
+      temp_by_cat = count_levels( #this just gets k and n. need to make faster
         y = y,
         v = v,
         cluster = cluster,
         factor = make.names(x),
-        data = data
+        data = temp_data
       )
       temp_table = extractData(temp_model) %>%
         dplyr::mutate(moderation = x) %>%

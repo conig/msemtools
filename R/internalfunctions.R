@@ -47,6 +47,30 @@ find_author = function(data) {
   return(string)
 }
 
+
+#' count_levels
+#'
+#' counts levels in factors
+#' @param y a string
+#' @param v a string
+#' @param cluster a string
+#' @param factor a string
+#' @param data a data object
+#' @importFrom tibble tibble
+
+count_levels = function(y,v,cluster,factor, data){
+  temp_data = na.omit(data[,c(y,v,cluster,factor)])
+  levels = levels(droplevels(temp_data[,factor]))
+  out = tibble(level = levels)
+  out$k = lapply(levels, function(i){
+    length(unique(temp_data[temp_data[,factor] == i,cluster]))
+  }) %>% unlist
+  out$n = lapply(levels, function(i){
+    length(temp_data[temp_data[,factor] == i,cluster])
+  }) %>% unlist
+  return(out)
+}
+
 #' get_name
 #'
 #' return's an object's name
