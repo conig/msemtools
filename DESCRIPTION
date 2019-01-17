@@ -18,7 +18,9 @@ Imports:
     stats (>= 3.5.1),
     metafor(>= 2.0-0),
     Conigrave,
-    papertools
+    papertools,
+    papaja
 Remotes:
     JConigrave/papertools,
-    JConigrave/Conigrave
+    JConigrave/Conigrave,
+    crsh/papaja

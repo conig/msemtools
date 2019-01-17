@@ -36,13 +36,13 @@ ninjaForest = function(model,
 
   #find missing variables
   data = model$data
+
   if (is.null(year)) {
     year = find_year(data)
   }
   if (is.null(author)) {
     author = find_author(data)
   }
-
   if (is.null(cluster)) {
     cluster = model$cluster
   }
@@ -98,8 +98,9 @@ ninjaForest = function(model,
     ) %>%
     dplyr::mutate(type = "summary",
                   setting = "pooled")
-  summary$year = seq_len(nrow(summary))
-
+  rev = rev(seq_len(nrow(summary)))
+  rev = rev[-length(rev)]
+  summary$year = c(1,rev)
   summary$cluster[summary$cluster == "Baseline"] = baseline_name
 
   dat = b_model$data %>%
@@ -115,12 +116,12 @@ ninjaForest = function(model,
 
   dat$author = lapply(dat$cluster, function(x) {
     x = as.numeric(as.character(x))
-    data[data$study_id == x, "author"] %>% unlist() %>% .[1]
+    data[data[,cluster] == x, author] %>% unlist() %>% .[1]
   }) %>% unlist
 
   dat$year = lapply(dat$cluster, function(x) {
     x = as.numeric(as.character(x))
-    data[data$study_id == x, "year"] %>% unlist() %>% .[1]
+    data[data[,cluster] == x, year] %>% unlist() %>% .[1]
   }) %>% unlist
   dat = dat[order(dat$year), ]
   dat$cluster = paste(dat$author, dat$year)

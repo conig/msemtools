@@ -2,9 +2,10 @@
 #'
 #' Grabs pertinent data from a metaSEM model
 #' @param model a numeric.
+#' @param model.name a model name.
 #' @importFrom dplyr %>%
 #' @importFrom tibble rownames_to_column as_tibble
-#' @export extractData
+
 
 extractData = function(model, model.name = NULL){
   names = c("model.name","k","n","estimate","SE","lbound","ubound","t2","t2p","I2","t2_3","t2_3p",
@@ -13,7 +14,7 @@ extractData = function(model, model.name = NULL){
   names(result) = names
 
   if(is.data.frame(model)){
-    result[1,] = c(as.character(model$model.name),0,0,rep(NA,length(names)-3))
+    result[1,] = c(as.character(model$model.name),model$k,model$n,rep(NA,length(names)-3))
     return(result)
   }
 
@@ -87,7 +88,7 @@ return(as_tibble(result))
 #' Grabs slope coefficient data
 #'
 #' @param model a model.
-#' @export extractSlopes
+
 
 extractSlopes = function(model){
   summary = summary(model)
@@ -108,7 +109,6 @@ extractSlopes = function(model){
 #' @param intercept.constraints a numeric. Set the value of the intercept
 #' @importFrom metaSEM meta3 rerun
 #'
-#' @export string_meta3
 
 
 string_meta3 = function(y, v, cluster, x = NULL, data, model.name = NA,intercept.constraints = NULL) {
@@ -156,8 +156,8 @@ model = try_even_harder(model)
 #' @importFrom metaSEM meta3
 #' @importFrom dplyr filter %>%
 #' @importFrom tibble as_tibble
-#'
-#' @export meta3_by_factor
+#' @importFrom stats na.omit
+
 
 
 meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.models = F) {
@@ -169,8 +169,11 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
     #message(fc)
     temp_data = data %>% filter(data[, factor] == fc)
 
-    rows = nrow(na.omit(temp_data[,c(y,v,cluster)]))
-    if(rows > 0){
+    na_data = na.omit(temp_data[,c(y,v,cluster)])
+    rows = nrow(na_data)
+    studies = length(unique(na_data[,cluster]))
+
+    if(rows > 1){
     output = string_meta3(
       data = temp_data,
       y = y,
@@ -182,7 +185,7 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
     )
 
     }else{
-      output = data.frame(model = "no rows", model.name = fc)
+      output = data.frame(model = NA, model.name = fc, k = studies, n = rows)
     }
     output
   })
@@ -232,6 +235,9 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
 #' @importFrom stats anova
 #' @importFrom methods setClass representation
 #' @export meta3_moderation
+
+
+#data = males; names = NULL ; y = "drink_yi" ; v = "drink_vi" ; cluster = "study_id" ; moderators = c('Remoteness','State','Cultural adaptations','Confidential','Questionnaire')
 
 #y = "risk_short_yi"; v = "risk_short_vi"; cluster = "study_id"; moderators = c("Cultural adaptations"); data = f; base = NULL; names = NULL
 # msemtools::meta3_moderation("drink_yi","drink_vi","study_id","gender_cat",data = f)
@@ -293,6 +299,7 @@ meta3_moderation = function(y,
   data = data.frame(data)
 
   amazing_result = lapply(moderators, function(x) {
+    #message(x)
     mod = data[, make.names(x)] #create moderator variable
     if (!(is.numeric(mod) | is.factor(mod))) {
       stop(
@@ -327,6 +334,8 @@ meta3_moderation = function(y,
 
 #if the moderator is a factor
     if (is.factor(mod)) {
+      data[,make.names(x)] = droplevels(data[,make.names(x)])
+      mod = droplevels(mod) #get rid of empty levels
       levels = levels(mod) #we remove the first level as it becomes the reference group
       cat_x = lapply(levels, function(y) {
         ifelse(mod == y, 1, 0)
@@ -404,6 +413,8 @@ meta3_moderation = function(y,
   merged_table= final_tables %>%
     do.call("rbind",.)
 
+  merged_table[merged_table$type == "factor", c("slope", "slope_ubound", "slope_lbound")] = NA #gets rid of error when factors have only one level.
+
   out = list(models = final_models,table = merged_table, cluster = cluster, data = as_tibble(data))
   class(out) = c("meta_ninja")
 
@@ -430,11 +441,18 @@ meta3_moderation = function(y,
 #' @importFrom dplyr %>%
 #' @importFrom Conigrave check_names
 #' @export moderate
+#'
+# model = ill_e_mod0 %>%
+# moderate(Strategy,`Scale Type`, Age, Gender, Country, SES)
 
 moderate = function(model, ...) {
   call = model$call %>%
     as.list %>%
     lapply(as.character)
+
+  if(call$data == "."){
+    stop("moderate grabs the data.frame based on it's name as stored in the metaSEM model call. You've used a pipe (%>%) to specify the model which records the data's name as '.' which cannot be accessed from the global environment. This breaks moderate, please specify the data name in the model explicitly.")
+  }
 
   data = call$data  %>%
     get
@@ -457,5 +475,4 @@ moderate = function(model, ...) {
   )
 
 }
-
 

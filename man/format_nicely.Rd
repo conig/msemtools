@@ -4,7 +4,8 @@
 \alias{format_nicely}
 \title{format_nicely}
 \usage{
-format_nicely(x, round = 2, transform = NULL, t_name = NULL)
+format_nicely(x, round = 2, transform = NULL, t.name = NULL,
+  hide.insig = T)
 }
 \arguments{
 \item{x}{a meta_ninja}
@@ -13,7 +14,9 @@ format_nicely(x, round = 2, transform = NULL, t_name = NULL)
 
 \item{transform}{a function. If provided will transform effects and confidence intervals.}
 
-\item{t_name}{a character string. If provided, will name the transformed column.}
+\item{t.name}{a character string. If provided, will name the transformed column.}
+
+\item{hide.insig}{a bool.}
 }
 \description{
 format_nicely

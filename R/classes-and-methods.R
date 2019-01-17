@@ -50,9 +50,6 @@ as.data.frame.meta_ninja = function(x,
   data.frame(x$table, row.names = row.names)
 }
 
-
-
-
 #Define global variables
 utils::globalVariables(
   c(
@@ -89,6 +86,7 @@ utils::globalVariables(
     "aes",
     "Mx_status",
     "extra",
-    "anova p-value"
+    "anova p-value",
+    "slope_se"
   )
 )

@@ -8,6 +8,8 @@ extractData(model, model.name = NULL)
 }
 \arguments{
 \item{model}{a numeric.}
+
+\item{model.name}{a model name.}
 }
 \description{
 Grabs pertinent data from a metaSEM model

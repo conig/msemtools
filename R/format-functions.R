@@ -3,17 +3,19 @@
 #' @param x a meta_ninja
 #' @param round a scalar.
 #' @param transform a function. If provided will transform effects and confidence intervals.
-#' @param t_name a character string. If provided, will name the transformed column.
+#' @param t.name a character string. If provided, will name the transformed column.
+#' @param hide.insig a bool.
 #' @export format_nicely
-#' @importFrom dplyr select
+#' @importFrom dplyr select rename
 #' @importFrom papertools glue_bracket digits
 
 #examples
-# round = 2; transform = logit2prob; t_name = "Pr (95% CI)"
+# round = 2; transform = NULL; t.name = "Pr (95% CI)"
 format_nicely = function(x,
                          round = 2,
                          transform = NULL,
-                         t_name = NULL) {
+                         t.name = NULL,
+                         hide.insig = T) {
   if (!"meta_ninja" %in% class(x)) {
     stop(
       "'format_nicely' only works with objects of class meta_ninja. See Fn meta3_moderation",
@@ -23,13 +25,39 @@ format_nicely = function(x,
   args = as.list(match.call())
   base_table = x$table
   df = base_table
-  df$SE = papertools::digits(df$SE, round)
+  df$SE = papertools::digits(as.numeric(as.character(df$SE)), round)
   df$"Slope (95% CI)" = NA
   df$"Slope SE" = NA
 
+  if (hide.insig) { #this code chunk could be improved, was painful to write.
+    mods = unique(df$moderation)
+    for (i in seq_along(mods)) {
+      #message(i)
+
+      ps = df %>%
+        dplyr::filter(moderation == mods[i]) %>%
+        dplyr::select("anova p-value")
+      if (any(!is.na(ps))) {
+        p =  ps %>%
+          max(na.rm = T)
+        if (p >= 0.05) {
+          rows = which(!(df$moderation == mods[i] &
+                           duplicated(df$moderation)))
+          df = df[rows, ] #remove factor levels from the current moderation
+          base_table = base_table[rows,]
+
+
+        }
+      }
+    }
+  }
+
+
+
+
   if (!is.null(transform)) {
-    if (is.null(t_name)) {
-      t_name = deparse(args$transform)
+    if (is.null(t.name)) {
+      t.name = deparse(args$transform)
     }
     df$extra = papertools::glue_bracket(transform(df$estimate),
                                         transform(df$lbound),
@@ -51,12 +79,13 @@ format_nicely = function(x,
       "ANOVA p-value" = `anova p-value`
     )
     df$Estimate = papertools::digits(df$Estimate, round)
-    names(df)[names(df) == "extra"] = t_name
+    names(df)[names(df) == "extra"] = t.name
   } else{
     df$estimate = papertools::glue_bracket(df$estimate, df$lbound, df$ubound, round = round)
     df$estimate[df$estimate == papertools::glue_bracket(NA, NA, NA)] = NA
     df = df %>% dplyr::select(
       indent = moderation,
+      moderation,
       Moderator = model.name,
       k,
       n,
@@ -90,5 +119,32 @@ format_nicely = function(x,
   df[df == "NA"] = "-"
   df$k = as.character(df$k)
   df$n = as.character(df$n)
+  df= df %>%
+    rename("p-value" = "ANOVA p-value")
   return(df)
+}
+
+#' to_apa
+#'
+#' @param x a pretty_ninja
+#' @param caption a character.
+#' @param note a charcter.
+#' @param escape a bool
+#' @param ... additional functions can be deliverd to papaja::apa_table
+#' @importFrom papaja apa_table
+#' @importFrom dplyr %>%
+#' @export to_apa
+
+to_apa = function(x, caption, note, escape = F, ...){
+  if("meta_ninja" %in% class(x)){
+    x = format_nicely(x)
+  }
+  indents = x$indent
+  x = x[-1]
+  papaja::apa_table(x,
+                    caption = caption,
+                    note = note,
+                    stub_indents = list(indents),
+                    escape = F,...
+  )
 }
