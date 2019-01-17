@@ -164,7 +164,7 @@ to_apa = function(x, caption, note, escape = F, ...){
     x = format_nicely(x)
   }
 
-  names(x)[names(x) %in% c("I2","R2")] = c("I$^2$", "R$^2$")
+  names(x)[names(x) %in% c("I2","R2")] = c("I^2^", "R^2^")
 
   indents = x$indent
   x = x[-1]
