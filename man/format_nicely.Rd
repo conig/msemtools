@@ -4,13 +4,15 @@
 \alias{format_nicely}
 \title{format_nicely}
 \usage{
-format_nicely(x, round = 2, transform = NULL, t.name = NULL,
-  hide.insig = T)
+format_nicely(x, round = 2, effect.name = NULL, transform = NULL,
+  t.name = NULL, hide.insig = T)
 }
 \arguments{
 \item{x}{a meta_ninja}
 
 \item{round}{a scalar.}
+
+\item{effect.name}{a string. If provided, will rename Estimate column with string provided.}
 
 \item{transform}{a function. If provided will transform effects and confidence intervals.}
 

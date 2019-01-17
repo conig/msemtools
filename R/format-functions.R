@@ -3,6 +3,7 @@
 #' @param x a meta_ninja
 #' @param round a scalar.
 #' @param transform a function. If provided will transform effects and confidence intervals.
+#' @param effect.name a string. If provided, will rename Estimate column with string provided.
 #' @param t.name a character string. If provided, will name the transformed column.
 #' @param hide.insig a bool.
 #' @export format_nicely
@@ -10,9 +11,10 @@
 #' @importFrom papertools glue_bracket digits
 
 #examples
-# round = 2; transform = NULL; t.name = "Pr (95% CI)"
+#round = 2; transform = NULL; t.name = "Pr (95% CI)"; hide.insig = F
 format_nicely = function(x,
                          round = 2,
+                         effect.name = NULL,
                          transform = NULL,
                          t.name = NULL,
                          hide.insig = T) {
@@ -110,18 +112,40 @@ format_nicely = function(x,
 
   df$indent = duplicated(df$indent)
 
-  df$`ANOVA p-value` = ifelse(df$`ANOVA p-value` < 0.001,
-                              "< 0.001",
-                              papertools::digits(df$`ANOVA p-value`, 3))
+  df$`ANOVA p-value` = lapply(df$`ANOVA p-value`, function(i) { #add in sig stars and round p-value
+    if (is.na(i)) {
+      return(NA)
+    } else{
+      if (i < 0.001) {
+        return("< 0.001*")
+      } else{
+        if (i < 0.05) {
+          return(paste0(papertools::digits(i, 3), "*"))
+        } else {
+          return(papertools::digits(i, 3))
+        }
+      }
+    }
+  }) %>% unlist
+
   df$I2 = digits(df$I2, round)
   df$R2 = digits(df$R2, round)
   df[is.na(df)] = "-"
   df[df == "NA"] = "-"
   df$k = as.character(df$k)
   df$n = as.character(df$n)
-  df= df %>%
+  df = df %>%
     rename("p-value" = "ANOVA p-value")
+
+  if(!is.null(effect.name)){
+    names(df)[names(df) == "Estimate"] = effect.name
+  }else{
+    if(is.null(transform)){
+    names(df)[names(df) == "Estimate"] = "Estimate (95% CI)"
+    }
+  }
   return(df)
+
 }
 
 #' to_apa
@@ -139,8 +163,12 @@ to_apa = function(x, caption, note, escape = F, ...){
   if("meta_ninja" %in% class(x)){
     x = format_nicely(x)
   }
+
+  names(x)[names(x) %in% c("I2","R2")] = c("I$^2$", "R$^2$")
+
   indents = x$indent
   x = x[-1]
+
   papaja::apa_table(x,
                     caption = caption,
                     note = note,
