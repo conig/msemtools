@@ -4,12 +4,14 @@
 \alias{moderate}
 \title{moderate}
 \usage{
-moderate(model, ...)
+moderate(model, ..., moderators = NULL)
 }
 \arguments{
 \item{model}{A meta3 model. The original data file must be available in the environment, with the same name.}
 
 \item{...}{moderators, entered as objects}
+
+\item{moderators}{a character vector. A vector of moderator names may be supplied.}
 }
 \description{
 This is a wrapper to perform meta3 moderations with. The original data file must be in the environment.

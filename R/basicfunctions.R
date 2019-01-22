@@ -440,6 +440,7 @@ meta3_moderation = function(y,
 #' This is a wrapper to perform meta3 moderations with. The original data file must be in the environment.
 #' @param model A meta3 model. The original data file must be available in the environment, with the same name.
 #' @param ... moderators, entered as objects
+#' @param moderators a character vector. A vector of moderator names may be supplied.
 #' @importFrom dplyr %>%
 #' @importFrom Conigrave check_names
 #' @export moderate
@@ -447,7 +448,9 @@ meta3_moderation = function(y,
 # model = ill_e_mod0 %>%
 # moderate(Strategy,`Scale Type`, Age, Gender, Country, SES)
 
-moderate = function(model, ...) {
+moderate = function(model, ..., moderators = NULL) {
+  mods = c()
+
   call = model$call %>%
     as.list %>%
     lapply(as.character)
@@ -462,17 +465,21 @@ moderate = function(model, ...) {
   v = call$v
   cluster = call$cluster
 
-  moderators = substitute(list(...))[-1] %>%
+  mods = substitute(list(...))[-1] %>%
     sapply(deparse)
 
-  Conigrave::check_names(moderators,data)
+  if(!is.null(moderators)){
+  mods = append(mods, moderators) %>% unlist
+  }
+
+  Conigrave::check_names(mods,data)
 
   #return(moderators)
   meta3_moderation(
     y = y,
     v = v,
     cluster = cluster,
-    moderators = moderators,
+    moderators = mods,
     data = data
   )
 

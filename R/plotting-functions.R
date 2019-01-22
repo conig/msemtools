@@ -32,7 +32,7 @@ ninjaForest = function(model,
                        author = NULL,
                        year = NULL,
                        summary.shape = 23,
-                       summary.size = 4,
+                       summary.size = 3.2,
                        font = "serif") {
   if (!"meta_ninja" %in% class(model)) {
     stop("ninjaForest must be provided objects of class 'meta-ninja")
