@@ -237,8 +237,8 @@ meta3_by_factor = function(y, v, cluster, factor, data, names = NULL, output.mod
 #' @export meta3_moderation
 
 
-#data = males; names = NULL ; y = "drink_yi" ; v = "drink_vi" ; cluster = "study_id" ; moderators = c('Remoteness','State','Cultural adaptations','Confidential','Questionnaire')
-
+#base = NULL;data = f; names = NULL ; y = "drink_yi" ; v = "drink_vi" ; cluster = "study_id" ; moderators = c("year")
+# y = "logOR"; v = "v"; cluster = "Cluster"; data = Bornmann07; base = NULL; names = NULL; moderators = "Type"; x = moderators[1]
 #y = "risk_long_yi"; v = "risk_long_vi"; cluster = "study_id"; moderators = c("Gender"); data = f; base = NULL; names = NULL
 # msemtools::meta3_moderation("drink_yi","drink_vi","study_id","gender_cat",data = f)
 #x = msemtools::meta3_moderation("drink_yi","drink_vi","study_id",c("State"),data = f)
@@ -261,7 +261,8 @@ meta3_moderation = function(y,
       cluster = cluster,
       model.name = "Baseline",
       intercept.constraints = NULL
-    )
+    ) %>%
+      try_even_harder
 
   }
 
@@ -293,6 +294,7 @@ meta3_moderation = function(y,
     dplyr::mutate("anova p-value" = NA,
                   type = "Baseline") %>%
     list
+  base_intercept = base_table[[1]]$estimate
 
   model_list = list(base)
   table_list = base_table
@@ -316,6 +318,8 @@ meta3_moderation = function(y,
     }
 #if the moderator is numeric
     if (is.numeric(mod)) {
+      temp_data[,make.names(x)] = scale(temp_data[,make.names(x)], scale = F)
+
       #message("numeric")
       temp_model = string_meta3(
         y = y,
@@ -323,13 +327,26 @@ meta3_moderation = function(y,
         cluster = cluster,
         x = x,
         data = temp_data,
+        intercept.constraints = base_intercept,
         model.name = x
-      )
+      ) %>%
+        try_even_harder
+
+      unconstrained = string_meta3( #when intercept is constrained we cant put it in an anova
+        y = y,
+        v = v,
+        cluster = cluster,
+        x = x,
+        data = temp_data,
+        model.name = x
+      ) %>%
+        try_even_harder
+
       temp_anova = anova(temp_model, base)
       temp_table = extractData(temp_model) %>%
         dplyr::mutate(moderation = x) %>%
         get_vars %>%
-        dplyr::mutate("anova p-value" = temp_anova$p[2],
+        dplyr::mutate("anova p-value" = anova(unconstrained,base)$p[2],
                       type = "numeric")
       return(list(table = temp_table, model = temp_model))
     }
