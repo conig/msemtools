@@ -16,7 +16,7 @@ find_year = function(data) {
     sum(n, na.rm = T) / length(n)
   })
   string = names(data)[which.max(count_chars)]
-  warning(paste0("year was not manually specified, using column:'", string, "'."),
+  message(paste0("year was not manually specified, using column:'", string, "'."),
           call. = F)
   return(string)
 }
@@ -38,7 +38,7 @@ find_author = function(data) {
   })
   score = has_author_title + unlist(et_al)
   string = vars[which.max(score)]
-  warning(paste0(
+  message(paste0(
     "author was not manually specified, using column:'",
     string,
     "'."

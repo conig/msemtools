@@ -24,7 +24,7 @@ format_nicely = function(x,
       call. = F
     )
   }
-  args = as.list(match.call())
+  args = as.list(match.call()) #I capture the call here, to give t_name a name if necessary.
   base_table = x$table
   df = base_table
   df$SE = papertools::digits(as.numeric(as.character(df$SE)), round)
@@ -55,8 +55,6 @@ format_nicely = function(x,
   }
 
 
-
-
   if (!is.null(transform)) {
     if (is.null(t.name)) {
       t.name = deparse(args$transform)
@@ -78,6 +76,7 @@ format_nicely = function(x,
       "Slope SE",
       I2,
       R2 = R2_2,
+      R2_3 = R2_3,
       "ANOVA p-value" = `anova p-value`
     )
     df$Estimate = papertools::digits(df$Estimate, round)
@@ -97,6 +96,7 @@ format_nicely = function(x,
       "Slope SE",
       I2,
       R2 = R2_2,
+      R2_3 = R2_3,
       `ANOVA p-value` = `anova p-value`
     )
   }
@@ -128,8 +128,11 @@ format_nicely = function(x,
     }
   }) %>% unlist
 
-  df$I2 = digits(df$I2, round)
+  df$Moderator[1] = paste0(df$Moderator[1], " (","I2 = ",digits(df$I2[1], round),")")
+
+  df$I2 = NULL
   df$R2 = digits(df$R2, round)
+  df$R2_3 = digits(df$R2_3, round)
   df[is.na(df)] = "-"
   df[df == "NA"] = "-"
   df$k = as.character(df$k)
@@ -166,7 +169,9 @@ to_apa = function(x, caption, note,escape = F, escape.pc = T,docx = T, ...){
     x = format_nicely(x)
   }
 if(docx){
-  names(x)[names(x) %in% c("I2","R2")] = c("I^2^", "R^2^")
+  names(x)[names(x) %in% c("R2","R2_3")] = c("R^2^","R^2^~(3)~")
+  x$Moderator = gsub("\\(I2 =","(I^2^ =",x$Moderator)
+
 }else{
   names(x)[names(x) %in% c("I2","R2")] = c("I\\textsuperscript{2}", "R\\textsuperscript{2}")
 }
