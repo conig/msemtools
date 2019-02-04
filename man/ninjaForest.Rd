@@ -33,11 +33,11 @@ ninjaForest(model, xlab = "Effect size", transform = NULL,
 
 \item{moderator.size}{a scalar. ggplot2 geom_point size value}
 
+\item{summary.shape}{a scalar ggplot2 geom_point shape value}
+
+\item{summary.size}{a scalar ggplot2 geom_point size value}
+
 \item{font}{A string. The name of a font family. Defaults to serif.}
-
-\item{pooled.shape}{a scalar ggplot2 geom_point shape value}
-
-\item{pooled.size}{a scalar ggplot2 geom_point size value}
 }
 \description{
 This function is used for plotting

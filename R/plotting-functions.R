@@ -13,8 +13,8 @@
 #' @param year the name of the year column
 #' @param moderator.shape a scalar ggplot2 geom_point shape value
 #' @param moderator.size a scalar. ggplot2 geom_point size value
-#' @param pooled.shape a scalar ggplot2 geom_point shape value
-#' @param pooled.size a scalar ggplot2 geom_point size value
+#' @param summary.shape a scalar ggplot2 geom_point shape value
+#' @param summary.size a scalar ggplot2 geom_point size value
 #' @param font A string. The name of a font family. Defaults to serif.
 #' @export ninjaForest
 #' @importFrom dplyr filter select %>% mutate
