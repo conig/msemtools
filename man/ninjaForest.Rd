@@ -6,8 +6,9 @@
 \usage{
 ninjaForest(model, xlab = "Effect size", transform = NULL,
   baseline_name = "All", factor.levels = NULL, vline = NULL,
-  cluster = NULL, author = NULL, year = NULL, summary.shape = 23,
-  summary.size = 3.2, font = "serif")
+  cluster = NULL, author = NULL, year = NULL, moderator.shape = 23,
+  moderator.size = 3.2, summary.shape = 23, summary.size = 4,
+  font = "serif")
 }
 \arguments{
 \item{model}{an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.}
@@ -28,11 +29,15 @@ ninjaForest(model, xlab = "Effect size", transform = NULL,
 
 \item{year}{the name of the year column}
 
-\item{summary.shape}{a scalar ggplot2 geom_point shape value}
+\item{moderator.shape}{a scalar ggplot2 geom_point shape value}
 
-\item{summary.size}{a scalar. Ggplot2 geom_point size value}
+\item{moderator.size}{a scalar. ggplot2 geom_point size value}
 
 \item{font}{A string. The name of a font family. Defaults to serif.}
+
+\item{pooled.shape}{a scalar ggplot2 geom_point shape value}
+
+\item{pooled.size}{a scalar ggplot2 geom_point size value}
 }
 \description{
 This function is used for plotting

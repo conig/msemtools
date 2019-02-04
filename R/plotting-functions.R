@@ -11,8 +11,10 @@
 #' @param cluster study_id column
 #' @param author the name of the author column
 #' @param year the name of the year column
-#' @param summary.shape a scalar ggplot2 geom_point shape value
-#' @param summary.size a scalar. Ggplot2 geom_point size value
+#' @param moderator.shape a scalar ggplot2 geom_point shape value
+#' @param moderator.size a scalar. ggplot2 geom_point size value
+#' @param pooled.shape a scalar ggplot2 geom_point shape value
+#' @param pooled.size a scalar ggplot2 geom_point size value
 #' @param font A string. The name of a font family. Defaults to serif.
 #' @export ninjaForest
 #' @importFrom dplyr filter select %>% mutate
@@ -31,8 +33,11 @@ ninjaForest = function(model,
                        cluster = NULL,
                        author = NULL,
                        year = NULL,
+                       moderator.shape = 23,
+                       moderator.size = 3.2,
                        summary.shape = 23,
-                       summary.size = 3.2,
+                       summary.size = 4,
+
                        font = "serif") {
   if (!"meta_ninja" %in% class(model)) {
     stop("ninjaForest must be provided objects of class 'meta-ninja")
@@ -67,7 +72,7 @@ ninjaForest = function(model,
     )
   }
 
-  #### next we separte out the bits of the summary table we want to plot. We want to avoid
+  #### next we separte out the bits of the summary table we want to plot.
   baseline = df %>%
     dplyr::filter(type %in% c("Baseline"))
 
@@ -91,6 +96,13 @@ ninjaForest = function(model,
                       model.name %in% factor.levels)
   }
 
+  #prepare mod and baseline data
+  mod_data =  mod_data %>%
+    mutate(type = "moderator", setting = "Pooled")
+
+  baseline = baseline %>%
+    mutate(type = "baseline", setting = "Pooled")
+
   summary = rbind(baseline, mod_data) %>%
     dplyr::select(
       cluster = model.name,
@@ -98,10 +110,10 @@ ninjaForest = function(model,
       n,
       est = estimate,
       lower = lbound,
-      upper = ubound
-    ) %>%
-    dplyr::mutate(type = "summary",
-                  setting = "pooled")
+      upper = ubound,
+      type,
+      setting
+    )
   rev = rev(seq_len(nrow(summary)))
   rev = rev[-length(rev)]
   summary$year = c(1,rev)
@@ -115,7 +127,7 @@ ninjaForest = function(model,
       k = NA,
       n = NA
     ) %>%
-    dplyr::mutate(type = "data", setting = "effects") %>%
+    dplyr::mutate(type = "data", setting = "Effect sizes") %>%
     dplyr::select(n, k, est = y, lower, upper, type, setting, cluster)
 
   dat$author = lapply(dat$cluster, function(x) {
@@ -161,6 +173,8 @@ ninjaForest = function(model,
     }
   }
 
+  # ------------------------------------- plotting
+
   plot = ggplot(dat, aes(
     y = reorder(cluster, year),
     x = est,
@@ -174,12 +188,22 @@ ninjaForest = function(model,
                linetype = 'dashed') +
 
     geom_point( #add summary points
-      data = dat[dat$type == "summary", ],
+      data = dat[dat$type == "moderator", ],
+      color = 'black',
+      shape = moderator.shape,
+      size = moderator.size,
+      fill = "white"
+    ) +
+
+    geom_point( #add summary points
+      data = dat[dat$type == "baseline", ],
       color = 'black',
       shape = summary.shape,
       size = summary.size,
-      fill = "white"
+      fill = "black"
     ) +
+
+
     #add the CI error bars
     #Specify the limits of the x-axis and relabel it to something more meaningful
     scale_x_continuous(name = xlab) +
