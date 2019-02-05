@@ -125,441 +125,184 @@ moderation_object
 ```
 
 <table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 5%" />
+<col style="width: 13%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+<col style="width: 5%" />
+<col style="width: 4%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 1%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-moderation
-</th>
-<th style="text-align:left;">
-model.name
-</th>
-<th style="text-align:right;">
-k
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-estimate
-</th>
-<th style="text-align:right;">
-SE
-</th>
-<th style="text-align:right;">
-lbound
-</th>
-<th style="text-align:right;">
-ubound
-</th>
-<th style="text-align:right;">
-I2
-</th>
-<th style="text-align:right;">
-I2\_3
-</th>
-<th style="text-align:left;">
-slope
-</th>
-<th style="text-align:left;">
-slope\_se
-</th>
-<th style="text-align:left;">
-slope\_lbound
-</th>
-<th style="text-align:left;">
-slope\_ubound
-</th>
-<th style="text-align:right;">
-R2\_2
-</th>
-<th style="text-align:right;">
-R2\_3
-</th>
-<th style="text-align:right;">
-Mx\_status
-</th>
-<th style="text-align:right;">
-anova p-value
-</th>
-<th style="text-align:left;">
-type
-</th>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">moderation</th>
+<th style="text-align: left;">model.name</th>
+<th style="text-align: right;">k</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">lbound</th>
+<th style="text-align: right;">ubound</th>
+<th style="text-align: right;">I2</th>
+<th style="text-align: right;">I2_3</th>
+<th style="text-align: left;">slope</th>
+<th style="text-align: left;">slope_se</th>
+<th style="text-align: left;">slope_lbound</th>
+<th style="text-align: left;">slope_ubound</th>
+<th style="text-align: right;">R2_2</th>
+<th style="text-align: right;">R2_3</th>
+<th style="text-align: right;">Mx_status</th>
+<th style="text-align: right;">anova p-value</th>
+<th style="text-align: left;">type</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Baseline
-</td>
-<td style="text-align:left;">
-Baseline
-</td>
-<td style="text-align:left;">
-Baseline
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-66
-</td>
-<td style="text-align:right;">
--0.1520430
-</td>
-<td style="text-align:right;">
-0.0645426
-</td>
-<td style="text-align:right;">
--0.2785441
-</td>
-<td style="text-align:right;">
--0.0255419
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-Baseline
-</td>
+<tr class="odd">
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">-0.1520430</td>
+<td style="text-align: right;">0.0645426</td>
+<td style="text-align: right;">-0.2785441</td>
+<td style="text-align: right;">-0.0255419</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">Baseline</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.1
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-66
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.4974673
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-factor
-</td>
+<tr class="even">
+<td style="text-align: left;">Discipline.1</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.4974673</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">factor</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.2
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Physical sciences
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
--0.0238785
-</td>
-<td style="text-align:right;">
-0.0764858
-</td>
-<td style="text-align:right;">
--0.1737878
-</td>
-<td style="text-align:right;">
-0.1260308
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="odd">
+<td style="text-align: left;">Discipline.2</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Physical sciences</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">-0.0238785</td>
+<td style="text-align: right;">0.0764858</td>
+<td style="text-align: right;">-0.1737878</td>
+<td style="text-align: right;">0.1260308</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.3
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Life sciences/biology
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:right;">
--0.1409274
-</td>
-<td style="text-align:right;">
-0.0438924
-</td>
-<td style="text-align:right;">
--0.2269550
-</td>
-<td style="text-align:right;">
--0.0548999
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="even">
+<td style="text-align: left;">Discipline.3</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Life sciences/biology</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">-0.1409274</td>
+<td style="text-align: right;">0.0438924</td>
+<td style="text-align: right;">-0.2269550</td>
+<td style="text-align: right;">-0.0548999</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.4
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Social sciences/humanities
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
--0.2517048
-</td>
-<td style="text-align:right;">
-0.1016318
-</td>
-<td style="text-align:right;">
--0.4508995
-</td>
-<td style="text-align:right;">
--0.0525101
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="odd">
+<td style="text-align: left;">Discipline.4</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Social sciences/humanities</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">-0.2517048</td>
+<td style="text-align: right;">0.1016318</td>
+<td style="text-align: right;">-0.4508995</td>
+<td style="text-align: right;">-0.0525101</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.5
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Multidisciplinary
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
--0.0147478
-</td>
-<td style="text-align:right;">
-0.0638994
-</td>
-<td style="text-align:right;">
--0.1399885
-</td>
-<td style="text-align:right;">
-0.1104928
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="even">
+<td style="text-align: left;">Discipline.5</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Multidisciplinary</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">-0.0147478</td>
+<td style="text-align: right;">0.0638994</td>
+<td style="text-align: right;">-0.1399885</td>
+<td style="text-align: right;">0.1104928</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
 </tbody>
 </table>
@@ -589,1000 +332,383 @@ moderation_object2 = model0 %>%
 moderation_object2
 ```
 
-<table>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 5%" />
+<col style="width: 13%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+<col style="width: 5%" />
+<col style="width: 4%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 1%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-moderation
-</th>
-<th style="text-align:left;">
-model.name
-</th>
-<th style="text-align:right;">
-k
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-estimate
-</th>
-<th style="text-align:right;">
-SE
-</th>
-<th style="text-align:right;">
-lbound
-</th>
-<th style="text-align:right;">
-ubound
-</th>
-<th style="text-align:right;">
-I2
-</th>
-<th style="text-align:right;">
-I2\_3
-</th>
-<th style="text-align:left;">
-slope
-</th>
-<th style="text-align:left;">
-slope\_se
-</th>
-<th style="text-align:left;">
-slope\_lbound
-</th>
-<th style="text-align:left;">
-slope\_ubound
-</th>
-<th style="text-align:right;">
-R2\_2
-</th>
-<th style="text-align:right;">
-R2\_3
-</th>
-<th style="text-align:right;">
-Mx\_status
-</th>
-<th style="text-align:right;">
-anova p-value
-</th>
-<th style="text-align:left;">
-type
-</th>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">moderation</th>
+<th style="text-align: left;">model.name</th>
+<th style="text-align: right;">k</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">lbound</th>
+<th style="text-align: right;">ubound</th>
+<th style="text-align: right;">I2</th>
+<th style="text-align: right;">I2_3</th>
+<th style="text-align: left;">slope</th>
+<th style="text-align: left;">slope_se</th>
+<th style="text-align: left;">slope_lbound</th>
+<th style="text-align: left;">slope_ubound</th>
+<th style="text-align: right;">R2_2</th>
+<th style="text-align: right;">R2_3</th>
+<th style="text-align: right;">Mx_status</th>
+<th style="text-align: right;">anova p-value</th>
+<th style="text-align: left;">type</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Baseline
-</td>
-<td style="text-align:left;">
-Baseline
-</td>
-<td style="text-align:left;">
-Baseline
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-66
-</td>
-<td style="text-align:right;">
--0.1520430
-</td>
-<td style="text-align:right;">
-0.0645426
-</td>
-<td style="text-align:right;">
--0.2785441
-</td>
-<td style="text-align:right;">
--0.0255419
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-Baseline
-</td>
+<tr class="odd">
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">-0.1520430</td>
+<td style="text-align: right;">0.0645426</td>
+<td style="text-align: right;">-0.2785441</td>
+<td style="text-align: right;">-0.0255419</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">Baseline</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.1
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-66
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-<td style="text-align:right;">
-0.4974673
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-factor
-</td>
+<tr class="even">
+<td style="text-align: left;">Discipline.1</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.4974673</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">factor</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.2
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Physical sciences
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
--0.0238785
-</td>
-<td style="text-align:right;">
-0.0764858
-</td>
-<td style="text-align:right;">
--0.1737878
-</td>
-<td style="text-align:right;">
-0.1260308
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="odd">
+<td style="text-align: left;">Discipline.2</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Physical sciences</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">-0.0238785</td>
+<td style="text-align: right;">0.0764858</td>
+<td style="text-align: right;">-0.1737878</td>
+<td style="text-align: right;">0.1260308</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.3
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Life sciences/biology
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:right;">
--0.1409274
-</td>
-<td style="text-align:right;">
-0.0438924
-</td>
-<td style="text-align:right;">
--0.2269550
-</td>
-<td style="text-align:right;">
--0.0548999
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="even">
+<td style="text-align: left;">Discipline.3</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Life sciences/biology</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">-0.1409274</td>
+<td style="text-align: right;">0.0438924</td>
+<td style="text-align: right;">-0.2269550</td>
+<td style="text-align: right;">-0.0548999</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.4
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Social sciences/humanities
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
--0.2517048
-</td>
-<td style="text-align:right;">
-0.1016318
-</td>
-<td style="text-align:right;">
--0.4508995
-</td>
-<td style="text-align:right;">
--0.0525101
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="odd">
+<td style="text-align: left;">Discipline.4</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Social sciences/humanities</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">-0.2517048</td>
+<td style="text-align: right;">0.1016318</td>
+<td style="text-align: right;">-0.4508995</td>
+<td style="text-align: right;">-0.0525101</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Discipline.5
-</td>
-<td style="text-align:left;">
-Discipline
-</td>
-<td style="text-align:left;">
-Multidisciplinary
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
--0.0147478
-</td>
-<td style="text-align:right;">
-0.0638994
-</td>
-<td style="text-align:right;">
--0.1399885
-</td>
-<td style="text-align:right;">
-0.1104928
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="even">
+<td style="text-align: left;">Discipline.5</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">Multidisciplinary</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">-0.0147478</td>
+<td style="text-align: right;">0.0638994</td>
+<td style="text-align: right;">-0.1399885</td>
+<td style="text-align: right;">0.1104928</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Country.1
-</td>
-<td style="text-align:left;">
-Country
-</td>
-<td style="text-align:left;">
-Country
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-66
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.1208598
-</td>
-<td style="text-align:right;">
-0.6605707
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-factor
-</td>
+<tr class="odd">
+<td style="text-align: left;">Country.1</td>
+<td style="text-align: left;">Country</td>
+<td style="text-align: left;">Country</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0.1208598</td>
+<td style="text-align: right;">0.6605707</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">factor</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Country.2
-</td>
-<td style="text-align:left;">
-Country
-</td>
-<td style="text-align:left;">
-United States
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-0.0025681
-</td>
-<td style="text-align:right;">
-0.0597768
-</td>
-<td style="text-align:right;">
--0.1145923
-</td>
-<td style="text-align:right;">
-0.1197285
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="even">
+<td style="text-align: left;">Country.2</td>
+<td style="text-align: left;">Country</td>
+<td style="text-align: left;">United States</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0.0025681</td>
+<td style="text-align: right;">0.0597768</td>
+<td style="text-align: right;">-0.1145923</td>
+<td style="text-align: right;">0.1197285</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Country.3
-</td>
-<td style="text-align:left;">
-Country
-</td>
-<td style="text-align:left;">
-Canada
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
--0.1315119
-</td>
-<td style="text-align:right;">
-0.1026488
-</td>
-<td style="text-align:right;">
--0.3326998
-</td>
-<td style="text-align:right;">
-0.0696760
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="odd">
+<td style="text-align: left;">Country.3</td>
+<td style="text-align: left;">Country</td>
+<td style="text-align: left;">Canada</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-0.1315119</td>
+<td style="text-align: right;">0.1026488</td>
+<td style="text-align: right;">-0.3326998</td>
+<td style="text-align: right;">0.0696760</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Country.4
-</td>
-<td style="text-align:left;">
-Country
-</td>
-<td style="text-align:left;">
-Australia
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
--0.0214428
-</td>
-<td style="text-align:right;">
-0.0926603
-</td>
-<td style="text-align:right;">
--0.2030538
-</td>
-<td style="text-align:right;">
-0.1601681
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="even">
+<td style="text-align: left;">Country.4</td>
+<td style="text-align: left;">Country</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">-0.0214428</td>
+<td style="text-align: right;">0.0926603</td>
+<td style="text-align: right;">-0.2030538</td>
+<td style="text-align: right;">0.1601681</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Country.5
-</td>
-<td style="text-align:left;">
-Country
-</td>
-<td style="text-align:left;">
-United Kingdom
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-0.0562932
-</td>
-<td style="text-align:right;">
-0.0790467
-</td>
-<td style="text-align:right;">
--0.0986354
-</td>
-<td style="text-align:right;">
-0.2112219
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="odd">
+<td style="text-align: left;">Country.5</td>
+<td style="text-align: left;">Country</td>
+<td style="text-align: left;">United Kingdom</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0562932</td>
+<td style="text-align: right;">0.0790467</td>
+<td style="text-align: right;">-0.0986354</td>
+<td style="text-align: right;">0.2112219</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Country.6
-</td>
-<td style="text-align:left;">
-Country
-</td>
-<td style="text-align:left;">
-Europe
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
--0.2185120
-</td>
-<td style="text-align:right;">
-0.0500825
-</td>
-<td style="text-align:right;">
--0.3166718
-</td>
-<td style="text-align:right;">
--0.1203521
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="even">
+<td style="text-align: left;">Country.6</td>
+<td style="text-align: left;">Country</td>
+<td style="text-align: left;">Europe</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">-0.2185120</td>
+<td style="text-align: right;">0.0500825</td>
+<td style="text-align: right;">-0.3166718</td>
+<td style="text-align: right;">-0.1203521</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Type.1
-</td>
-<td style="text-align:left;">
-Type
-</td>
-<td style="text-align:left;">
-Type
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-66
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-0.0692595
-</td>
-<td style="text-align:right;">
-0.7942804
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-factor
-</td>
+<tr class="odd">
+<td style="text-align: left;">Type.1</td>
+<td style="text-align: left;">Type</td>
+<td style="text-align: left;">Type</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0.0692595</td>
+<td style="text-align: right;">0.7942804</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">factor</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Type.2
-</td>
-<td style="text-align:left;">
-Type
-</td>
-<td style="text-align:left;">
-Grant
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-40
-</td>
-<td style="text-align:right;">
--0.0066071
-</td>
-<td style="text-align:right;">
-0.0371125
-</td>
-<td style="text-align:right;">
--0.0793462
-</td>
-<td style="text-align:right;">
-0.0661320
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="even">
+<td style="text-align: left;">Type.2</td>
+<td style="text-align: left;">Type</td>
+<td style="text-align: left;">Grant</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">-0.0066071</td>
+<td style="text-align: right;">0.0371125</td>
+<td style="text-align: right;">-0.0793462</td>
+<td style="text-align: right;">0.0661320</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Type.3
-</td>
-<td style="text-align:left;">
-Type
-</td>
-<td style="text-align:left;">
-Fellowship
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:right;">
--0.2021940
-</td>
-<td style="text-align:right;">
-0.0399473
-</td>
-<td style="text-align:right;">
--0.2804893
-</td>
-<td style="text-align:right;">
--0.1238987
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:left;">
-factor level
-</td>
+<tr class="odd">
+<td style="text-align: left;">Type.3</td>
+<td style="text-align: left;">Type</td>
+<td style="text-align: left;">Fellowship</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">-0.2021940</td>
+<td style="text-align: right;">0.0399473</td>
+<td style="text-align: right;">-0.2804893</td>
+<td style="text-align: right;">-0.1238987</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">factor level</td>
 </tr>
 </tbody>
 </table>
@@ -1594,542 +720,216 @@ moderation_object2 %>%
   format_nicely
 ```
 
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 6%" />
+<col style="width: 33%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 20%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 7%" />
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-indent
-</th>
-<th style="text-align:left;">
-Moderator
-</th>
-<th style="text-align:left;">
-k
-</th>
-<th style="text-align:left;">
-n
-</th>
-<th style="text-align:left;">
-Estimate (95% CI)
-</th>
-<th style="text-align:left;">
-SE
-</th>
-<th style="text-align:left;">
-R2\_2
-</th>
-<th style="text-align:left;">
-R2\_3
-</th>
-<th style="text-align:left;">
-p
-</th>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">indent</th>
+<th style="text-align: left;">Moderator</th>
+<th style="text-align: left;">k</th>
+<th style="text-align: left;">n</th>
+<th style="text-align: left;">Estimate (95% CI)</th>
+<th style="text-align: left;">SE</th>
+<th style="text-align: left;">R2_2</th>
+<th style="text-align: left;">R2_3</th>
+<th style="text-align: left;">p</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Baseline
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-<td style="text-align:left;">
-Baseline (I<sup>2</sup><sub>(2;3)</sub>: 0.00; 0.00)
-</td>
-<td style="text-align:left;">
-21
-</td>
-<td style="text-align:left;">
-66
-</td>
-<td style="text-align:left;">
--0.15 (-0.28, -0.03)
-</td>
-<td style="text-align:left;">
-0.06
-</td>
-<td style="text-align:left;">
-
--   </td>
-    <td style="text-align:left;">
-
-    -   </td>
-        <td style="text-align:left;">
-
-        -   </td>
-            </tr>
-            <tr>
-            <td style="text-align:left;">
-            Discipline.1
-            </td>
-            <td style="text-align:left;">
-            FALSE
-            </td>
-            <td style="text-align:left;">
-            Discipline
-            </td>
-            <td style="text-align:left;">
-            21
-            </td>
-            <td style="text-align:left;">
-            66
-            </td>
-            <td style="text-align:left;">
-
-            -   </td>
-                <td style="text-align:left;">
-
-                -   </td>
-                    <td style="text-align:left;">
-                    0.00
-                    </td>
-                    <td style="text-align:left;">
-                    0.50
-                    </td>
-                    <td style="text-align:left;">
-                    &lt; 0.01\*
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="text-align:left;">
-                    Discipline.2
-                    </td>
-                    <td style="text-align:left;">
-                    TRUE
-                    </td>
-                    <td style="text-align:left;">
-                    Physical sciences
-                    </td>
-                    <td style="text-align:left;">
-                    5
-                    </td>
-                    <td style="text-align:left;">
-                    14
-                    </td>
-                    <td style="text-align:left;">
-                    -0.02 (-0.17, 0.13)
-                    </td>
-                    <td style="text-align:left;">
-                    0.08
-                    </td>
-                    <td style="text-align:left;">
-
-                    -   </td>
-                        <td style="text-align:left;">
-
-                        -   </td>
-                            <td style="text-align:left;">
-
-                            -   </td>
-                                </tr>
-                                <tr>
-                                <td style="text-align:left;">
-                                Discipline.3
-                                </td>
-                                <td style="text-align:left;">
-                                TRUE
-                                </td>
-                                <td style="text-align:left;">
-                                Life sciences/biology
-                                </td>
-                                <td style="text-align:left;">
-                                12
-                                </td>
-                                <td style="text-align:left;">
-                                26
-                                </td>
-                                <td style="text-align:left;">
-                                -0.14 (-0.23, -0.05)
-                                </td>
-                                <td style="text-align:left;">
-                                0.04
-                                </td>
-                                <td style="text-align:left;">
-
-                                -   </td>
-                                    <td style="text-align:left;">
-
-                                    -   </td>
-                                        <td style="text-align:left;">
-
-                                        -   </td>
-                                            </tr>
-                                            <tr>
-                                            <td style="text-align:left;">
-                                            Discipline.4
-                                            </td>
-                                            <td style="text-align:left;">
-                                            TRUE
-                                            </td>
-                                            <td style="text-align:left;">
-                                            Social sciences/humanities
-                                            </td>
-                                            <td style="text-align:left;">
-                                            5
-                                            </td>
-                                            <td style="text-align:left;">
-                                            13
-                                            </td>
-                                            <td style="text-align:left;">
-                                            -0.25 (-0.45, -0.05)
-                                            </td>
-                                            <td style="text-align:left;">
-                                            0.10
-                                            </td>
-                                            <td style="text-align:left;">
-
-                                            -   </td>
-                                                <td style="text-align:left;">
-
-                                                -   </td>
-                                                    <td style="text-align:left;">
-
-                                                    -   </td>
-                                                        </tr>
-                                                        <tr>
-                                                        <td style="text-align:left;">
-                                                        Discipline.5
-                                                        </td>
-                                                        <td style="text-align:left;">
-                                                        TRUE
-                                                        </td>
-                                                        <td style="text-align:left;">
-                                                        Multidisciplinary
-                                                        </td>
-                                                        <td style="text-align:left;">
-                                                        5
-                                                        </td>
-                                                        <td style="text-align:left;">
-                                                        13
-                                                        </td>
-                                                        <td style="text-align:left;">
-                                                        -0.01 (-0.14,
-                                                        0.11)
-                                                        </td>
-                                                        <td style="text-align:left;">
-                                                        0.06
-                                                        </td>
-                                                        <td style="text-align:left;">
-
-                                                        -   </td>
-                                                            <td style="text-align:left;">
-
-                                                            -   </td>
-                                                                <td style="text-align:left;">
-
-                                                                -   </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                    <td style="text-align:left;">
-                                                                    Country.1
-                                                                    </td>
-                                                                    <td style="text-align:left;">
-                                                                    FALSE
-                                                                    </td>
-                                                                    <td style="text-align:left;">
-                                                                    Country
-                                                                    </td>
-                                                                    <td style="text-align:left;">
-                                                                    21
-                                                                    </td>
-                                                                    <td style="text-align:left;">
-                                                                    66
-                                                                    </td>
-                                                                    <td style="text-align:left;">
-
-                                                                    -   </td>
-                                                                        <td style="text-align:left;">
-
-                                                                        -   </td>
-                                                                            <td style="text-align:left;">
-                                                                            0.12
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-                                                                            0.66
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-                                                                            &lt;
-                                                                            0.01\*
-                                                                            </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                            <td style="text-align:left;">
-                                                                            Country.2
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-                                                                            TRUE
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-                                                                            United
-                                                                            States
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-                                                                            4
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-                                                                            12
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-                                                                            0.00
-                                                                            (-0.11,
-                                                                            0.12)
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-                                                                            0.06
-                                                                            </td>
-                                                                            <td style="text-align:left;">
-
-                                                                            -   </td>
-                                                                                <td style="text-align:left;">
-
-                                                                                -   </td>
-                                                                                    <td style="text-align:left;">
-
-                                                                                    -   </td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                        <td style="text-align:left;">
-                                                                                        Country.3
-                                                                                        </td>
-                                                                                        <td style="text-align:left;">
-                                                                                        TRUE
-                                                                                        </td>
-                                                                                        <td style="text-align:left;">
-                                                                                        Canada
-                                                                                        </td>
-                                                                                        <td style="text-align:left;">
-                                                                                        1
-                                                                                        </td>
-                                                                                        <td style="text-align:left;">
-                                                                                        3
-                                                                                        </td>
-                                                                                        <td style="text-align:left;">
-                                                                                        -0.13
-                                                                                        (-0.33,
-                                                                                        0.07)
-                                                                                        </td>
-                                                                                        <td style="text-align:left;">
-                                                                                        0.10
-                                                                                        </td>
-                                                                                        <td style="text-align:left;">
-
-                                                                                        -   </td>
-                                                                                            <td style="text-align:left;">
-
-                                                                                            -   </td>
-                                                                                                <td style="text-align:left;">
-
-                                                                                                -   </td>
-                                                                                                    </tr>
-                                                                                                    <tr>
-                                                                                                    <td style="text-align:left;">
-                                                                                                    Country.4
-                                                                                                    </td>
-                                                                                                    <td style="text-align:left;">
-                                                                                                    TRUE
-                                                                                                    </td>
-                                                                                                    <td style="text-align:left;">
-                                                                                                    Australia
-                                                                                                    </td>
-                                                                                                    <td style="text-align:left;">
-                                                                                                    5
-                                                                                                    </td>
-                                                                                                    <td style="text-align:left;">
-                                                                                                    13
-                                                                                                    </td>
-                                                                                                    <td style="text-align:left;">
-                                                                                                    -0.02
-                                                                                                    (-0.20,
-                                                                                                    0.16)
-                                                                                                    </td>
-                                                                                                    <td style="text-align:left;">
-                                                                                                    0.09
-                                                                                                    </td>
-                                                                                                    <td style="text-align:left;">
-
-                                                                                                    -   </td>
-                                                                                                        <td style="text-align:left;">
-
-                                                                                                        -   </td>
-                                                                                                            <td style="text-align:left;">
-
-                                                                                                            -   </td>
-                                                                                                                </tr>
-                                                                                                                <tr>
-                                                                                                                <td style="text-align:left;">
-                                                                                                                Country.5
-                                                                                                                </td>
-                                                                                                                <td style="text-align:left;">
-                                                                                                                TRUE
-                                                                                                                </td>
-                                                                                                                <td style="text-align:left;">
-                                                                                                                United
-                                                                                                                Kingdom
-                                                                                                                </td>
-                                                                                                                <td style="text-align:left;">
-                                                                                                                4
-                                                                                                                </td>
-                                                                                                                <td style="text-align:left;">
-                                                                                                                10
-                                                                                                                </td>
-                                                                                                                <td style="text-align:left;">
-                                                                                                                0.06
-                                                                                                                (-0.10,
-                                                                                                                0.21)
-                                                                                                                </td>
-                                                                                                                <td style="text-align:left;">
-                                                                                                                0.08
-                                                                                                                </td>
-                                                                                                                <td style="text-align:left;">
-
-                                                                                                                -   </td>
-                                                                                                                    <td style="text-align:left;">
-
-                                                                                                                    -   </td>
-                                                                                                                        <td style="text-align:left;">
-
-                                                                                                                        -   </td>
-                                                                                                                            </tr>
-                                                                                                                            <tr>
-                                                                                                                            <td style="text-align:left;">
-                                                                                                                            Country.6
-                                                                                                                            </td>
-                                                                                                                            <td style="text-align:left;">
-                                                                                                                            TRUE
-                                                                                                                            </td>
-                                                                                                                            <td style="text-align:left;">
-                                                                                                                            Europe
-                                                                                                                            </td>
-                                                                                                                            <td style="text-align:left;">
-                                                                                                                            7
-                                                                                                                            </td>
-                                                                                                                            <td style="text-align:left;">
-                                                                                                                            28
-                                                                                                                            </td>
-                                                                                                                            <td style="text-align:left;">
-                                                                                                                            -0.22
-                                                                                                                            (-0.32,
-                                                                                                                            -0.12)
-                                                                                                                            </td>
-                                                                                                                            <td style="text-align:left;">
-                                                                                                                            0.05
-                                                                                                                            </td>
-                                                                                                                            <td style="text-align:left;">
-
-                                                                                                                            -   </td>
-                                                                                                                                <td style="text-align:left;">
-
-                                                                                                                                -   </td>
-                                                                                                                                    <td style="text-align:left;">
-
-                                                                                                                                    -   </td>
-                                                                                                                                        </tr>
-                                                                                                                                        <tr>
-                                                                                                                                        <td style="text-align:left;">
-                                                                                                                                        Type.1
-                                                                                                                                        </td>
-                                                                                                                                        <td style="text-align:left;">
-                                                                                                                                        FALSE
-                                                                                                                                        </td>
-                                                                                                                                        <td style="text-align:left;">
-                                                                                                                                        Type
-                                                                                                                                        </td>
-                                                                                                                                        <td style="text-align:left;">
-                                                                                                                                        21
-                                                                                                                                        </td>
-                                                                                                                                        <td style="text-align:left;">
-                                                                                                                                        66
-                                                                                                                                        </td>
-                                                                                                                                        <td style="text-align:left;">
-
-                                                                                                                                        -   </td>
-                                                                                                                                            <td style="text-align:left;">
-
-                                                                                                                                            -   </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                0.07
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                0.79
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                &lt;
-                                                                                                                                                0.01\*
-                                                                                                                                                </td>
-                                                                                                                                                </tr>
-                                                                                                                                                <tr>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                Type.2
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                TRUE
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                Grant
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                13
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                40
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                -0.01
-                                                                                                                                                (-0.08,
-                                                                                                                                                0.07)
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-                                                                                                                                                0.04
-                                                                                                                                                </td>
-                                                                                                                                                <td style="text-align:left;">
-
-                                                                                                                                                -   </td>
-                                                                                                                                                    <td style="text-align:left;">
-
-                                                                                                                                                    -   </td>
-                                                                                                                                                        <td style="text-align:left;">
-
-                                                                                                                                                        -   </td>
-                                                                                                                                                            </tr>
-                                                                                                                                                            <tr>
-                                                                                                                                                            <td style="text-align:left;">
-                                                                                                                                                            Type.3
-                                                                                                                                                            </td>
-                                                                                                                                                            <td style="text-align:left;">
-                                                                                                                                                            TRUE
-                                                                                                                                                            </td>
-                                                                                                                                                            <td style="text-align:left;">
-                                                                                                                                                            Fellowship
-                                                                                                                                                            </td>
-                                                                                                                                                            <td style="text-align:left;">
-                                                                                                                                                            11
-                                                                                                                                                            </td>
-                                                                                                                                                            <td style="text-align:left;">
-                                                                                                                                                            26
-                                                                                                                                                            </td>
-                                                                                                                                                            <td style="text-align:left;">
-                                                                                                                                                            -0.20
-                                                                                                                                                            (-0.28,
-                                                                                                                                                            -0.12)
-                                                                                                                                                            </td>
-                                                                                                                                                            <td style="text-align:left;">
-                                                                                                                                                            0.04
-                                                                                                                                                            </td>
-                                                                                                                                                            <td style="text-align:left;">
-
-                                                                                                                                                            -   </td>
-                                                                                                                                                                <td style="text-align:left;">
-
-                                                                                                                                                                -   </td>
-                                                                                                                                                                    <td style="text-align:left;">
-
-                                                                                                                                                                    -   </td>
-                                                                                                                                                                        </tr>
-                                                                                                                                                                        </tbody>
-                                                                                                                                                                        </table>
+<tr class="odd">
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Baseline (I<sup>2</sup><sub>(2;3)</sub>: 0.00; 0.00)</td>
+<td style="text-align: left;">21</td>
+<td style="text-align: left;">66</td>
+<td style="text-align: left;">-0.15 (-0.28, -0.03)</td>
+<td style="text-align: left;">0.06</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Discipline.1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Discipline</td>
+<td style="text-align: left;">21</td>
+<td style="text-align: left;">66</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">&lt; 0.01*</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Discipline.2</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Physical sciences</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">14</td>
+<td style="text-align: left;">-0.02 (-0.17, 0.13)</td>
+<td style="text-align: left;">0.08</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Discipline.3</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Life sciences/biology</td>
+<td style="text-align: left;">12</td>
+<td style="text-align: left;">26</td>
+<td style="text-align: left;">-0.14 (-0.23, -0.05)</td>
+<td style="text-align: left;">0.04</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Discipline.4</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Social sciences/humanities</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">13</td>
+<td style="text-align: left;">-0.25 (-0.45, -0.05)</td>
+<td style="text-align: left;">0.10</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Discipline.5</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Multidisciplinary</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">13</td>
+<td style="text-align: left;">-0.01 (-0.14, 0.11)</td>
+<td style="text-align: left;">0.06</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Country.1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Country</td>
+<td style="text-align: left;">21</td>
+<td style="text-align: left;">66</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">0.12</td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">&lt; 0.01*</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Country.2</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">United States</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">12</td>
+<td style="text-align: left;">0.00 (-0.11, 0.12)</td>
+<td style="text-align: left;">0.06</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Country.3</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Canada</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">-0.13 (-0.33, 0.07)</td>
+<td style="text-align: left;">0.10</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Country.4</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">13</td>
+<td style="text-align: left;">-0.02 (-0.20, 0.16)</td>
+<td style="text-align: left;">0.09</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Country.5</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">United Kingdom</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">10</td>
+<td style="text-align: left;">0.06 (-0.10, 0.21)</td>
+<td style="text-align: left;">0.08</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Country.6</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Europe</td>
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">28</td>
+<td style="text-align: left;">-0.22 (-0.32, -0.12)</td>
+<td style="text-align: left;">0.05</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Type.1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">Type</td>
+<td style="text-align: left;">21</td>
+<td style="text-align: left;">66</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">0.07</td>
+<td style="text-align: left;">0.79</td>
+<td style="text-align: left;">&lt; 0.01*</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Type.2</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Grant</td>
+<td style="text-align: left;">13</td>
+<td style="text-align: left;">40</td>
+<td style="text-align: left;">-0.01 (-0.08, 0.07)</td>
+<td style="text-align: left;">0.04</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Type.3</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: left;">Fellowship</td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">26</td>
+<td style="text-align: left;">-0.20 (-0.28, -0.12)</td>
+<td style="text-align: left;">0.04</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
+</tr>
+</tbody>
+</table>
 
 An indent column can be used to send formatting instuctions to word.
 
