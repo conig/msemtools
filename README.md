@@ -162,7 +162,7 @@ We can now plot easily \#\#\# forest plot
 
     ## year was not manually specified, using column:'Year'.FALSE
 
-![](msemtools_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 If author has et al in it, we would not have to manually specify it.
 
@@ -235,7 +235,7 @@ and detect publication bias.
 
     ## $plot
 
-![](msemtools_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
     ## 
     ## $reg_test
