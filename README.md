@@ -124,188 +124,18 @@ moderation_object = model0 %>%
 moderation_object
 ```
 
-<table>
-<colgroup>
-<col style="width: 6%" />
-<col style="width: 5%" />
-<col style="width: 13%" />
-<col style="width: 1%" />
-<col style="width: 1%" />
-<col style="width: 5%" />
-<col style="width: 4%" />
-<col style="width: 5%" />
-<col style="width: 5%" />
-<col style="width: 1%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 4%" />
-<col style="width: 6%" />
-<col style="width: 6%" />
-<col style="width: 2%" />
-<col style="width: 4%" />
-<col style="width: 4%" />
-<col style="width: 6%" />
-<col style="width: 6%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: left;">moderation</th>
-<th style="text-align: left;">model.name</th>
-<th style="text-align: right;">k</th>
-<th style="text-align: right;">n</th>
-<th style="text-align: right;">estimate</th>
-<th style="text-align: right;">SE</th>
-<th style="text-align: right;">lbound</th>
-<th style="text-align: right;">ubound</th>
-<th style="text-align: right;">I2</th>
-<th style="text-align: right;">I2_3</th>
-<th style="text-align: left;">slope</th>
-<th style="text-align: left;">slope_se</th>
-<th style="text-align: left;">slope_lbound</th>
-<th style="text-align: left;">slope_ubound</th>
-<th style="text-align: right;">R2_2</th>
-<th style="text-align: right;">R2_3</th>
-<th style="text-align: right;">Mx_status</th>
-<th style="text-align: right;">anova p-value</th>
-<th style="text-align: left;">type</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Baseline</td>
-<td style="text-align: left;">Baseline</td>
-<td style="text-align: left;">Baseline</td>
-<td style="text-align: right;">21</td>
-<td style="text-align: right;">66</td>
-<td style="text-align: right;">-0.1520430</td>
-<td style="text-align: right;">0.0645426</td>
-<td style="text-align: right;">-0.2785441</td>
-<td style="text-align: right;">-0.0255419</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">Baseline</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Discipline.1</td>
-<td style="text-align: left;">Discipline</td>
-<td style="text-align: left;">Discipline</td>
-<td style="text-align: right;">21</td>
-<td style="text-align: right;">66</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.4974673</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">factor</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Discipline.2</td>
-<td style="text-align: left;">Discipline</td>
-<td style="text-align: left;">Physical sciences</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">14</td>
-<td style="text-align: right;">-0.0238785</td>
-<td style="text-align: right;">0.0764858</td>
-<td style="text-align: right;">-0.1737878</td>
-<td style="text-align: right;">0.1260308</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">factor level</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Discipline.3</td>
-<td style="text-align: left;">Discipline</td>
-<td style="text-align: left;">Life sciences/biology</td>
-<td style="text-align: right;">12</td>
-<td style="text-align: right;">26</td>
-<td style="text-align: right;">-0.1409274</td>
-<td style="text-align: right;">0.0438924</td>
-<td style="text-align: right;">-0.2269550</td>
-<td style="text-align: right;">-0.0548999</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">factor level</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Discipline.4</td>
-<td style="text-align: left;">Discipline</td>
-<td style="text-align: left;">Social sciences/humanities</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">-0.2517048</td>
-<td style="text-align: right;">0.1016318</td>
-<td style="text-align: right;">-0.4508995</td>
-<td style="text-align: right;">-0.0525101</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">factor level</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Discipline.5</td>
-<td style="text-align: left;">Discipline</td>
-<td style="text-align: left;">Multidisciplinary</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">-0.0147478</td>
-<td style="text-align: right;">0.0638994</td>
-<td style="text-align: right;">-0.1399885</td>
-<td style="text-align: right;">0.1104928</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">factor level</td>
-</tr>
-</tbody>
-</table>
+    ## # A tibble: 6 x 19
+    ##   moderation model.name     k     n estimate      SE  lbound   ubound
+    ## * <chr>      <chr>      <dbl> <dbl>    <dbl>   <dbl>   <dbl>    <dbl>
+    ## 1 Baseline   Baseline      21    66  -0.152   0.0645  -0.279  -0.0255
+    ## 2 Discipline Discipline    21    66  NA      NA       NA      NA     
+    ## 3 Discipline Physical ~     5    14  -0.0239  0.0765  -0.174   0.126 
+    ## 4 Discipline Life scie~    12    26  -0.141   0.0439  -0.227  -0.0549
+    ## 5 Discipline Social sc~     5    13  -0.252   0.102   -0.451  -0.0525
+    ## 6 Discipline Multidisc~     5    13  -0.0147  0.0639  -0.140   0.110 
+    ## # ... with 11 more variables: I2 <dbl>, I2_3 <dbl>, slope <lgl>,
+    ## #   slope_se <lgl>, slope_lbound <lgl>, slope_ubound <lgl>, R2_2 <dbl>,
+    ## #   R2_3 <dbl>, Mx_status <int>, `anova p-value` <dbl>, type <chr>
 
 We can now plot easily \#\# forest plot
 
@@ -361,26 +191,24 @@ moderation_object2 %>%
   format_nicely
 ```
 
-A tibble: 15 x 9
-================
-
-indent Moderator k n \`Estimate (95% \~ SE R2\_2 R2\_3 p  
-\* <lgl> <chr> <chr> <chr> <chr> <chr> <chr> <chr> <chr> 1 FALSE
-Baseline (I\~ 21 66 -0.15 (-0.28, -\~ 0.06 - - -  
-2 FALSE Discipline 21 66 - - 0.00 0.50 &lt; 0.\~ 3 TRUE Physical sc\~ 5
-14 -0.02 (-0.17, 0\~ 0.08 - - -  
-4 TRUE Life scienc\~ 12 26 -0.14 (-0.23, -\~ 0.04 - - -  
-5 TRUE Social scie\~ 5 13 -0.25 (-0.45, -\~ 0.10 - - -  
-6 TRUE Multidiscip\~ 5 13 -0.01 (-0.14, 0\~ 0.06 - - -  
-7 FALSE Country 21 66 - - 0.12 0.66 &lt; 0.\~ 8 TRUE United Stat\~ 4 12
-0.00 (-0.11, 0.\~ 0.06 - - -  
-9 TRUE Canada 1 3 -0.13 (-0.33, 0\~ 0.10 - - -  
-10 TRUE Australia 5 13 -0.02 (-0.20, 0\~ 0.09 - - -  
-11 TRUE United King\~ 4 10 0.06 (-0.10, 0.\~ 0.08 - - -  
-12 TRUE Europe 7 28 -0.22 (-0.32, -\~ 0.05 - - -  
-13 FALSE Type 21 66 - - 0.07 0.79 &lt; 0.\~ 14 TRUE Grant 13 40 -0.01
-(-0.08, 0\~ 0.04 - - -  
-15 TRUE Fellowship 11 26 -0.20 (-0.28, -\~ 0.04 - - -
+    ## # A tibble: 15 x 9
+    ##    indent Moderator    k     n     `Estimate (95% ~ SE    R2_2  R2_3  p    
+    ##  * <lgl>  <chr>        <chr> <chr> <chr>            <chr> <chr> <chr> <chr>
+    ##  1 FALSE  Baseline (I~ 21    66    -0.15 (-0.28, -~ 0.06  -     -     -    
+    ##  2 FALSE  Discipline   21    66    -                -     0.00  0.50  < 0.~
+    ##  3 TRUE   Physical sc~ 5     14    -0.02 (-0.17, 0~ 0.08  -     -     -    
+    ##  4 TRUE   Life scienc~ 12    26    -0.14 (-0.23, -~ 0.04  -     -     -    
+    ##  5 TRUE   Social scie~ 5     13    -0.25 (-0.45, -~ 0.10  -     -     -    
+    ##  6 TRUE   Multidiscip~ 5     13    -0.01 (-0.14, 0~ 0.06  -     -     -    
+    ##  7 FALSE  Country      21    66    -                -     0.12  0.66  < 0.~
+    ##  8 TRUE   United Stat~ 4     12    0.00 (-0.11, 0.~ 0.06  -     -     -    
+    ##  9 TRUE   Canada       1     3     -0.13 (-0.33, 0~ 0.10  -     -     -    
+    ## 10 TRUE   Australia    5     13    -0.02 (-0.20, 0~ 0.09  -     -     -    
+    ## 11 TRUE   United King~ 4     10    0.06 (-0.10, 0.~ 0.08  -     -     -    
+    ## 12 TRUE   Europe       7     28    -0.22 (-0.32, -~ 0.05  -     -     -    
+    ## 13 FALSE  Type         21    66    -                -     0.07  0.79  < 0.~
+    ## 14 TRUE   Grant        13    40    -0.01 (-0.08, 0~ 0.04  -     -     -    
+    ## 15 TRUE   Fellowship   11    26    -0.20 (-0.28, -~ 0.04  -     -     -
 
 An indent column can be used to send formatting instuctions to word.
 
