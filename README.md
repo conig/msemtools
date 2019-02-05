@@ -124,7 +124,7 @@ moderation_object = model0 %>%
 moderation_object
 ```
 
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -589,7 +589,7 @@ moderation_object2 = model0 %>%
 moderation_object2
 ```
 
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1594,7 +1594,7 @@ moderation_object2 %>%
   format_nicely
 ```
 
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table>
 <thead>
 <tr>
 <th style="text-align:left;">
