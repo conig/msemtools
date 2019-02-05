@@ -7,8 +7,10 @@ Installation
 
 To install msemtools run the following code:
 
-    #install.packages("devtools")
-    devtools::install_github("JConigrave/msemtools")
+``` r
+#install.packages("devtools")
+devtools::install_github("JConigrave/msemtools")
+```
 
 Running analyses
 ----------------
@@ -22,12 +24,14 @@ contstraints.
 I’ll demonstrate how to use it with Marsh’s data included in the metaSEM
 package
 
-    library(dplyr)
-    library(metaSEM)
-    library(msemtools)
-    example_data <- metaSEM::Bornmann07 %>% 
-      as_tibble
-    head(example_data)
+``` r
+library(dplyr)
+library(metaSEM)
+library(msemtools)
+example_data <- metaSEM::Bornmann07 %>% 
+  as_tibble
+head(example_data)
+```
 
     ## # A tibble: 6 x 9
     ##      Id Study      Cluster   logOR      v  Year Type   Discipline   Country
@@ -43,7 +47,9 @@ We need to do some basic prep for this data: In this dataset year data
 is held in two columns. This will ruin our plot so I remove them
 parentheses and contents from the author column.
 
-    example_data$Study =  gsub("\\s*\\([^\\)]+\\)","",as.character(example_data$Study))
+``` r
+example_data$Study =  gsub("\\s*\\([^\\)]+\\)","",as.character(example_data$Study))
+```
 
 Running a basic model with metaSEM
 ----------------------------------
@@ -51,15 +57,17 @@ Running a basic model with metaSEM
 As the effect sizes are already set up for this dataset, we can start
 running models. Here is the basic pooled effect size:
 
-    model0 <- meta3(
-      y = logOR,
-      v = v,
-      cluster = Cluster,
-      data = example_data,
-      model.name = "3 level model"
-    )
+``` r
+model0 <- meta3(
+  y = logOR,
+  v = v,
+  cluster = Cluster,
+  data = example_data,
+  model.name = "3 level model"
+)
 
-    summary(model0)
+summary(model0)
+```
 
     ## 
     ## Call:
@@ -101,16 +109,20 @@ Moderation with msemtools
 To run moderation with msemtools, covariates must be set up as factors.
 Let’s look at Discipline
 
-    #set up factors
-    is.factor(example_data$Discipline)
+``` r
+#set up factors
+is.factor(example_data$Discipline)
+```
 
     ## [1] TRUE
 
 This is already a factor so we’re ready to go.
 
-    moderation_object = model0 %>% 
-      moderate(Discipline)
-    moderation_object
+``` r
+moderation_object = model0 %>% 
+  moderate(Discipline)
+moderation_object
+```
 
     ## # A tibble: 6 x 14
     ##   moderation model.name     k     n estimate  lbound   ubound        I2
@@ -126,11 +138,13 @@ This is already a factor so we’re ready to go.
 
 We can now plot easily \#\# forest plot
 
-    moderation_object %>% plot(author = "Study")
+``` r
+moderation_object %>% plot(author = "Study")
+```
 
     ## year was not manually specified, using column:'Year'.FALSE
 
-![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 If author has et al in it, we would not have to manually specify it.
 
@@ -140,10 +154,12 @@ formatting
 If we want to add more moderators we just throw them into the moderation
 argument with commas
 
-    moderation_object2 = model0 %>% 
-      moderate(Discipline, Country, Type)
+``` r
+moderation_object2 = model0 %>% 
+  moderate(Discipline, Country, Type)
 
-    moderation_object2
+moderation_object2
+```
 
     ## # A tibble: 15 x 14
     ##    moderation model.name     k     n  estimate   lbound   ubound        I2
@@ -168,8 +184,10 @@ argument with commas
 
 We can then format this table with another function
 
-    moderation_object2 %>% 
-      format_nicely
+``` r
+moderation_object2 %>% 
+  format_nicely
+```
 
     ## # A tibble: 15 x 9
     ##    indent Moderator    k     n     `Estimate (95% ~ SE    R2_2  R2_3  p    
@@ -201,11 +219,13 @@ Finally, a function is provided to create a funnel plot from metaSEM
 models. An egger’s assymetry test is also automatically reported to try
 and detect publication bias.
 
-    model0 %>% funnel_plot
+``` r
+model0 %>% funnel_plot
+```
 
     ## $plot
 
-![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
     ## 
     ## $reg_test
