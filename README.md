@@ -124,7 +124,7 @@ This is already a factor so we’re ready to go.
     ## # ... with 6 more variables: I2_3 <dbl>, slope <lgl>, slope_lbound <lgl>,
     ## #   slope_ubound <lgl>, R2_2 <dbl>, `anova p-value` <dbl>
 
-We can now plot easily \#\#\# forest plot
+We can now plot easily \#\# forest plot
 
     moderation_object %>% plot(author = "Study")
 
@@ -134,7 +134,8 @@ We can now plot easily \#\#\# forest plot
 
 If author has et al in it, we would not have to manually specify it.
 
-### formatting
+formatting
+----------
 
 If we want to add more moderators we just throw them into the moderation
 argument with commas
@@ -193,7 +194,8 @@ An indent column can be used to send formatting instuctions to word.
 
 an extra column can help here msemtools::to\_apa
 
-### Funnel plots
+Funnel plots
+------------
 
 Finally, a function is provided to create a funnel plot from metaSEM
 models. An egger’s assymetry test is also automatically reported to try
