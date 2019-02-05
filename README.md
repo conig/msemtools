@@ -124,17 +124,445 @@ moderation_object = model0 %>%
 moderation_object
 ```
 
-    ## # A tibble: 6 x 14
-    ##   moderation model.name     k     n estimate  lbound   ubound        I2
-    ## * <chr>      <chr>      <dbl> <dbl>    <dbl>   <dbl>    <dbl>     <dbl>
-    ## 1 Baseline   Baseline      21    66  -0.152   -0.279  -0.0255  3.64e-10
-    ## 2 Discipline Discipline    21    66  NA       NA      NA      NA       
-    ## 3 Discipline Physical ~     5    14  -0.0239  -0.174   0.126  NA       
-    ## 4 Discipline Life scie~    12    26  -0.141   -0.227  -0.0549 NA       
-    ## 5 Discipline Social sc~     5    13  -0.252   -0.451  -0.0525 NA       
-    ## 6 Discipline Multidisc~     5    13  -0.0147  -0.140   0.110  NA       
-    ## # ... with 6 more variables: I2_3 <dbl>, slope <lgl>, slope_lbound <lgl>,
-    ## #   slope_ubound <lgl>, R2_2 <dbl>, `anova p-value` <dbl>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+moderation
+</th>
+<th style="text-align:left;">
+model.name
+</th>
+<th style="text-align:right;">
+k
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+SE
+</th>
+<th style="text-align:right;">
+lbound
+</th>
+<th style="text-align:right;">
+ubound
+</th>
+<th style="text-align:right;">
+I2
+</th>
+<th style="text-align:right;">
+I2\_3
+</th>
+<th style="text-align:left;">
+slope
+</th>
+<th style="text-align:left;">
+slope\_se
+</th>
+<th style="text-align:left;">
+slope\_lbound
+</th>
+<th style="text-align:left;">
+slope\_ubound
+</th>
+<th style="text-align:right;">
+R2\_2
+</th>
+<th style="text-align:right;">
+R2\_3
+</th>
+<th style="text-align:right;">
+Mx\_status
+</th>
+<th style="text-align:right;">
+anova p-value
+</th>
+<th style="text-align:left;">
+type
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Baseline
+</td>
+<td style="text-align:left;">
+Baseline
+</td>
+<td style="text-align:left;">
+Baseline
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:right;">
+-0.1520430
+</td>
+<td style="text-align:right;">
+0.0645426
+</td>
+<td style="text-align:right;">
+-0.2785441
+</td>
+<td style="text-align:right;">
+-0.0255419
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Baseline
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Discipline.1
+</td>
+<td style="text-align:left;">
+Discipline
+</td>
+<td style="text-align:left;">
+Discipline
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.4974673
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+factor
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Discipline.2
+</td>
+<td style="text-align:left;">
+Discipline
+</td>
+<td style="text-align:left;">
+Physical sciences
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+-0.0238785
+</td>
+<td style="text-align:right;">
+0.0764858
+</td>
+<td style="text-align:right;">
+-0.1737878
+</td>
+<td style="text-align:right;">
+0.1260308
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+factor level
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Discipline.3
+</td>
+<td style="text-align:left;">
+Discipline
+</td>
+<td style="text-align:left;">
+Life sciences/biology
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+-0.1409274
+</td>
+<td style="text-align:right;">
+0.0438924
+</td>
+<td style="text-align:right;">
+-0.2269550
+</td>
+<td style="text-align:right;">
+-0.0548999
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+factor level
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Discipline.4
+</td>
+<td style="text-align:left;">
+Discipline
+</td>
+<td style="text-align:left;">
+Social sciences/humanities
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+-0.2517048
+</td>
+<td style="text-align:right;">
+0.1016318
+</td>
+<td style="text-align:right;">
+-0.4508995
+</td>
+<td style="text-align:right;">
+-0.0525101
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+factor level
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Discipline.5
+</td>
+<td style="text-align:left;">
+Discipline
+</td>
+<td style="text-align:left;">
+Multidisciplinary
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+-0.0147478
+</td>
+<td style="text-align:right;">
+0.0638994
+</td>
+<td style="text-align:right;">
+-0.1399885
+</td>
+<td style="text-align:right;">
+0.1104928
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+factor level
+</td>
+</tr>
+</tbody>
+</table>
 
 We can now plot easily \#\# forest plot
 
@@ -144,7 +572,7 @@ moderation_object %>% plot(author = "Study")
 
     ## year was not manually specified, using column:'Year'.FALSE
 
-![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 If author has et al in it, we would not have to manually specify it.
 
@@ -225,7 +653,7 @@ model0 %>% funnel_plot
 
     ## $plot
 
-![](README_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
     ## 
     ## $reg_test
