@@ -2,7 +2,7 @@ The purpose of ‘msemtools’ (metaSEM tools) is to help run meta-analyses
 with metaSEM efficiently. The project is new and is in beta. Please
 report any bugs
 
-installation
+Installation
 ------------
 
 To install msemtools run the following code:
