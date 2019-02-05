@@ -76,7 +76,7 @@ format_nicely = function(x,
       "Slope SE",
       I2,
       I2_3,
-      R2 = R2_2,
+      R2_2,
       R2_3 = R2_3,
       "ANOVA p-value" = `anova p-value`
     )
@@ -97,7 +97,7 @@ format_nicely = function(x,
       "Slope SE",
       I2,
       I2_3,
-      R2 = R2_2,
+      R2_2,
       R2_3 = R2_3,
       `ANOVA p-value` = `anova p-value`
     )
@@ -133,7 +133,7 @@ format_nicely = function(x,
   df$Moderator[1] = paste0(df$Moderator[1], " (","I^2^~(2;3)~: ",digits(df$I2[1], round),"; ",digits(df$I2_3[1],round),")")
   df$I2 = NULL
   df$I2_3 = NULL
-  df$R2 = digits(df$R2, round)
+  df$R2_2 = digits(df$R2_2, round)
   df$R2_3 = digits(df$R2_3, round)
   df[is.na(df)] = "-"
   df[df == "NA"] = "-"
@@ -171,7 +171,7 @@ to_apa = function(x, caption, note,escape = F, escape.pc = T,docx = T, ...){
     x = format_nicely(x)
   }
 if(docx){
-  names(x)[names(x) %in% c("R2","R2_3")] = c("R^2^~(2)~","R^2^~(3)~")
+  names(x)[names(x) %in% c("R2_2","R2_3")] = c("R^2^~(2)~","R^2^~(3)~")
   #x$Moderator = gsub("\\(I2_2 =","(I^2^~(2)~ =",x$Moderator)
   #x$Moderator = gsub("I2_3 =","I^2^~(3)~",x$Moderator)
 

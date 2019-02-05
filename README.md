@@ -10,9 +10,6 @@ To install msemtools run the following code:
     #install.packages("devtools")
     devtools::install_github("JConigrave/msemtools")
 
-    ## Skipping install of 'msemtools' from a github remote, the SHA1 (7406d93a) has not changed since last install.
-    ##   Use `force = TRUE` to force installation
-
 Running analyses
 ----------------
 
@@ -26,37 +23,8 @@ I’ll demonstrate how to use it with Marsh’s data included in the metaSEM
 package
 
     library(dplyr)
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
     library(metaSEM)
-
-    ## Loading required package: OpenMx
-
-    ## "SLSQP" is set as the default optimizer in OpenMx.
-
-    ## mxOption(NULL, "Gradient algorithm") is set at "central".
-
-    ## mxOption(NULL, "Optimality tolerance") is set at "6.3e-14".
-
-    ## mxOption(NULL, "Gradient iterations") is set at "2".
-
     library(msemtools)
-
-    ## A ninja's swift gaze...
-    ## Dark stones, shrouded in concern...
-    ## leaves fall silently.
-    ##                             [-_-]~
-
     example_data <- metaSEM::Bornmann07 %>% 
       as_tibble
     head(example_data)
@@ -203,7 +171,7 @@ We can then format this table with another function
       format_nicely
 
     ## # A tibble: 15 x 9
-    ##    indent Moderator    k     n     `Estimate (95% ~ SE    R2    R2_3  p    
+    ##    indent Moderator    k     n     `Estimate (95% ~ SE    R2_2  R2_3  p    
     ##  * <lgl>  <chr>        <chr> <chr> <chr>            <chr> <chr> <chr> <chr>
     ##  1 FALSE  Baseline (I~ 21    66    -0.15 (-0.28, -~ 0.06  -     -     -    
     ##  2 FALSE  Discipline   21    66    -                -     0.00  0.50  < 0.~
