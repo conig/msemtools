@@ -130,16 +130,14 @@ extractSlopes = function(model) {
 #' meta3_moderation
 #'
 #' This function streamlines the moderation process. Moderation strategy varies based on whether a numeric, or factoral variable is supplied.
-#' @param call
-#' @param moderators
+#' @param call a call list
+#' @param moderators a vector of moderators
 #' @importFrom metaSEM meta3
 #' @importFrom dplyr filter %>% add_row
 #' @importFrom tibble as_tibble
-#' @importFrom stats anova
+#' @importFrom stats anova na.omit
 #' @importFrom methods setClass representation
-#' @export
-#model0 = metaSEM::meta3(drink_yi, drink_vi, cluster = study_id, data = f)
-#call = get_call(model0); moderators = c("Gender","year")
+#' @export meta3_moderation
 
 meta3_moderation = function(call,moderators) {
 

@@ -6,6 +6,11 @@
 \usage{
 meta3_moderation(call, moderators)
 }
+\arguments{
+\item{call}{a call list}
+
+\item{moderators}{a vector of moderators}
+}
 \description{
 This function streamlines the moderation process. Moderation strategy varies based on whether a numeric, or factoral variable is supplied.
 }
