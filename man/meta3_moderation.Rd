@@ -4,7 +4,12 @@
 \alias{meta3_moderation}
 \title{meta3_moderation}
 \usage{
-meta3_moderation(y, v, cluster, moderators, data, base = NULL,
+meta3_moderation(y, v, cluster, moderators, data,
+  intercept.constraints = NULL, coef.constraints = NULL,
+  RE2.constraints = NULL, RE2.lbound = 1e-10, RE3.constraints = NULL,
+  RE3.lbound = 1e-10, intervals.type = c("z", "LB"), I2 = "I2q",
+  R2 = TRUE, model.name = "Meta analysis with ML",
+  suppressWarnings = TRUE, silent = TRUE, run = TRUE, base = NULL,
   names = NULL)
 }
 \arguments{
@@ -17,6 +22,32 @@ meta3_moderation(y, v, cluster, moderators, data, base = NULL,
 \item{moderators}{a charcater vector. The names of the variable used for moderation}
 
 \item{data}{an object.}
+
+\item{intercept.constraints}{argument from meta3}
+
+\item{coef.constraints}{argument from meta3}
+
+\item{RE2.constraints}{argument from meta3}
+
+\item{RE2.lbound}{argument from meta3}
+
+\item{RE3.constraints}{argument from meta3}
+
+\item{RE3.lbound}{argument from meta3}
+
+\item{intervals.type}{argument from meta3}
+
+\item{I2, }{argument from meta3}
+
+\item{R2}{argument from meta3}
+
+\item{model.name}{argument from meta3}
+
+\item{suppressWarnings}{argument from meta3}
+
+\item{silent}{argument from meta3}
+
+\item{run}{argument}
 
 \item{base}{a meta3 model. Defaults to NULL. The baseline model is automatically calculated, but can also be supplied with this argument.}
 

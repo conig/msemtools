@@ -127,13 +127,13 @@ moderation_object
     ## # A tibble: 6 x 19
     ##   moderation model.name     k     n estimate      SE  lbound   ubound
     ## * <chr>      <chr>      <dbl> <dbl>    <dbl>   <dbl>   <dbl>    <dbl>
-    ## 1 Baseline   Baseline      21    66  -0.152   0.0645  -0.279  -0.0255
+    ## 1 Baseline   Baseline      21    66  -0.101   0.0401  -0.179  -0.0221
     ## 2 Discipline Discipline    21    66  NA      NA       NA      NA     
     ## 3 Discipline Physical ~     5    14  -0.0239  0.0765  -0.174   0.126 
     ## 4 Discipline Life scie~    12    26  -0.141   0.0439  -0.227  -0.0549
     ## 5 Discipline Social sc~     5    13  -0.252   0.102   -0.451  -0.0525
     ## 6 Discipline Multidisc~     5    13  -0.0147  0.0639  -0.140   0.110 
-    ## # ... with 11 more variables: I2 <dbl>, I2_3 <dbl>, slope <lgl>,
+    ## # ... with 11 more variables: I2_2 <dbl>, I2_3 <dbl>, slope <lgl>,
     ## #   slope_se <lgl>, slope_lbound <lgl>, slope_ubound <lgl>, R2_2 <dbl>,
     ## #   R2_3 <dbl>, Mx_status <int>, `anova p-value` <dbl>, type <chr>
 
@@ -165,7 +165,7 @@ moderation_object2
     ## # A tibble: 15 x 19
     ##    moderation model.name     k     n  estimate      SE   lbound   ubound
     ##  * <chr>      <chr>      <dbl> <dbl>     <dbl>   <dbl>    <dbl>    <dbl>
-    ##  1 Baseline   Baseline      21    66  -0.152    0.0645  -0.279   -0.0255
+    ##  1 Baseline   Baseline      21    66  -0.101    0.0401  -0.179   -0.0221
     ##  2 Discipline Discipline    21    66  NA       NA       NA       NA     
     ##  3 Discipline Physical ~     5    14  -0.0239   0.0765  -0.174    0.126 
     ##  4 Discipline Life scie~    12    26  -0.141    0.0439  -0.227   -0.0549
@@ -180,7 +180,7 @@ moderation_object2
     ## 13 Type       Type          21    66  NA       NA       NA       NA     
     ## 14 Type       Grant         13    40  -0.00661  0.0371  -0.0793   0.0661
     ## 15 Type       Fellowship    11    26  -0.202    0.0399  -0.280   -0.124 
-    ## # ... with 11 more variables: I2 <dbl>, I2_3 <dbl>, slope <lgl>,
+    ## # ... with 11 more variables: I2_2 <dbl>, I2_3 <dbl>, slope <lgl>,
     ## #   slope_se <lgl>, slope_lbound <lgl>, slope_ubound <lgl>, R2_2 <dbl>,
     ## #   R2_3 <dbl>, Mx_status <int>, `anova p-value` <dbl>, type <chr>
 
@@ -191,24 +191,20 @@ moderation_object2 %>%
   format_nicely
 ```
 
-    ## # A tibble: 15 x 9
+    ## # A tibble: 11 x 9
     ##    indent Moderator    k     n     `Estimate (95% ~ SE    R2_2  R2_3  p    
-    ##  * <lgl>  <chr>        <chr> <chr> <chr>            <chr> <chr> <chr> <chr>
-    ##  1 FALSE  Baseline (I~ 21    66    -0.15 (-0.28, -~ 0.06  -     -     -    
-    ##  2 FALSE  Discipline   21    66    -                -     0.00  0.50  < 0.~
-    ##  3 TRUE   Physical sc~ 5     14    -0.02 (-0.17, 0~ 0.08  -     -     -    
-    ##  4 TRUE   Life scienc~ 12    26    -0.14 (-0.23, -~ 0.04  -     -     -    
-    ##  5 TRUE   Social scie~ 5     13    -0.25 (-0.45, -~ 0.10  -     -     -    
-    ##  6 TRUE   Multidiscip~ 5     13    -0.01 (-0.14, 0~ 0.06  -     -     -    
-    ##  7 FALSE  Country      21    66    -                -     0.12  0.66  < 0.~
-    ##  8 TRUE   United Stat~ 4     12    0.00 (-0.11, 0.~ 0.06  -     -     -    
-    ##  9 TRUE   Canada       1     3     -0.13 (-0.33, 0~ 0.10  -     -     -    
-    ## 10 TRUE   Australia    5     13    -0.02 (-0.20, 0~ 0.09  -     -     -    
-    ## 11 TRUE   United King~ 4     10    0.06 (-0.10, 0.~ 0.08  -     -     -    
-    ## 12 TRUE   Europe       7     28    -0.22 (-0.32, -~ 0.05  -     -     -    
-    ## 13 FALSE  Type         21    66    -                -     0.07  0.79  < 0.~
-    ## 14 TRUE   Grant        13    40    -0.01 (-0.08, 0~ 0.04  -     -     -    
-    ## 15 TRUE   Fellowship   11    26    -0.20 (-0.28, -~ 0.04  -     -     -
+    ##    <lgl>  <chr>        <chr> <chr> <chr>            <chr> <chr> <chr> <chr>
+    ##  1 FALSE  Baseline (I~ 21    66    -0.10 (-0.18, -~ 0.04  -     -     -    
+    ##  2 FALSE  Discipline   21    66    -                -     0.00  0.50  0.13 
+    ##  3 FALSE  Country      21    66    -                -     0.12  0.66  0.02*
+    ##  4 TRUE   United Stat~ 4     12    0.00 (-0.11, 0.~ 0.06  -     -     -    
+    ##  5 TRUE   Canada       1     3     -0.13 (-0.33, 0~ 0.10  -     -     -    
+    ##  6 TRUE   Australia    5     13    -0.02 (-0.20, 0~ 0.09  -     -     -    
+    ##  7 TRUE   United King~ 4     10    0.06 (-0.10, 0.~ 0.08  -     -     -    
+    ##  8 TRUE   Europe       7     28    -0.22 (-0.32, -~ 0.05  -     -     -    
+    ##  9 FALSE  Type         21    66    -                -     0.07  0.79  < 0.~
+    ## 10 TRUE   Grant        13    40    -0.01 (-0.08, 0~ 0.04  -     -     -    
+    ## 11 TRUE   Fellowship   11    26    -0.20 (-0.28, -~ 0.04  -     -     -
 
 An indent column can be used to send formatting instuctions to word.
 

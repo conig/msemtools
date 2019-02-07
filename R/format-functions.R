@@ -74,7 +74,7 @@ format_nicely = function(x,
       SE,
       "Slope (95% CI)",
       "Slope SE",
-      I2,
+      I2_2,
       I2_3,
       R2_2,
       R2_3 = R2_3,
@@ -95,7 +95,7 @@ format_nicely = function(x,
       SE,
       "Slope (95% CI)",
       "Slope SE",
-      I2,
+      I2_2,
       I2_3,
       R2_2,
       R2_3 = R2_3,
@@ -130,8 +130,8 @@ format_nicely = function(x,
     }
   }) %>% unlist
 
-  df$Moderator[1] = paste0(df$Moderator[1], " (","I^2^~(2;3)~: ",digits(df$I2[1], round),"; ",digits(df$I2_3[1],round),")")
-  df$I2 = NULL
+  df$Moderator[1] = paste0(df$Moderator[1], " (","I^2^~(2;3)~: ",digits(df$I2_2[1], round),"; ",digits(df$I2_3[1],round),")")
+  df$I2_2 = NULL
   df$I2_3 = NULL
   df$R2_2 = digits(df$R2_2, round)
   df$R2_3 = digits(df$R2_3, round)
