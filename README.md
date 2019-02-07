@@ -34,14 +34,14 @@ head(example_data)
 ```
 
     ## # A tibble: 6 x 9
-    ##      Id Study      Cluster   logOR      v  Year Type   Discipline   Country
-    ##   <int> <chr>        <int>   <dbl>  <dbl> <int> <fct>  <fct>        <fct>  
-    ## 1     1 Ackers (2~       1 -0.401  0.0139  1996 Fello~ Physical sc~ Europe 
-    ## 2     2 Ackers (2~       1 -0.0573 0.0343  1996 Fello~ Physical sc~ Europe 
-    ## 3     3 Ackers (2~       1 -0.299  0.0339  1996 Fello~ Physical sc~ Europe 
-    ## 4     4 Ackers (2~       1  0.361  0.0340  1996 Fello~ Physical sc~ Europe 
-    ## 5     5 Ackers (2~       1 -0.333  0.0128  1996 Fello~ Social scie~ Europe 
-    ## 6     6 Ackers (2~       1 -0.0717 0.0136  1996 Fello~ Physical sc~ Europe
+    ##      Id Study     Cluster   logOR      v  Year Type   Discipline   Country
+    ##   <int> <chr>       <int>   <dbl>  <dbl> <int> <fct>  <fct>        <fct>  
+    ## 1     1 Ackers (~       1 -0.401  0.0139  1996 Fello~ Physical sc~ Europe 
+    ## 2     2 Ackers (~       1 -0.0573 0.0343  1996 Fello~ Physical sc~ Europe 
+    ## 3     3 Ackers (~       1 -0.299  0.0339  1996 Fello~ Physical sc~ Europe 
+    ## 4     4 Ackers (~       1  0.361  0.0340  1996 Fello~ Physical sc~ Europe 
+    ## 5     5 Ackers (~       1 -0.333  0.0128  1996 Fello~ Social scie~ Europe 
+    ## 6     6 Ackers (~       1 -0.0717 0.0136  1996 Fello~ Physical sc~ Europe
 
 We need to do some basic prep for this data: In this dataset data for
 ‘year’ is held in its own column as well as the Study column. This will
@@ -130,10 +130,10 @@ moderation_object
     ## * <chr>      <chr>      <dbl> <dbl>    <dbl>   <dbl>   <dbl>    <dbl>
     ## 1 Baseline   Baseline      21    66  -0.101   0.0401  -0.179  -0.0221
     ## 2 Discipline Discipline    21    66  NA      NA       NA      NA     
-    ## 3 Discipline Physical ~    14    14  -0.0239  0.0765  -0.174   0.126 
-    ## 4 Discipline Life scie~    26    26  -0.141   0.0439  -0.227  -0.0549
-    ## 5 Discipline Social sc~    13    13  -0.252   0.102   -0.451  -0.0525
-    ## 6 Discipline Multidisc~    13    13  -0.0147  0.0639  -0.140   0.110 
+    ## 3 Discipline Physical ~     5    14  -0.0239  0.0765  -0.174   0.126 
+    ## 4 Discipline Life scie~    12    26  -0.141   0.0439  -0.227  -0.0549
+    ## 5 Discipline Social sc~     5    13  -0.252   0.102   -0.451  -0.0525
+    ## 6 Discipline Multidisc~     5    13  -0.0147  0.0639  -0.140   0.110 
     ## # ... with 11 more variables: I2_2 <dbl>, I2_3 <dbl>, slope <lgl>,
     ## #   slope_se <lgl>, slope_lbound <lgl>, slope_ubound <lgl>, R2_2 <dbl>,
     ## #   R2_3 <dbl>, Mx_status <int>, `anova p-value` <dbl>, type <chr>
@@ -168,19 +168,19 @@ moderation_object2
     ##  * <chr>      <chr>      <dbl> <dbl>     <dbl>   <dbl>    <dbl>    <dbl>
     ##  1 Baseline   Baseline      21    66  -0.101    0.0401  -0.179   -0.0221
     ##  2 Discipline Discipline    21    66  NA       NA       NA       NA     
-    ##  3 Discipline Physical ~    14    14  -0.0239   0.0765  -0.174    0.126 
-    ##  4 Discipline Life scie~    26    26  -0.141    0.0439  -0.227   -0.0549
-    ##  5 Discipline Social sc~    13    13  -0.252    0.102   -0.451   -0.0525
-    ##  6 Discipline Multidisc~    13    13  -0.0147   0.0639  -0.140    0.110 
+    ##  3 Discipline Physical ~     5    14  -0.0239   0.0765  -0.174    0.126 
+    ##  4 Discipline Life scie~    12    26  -0.141    0.0439  -0.227   -0.0549
+    ##  5 Discipline Social sc~     5    13  -0.252    0.102   -0.451   -0.0525
+    ##  6 Discipline Multidisc~     5    13  -0.0147   0.0639  -0.140    0.110 
     ##  7 Country    Country       21    66  NA       NA       NA       NA     
-    ##  8 Country    United St~    12    12   0.00257  0.0598  -0.115    0.120 
-    ##  9 Country    Canada         3     3  -0.132    0.103   -0.333    0.0697
-    ## 10 Country    Australia     13    13  -0.0214   0.0927  -0.203    0.160 
-    ## 11 Country    United Ki~    10    10   0.0563   0.0790  -0.0986   0.211 
-    ## 12 Country    Europe        28    28  -0.219    0.0501  -0.317   -0.120 
+    ##  8 Country    United St~     4    12   0.00257  0.0598  -0.115    0.120 
+    ##  9 Country    Canada         1     3  -0.132    0.103   -0.333    0.0697
+    ## 10 Country    Australia      5    13  -0.0214   0.0927  -0.203    0.160 
+    ## 11 Country    United Ki~     4    10   0.0563   0.0790  -0.0986   0.211 
+    ## 12 Country    Europe         7    28  -0.219    0.0501  -0.317   -0.120 
     ## 13 Type       Type          21    66  NA       NA       NA       NA     
-    ## 14 Type       Grant         40    40  -0.00661  0.0371  -0.0793   0.0661
-    ## 15 Type       Fellowship    26    26  -0.202    0.0399  -0.280   -0.124 
+    ## 14 Type       Grant         13    40  -0.00661  0.0371  -0.0793   0.0661
+    ## 15 Type       Fellowship    11    26  -0.202    0.0399  -0.280   -0.124 
     ## # ... with 11 more variables: I2_2 <dbl>, I2_3 <dbl>, slope <lgl>,
     ## #   slope_se <lgl>, slope_lbound <lgl>, slope_ubound <lgl>, R2_2 <dbl>,
     ## #   R2_3 <dbl>, Mx_status <int>, `anova p-value` <dbl>, type <chr>
@@ -193,19 +193,19 @@ moderation_object2 %>%
 ```
 
     ## # A tibble: 11 x 9
-    ##    indent Moderator    k     n     `Estimate (95% ~ SE    R2_2  R2_3  p    
-    ##    <lgl>  <chr>        <chr> <chr> <chr>            <chr> <chr> <chr> <chr>
-    ##  1 FALSE  Baseline (I~ 21    66    -0.10 (-0.18, -~ 0.04  -     -     -    
-    ##  2 FALSE  Discipline   21    66    -                -     0.00  0.50  0.13 
-    ##  3 FALSE  Country      21    66    -                -     0.12  0.66  0.02*
-    ##  4 TRUE   United Stat~ 12    12    0.00 (-0.11, 0.~ 0.06  -     -     -    
-    ##  5 TRUE   Canada       3     3     -0.13 (-0.33, 0~ 0.10  -     -     -    
-    ##  6 TRUE   Australia    13    13    -0.02 (-0.20, 0~ 0.09  -     -     -    
-    ##  7 TRUE   United King~ 10    10    0.06 (-0.10, 0.~ 0.08  -     -     -    
-    ##  8 TRUE   Europe       28    28    -0.22 (-0.32, -~ 0.05  -     -     -    
-    ##  9 FALSE  Type         21    66    -                -     0.07  0.79  < 0.~
-    ## 10 TRUE   Grant        40    40    -0.01 (-0.08, 0~ 0.04  -     -     -    
-    ## 11 TRUE   Fellowship   26    26    -0.20 (-0.28, -~ 0.04  -     -     -
+    ##    indent Moderator   k     n     `Estimate (95% ~ SE    R2_2  R2_3  p    
+    ##    <lgl>  <chr>       <chr> <chr> <chr>            <chr> <chr> <chr> <chr>
+    ##  1 FALSE  Baseline (~ 21    66    -0.10 (-0.18, -~ 0.04  -     -     -    
+    ##  2 FALSE  Discipline  21    66    -                -     0.00  0.50  0.13 
+    ##  3 FALSE  Country     21    66    -                -     0.12  0.66  0.02*
+    ##  4 TRUE   United Sta~ 4     12    0.00 (-0.11, 0.~ 0.06  -     -     -    
+    ##  5 TRUE   Canada      1     3     -0.13 (-0.33, 0~ 0.10  -     -     -    
+    ##  6 TRUE   Australia   5     13    -0.02 (-0.20, 0~ 0.09  -     -     -    
+    ##  7 TRUE   United Kin~ 4     10    0.06 (-0.10, 0.~ 0.08  -     -     -    
+    ##  8 TRUE   Europe      7     28    -0.22 (-0.32, -~ 0.05  -     -     -    
+    ##  9 FALSE  Type        21    66    -                -     0.07  0.79  < 0.~
+    ## 10 TRUE   Grant       13    40    -0.01 (-0.08, 0~ 0.04  -     -     -    
+    ## 11 TRUE   Fellowship  11    26    -0.20 (-0.28, -~ 0.04  -     -     -
 
 An indent column can be used to send formatting instructions to word.
 

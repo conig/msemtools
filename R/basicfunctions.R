@@ -139,6 +139,8 @@ extractSlopes = function(model) {
 #' @importFrom methods setClass representation
 #' @export meta3_moderation
 
+#call = get_call(model0)
+
 meta3_moderation = function(call,moderators) {
 
   #--------------------------------------- create base
@@ -179,7 +181,6 @@ meta3_moderation = function(call,moderators) {
                   type = "Baseline") %>%
     list
   base_intercept = base_table[[1]]$estimate
-
   model_list = list(base)
   table_list = base_table
 
@@ -192,7 +193,7 @@ meta3_moderation = function(call,moderators) {
     as.character
   v = base$call$v %>%
     as.character
-  cluster = base$call$y %>%
+  cluster = base$call$cluster %>%
     as.character
 
   amazing_result = lapply(moderators, function(x) {
