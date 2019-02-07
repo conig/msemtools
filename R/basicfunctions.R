@@ -120,7 +120,6 @@ extractData = function(model, model.name = NULL) {
 #'
 #' @param model a model.
 
-
 extractSlopes = function(model) {
   summary = summary(model)
   coef = summary$coefficients %>% data.frame %>% rownames_to_column
@@ -128,168 +127,11 @@ extractSlopes = function(model) {
   coef[grepl("Slope", coef$row), ]
 }
 
-#' string_meta3
-#'
-#' Allows three-level meta-analyses to be specified with strings
-#' @param y a string. The name of the effect size variable
-#' @param v a string. The name of the sampling variance variable
-#' @param cluster a string. The name of the cluster variable
-#' @param x a string.
-#' @param data an object. data object
-#' @param model.name a string. The name of the model
-#' @param intercept.constraints a numeric. Set the value of the intercept
-#' @importFrom metaSEM meta3 rerun
-#'
-
-
-string_meta3 = function(y,
-                        v,
-                        cluster,
-                        x = NULL,
-                        data,
-                        model.name = NA,
-                        intercept.constraints = NULL) {
-  data_name = get_name(data)
-  if (is.null(x)) {
-    model = metaSEM::meta3(
-      y = eval(parse(text = y)),
-      v = eval(parse(text = v)),
-      cluster = eval(parse(text = cluster)),
-      data = data,
-      intercept.constraints = intercept.constraints
-    )
-  } else{
-    model = metaSEM::meta3(
-      y = eval(parse(text = y)),
-      v = eval(parse(text = v)),
-      x = eval(parse(text = x)),
-      cluster = eval(parse(text = cluster)),
-      data = data,
-      intercept.constraints = intercept.constraints
-    )
-  }
-
-  model = try_even_harder(model)
-
-  model$call$model.name = model.name
-  model$call$y = y #fill in call details (these are otherwise populated with eval-parse crap).
-  model$call$v = v
-  model$call$cluster = cluster
-  model$call$data = data_name
-
-  return(model)
-}
-
-#' meta3_by_factor
-#'
-#' Creates summary statistics for three level meta-analyses across a factor.
-#' @param y a string. The name of the effect size variable
-#' @param v a string. The name of the sampling variance variable
-#' @param cluster a string. The name of the cluster variable
-#' @param factor a string.
-#' @param data an object The name of the data object
-#' @param names character vector. If given, default names will be replaced.
-#' @param output.models a bool. If true, models are provided in a list.
-#' @importFrom metaSEM meta3
-#' @importFrom dplyr filter %>%
-#' @importFrom tibble as_tibble
-#' @importFrom stats na.omit
-
-
-
-meta3_by_factor = function(y,
-                           v,
-                           cluster,
-                           factor,
-                           data,
-                           names = NULL,
-                           output.models = F) {
-  #prepare factors
-  . = NULL
-  factor_levels = levels(data[, factor])
-
-  model_list = lapply(factor_levels, function(fc) {
-    #message(fc)
-    temp_data = data %>% filter(data[, factor] == fc)
-
-    na_data = na.omit(temp_data[, c(y, v, cluster)])
-    rows = nrow(na_data)
-    studies = length(unique(na_data[, cluster]))
-
-    if (rows > 1) {
-      output = string_meta3(
-        data = temp_data,
-        y = y,
-        v = v,
-        x = NULL,
-        cluster = cluster,
-        model.name = fc,
-        intercept.constraints = NULL
-      )
-
-    } else{
-      output = data.frame(
-        model = NA,
-        model.name = fc,
-        k = studies,
-        n = rows
-      )
-    }
-    output
-  })
-
-  results = model_list %>% lapply(extractData) %>%
-    do.call("rbind", .)
-
-  if (!is.null(names)) {
-    if (length(names) != length(result$model)) {
-      stop(
-        paste0(
-          "You provided ",
-          length(names),
-          " name(s). There are ",
-          length(result$model),
-          " levels: ",
-          paste(result$model, collapse = ", "),
-          "."
-        )
-      )
-    } else{
-      results$model.name = names
-    }
-  }
-
-  if (output.models) {
-    return(list(table = as_tibble(results), models = model_list))
-  } else {
-    return(as_tibble(results))
-  }
-
-}
-
 #' meta3_moderation
 #'
 #' This function streamlines the moderation process. Moderation strategy varies based on whether a numeric, or factoral variable is supplied.
-#' @param y a string. The name of yi
-#' @param v a string. The name of vi
-#' @param cluster a string. The name of the clustering variable e.g. 'study id'.
-#' @param moderators a charcater vector. The names of the variable used for moderation
-#' @param data an object.
-#' @param intercept.constraints argument from meta3
-#' @param coef.constraints argument from meta3
-#' @param RE2.constraints argument from meta3
-#' @param RE2.lbound argument from meta3
-#' @param RE3.constraints argument from meta3
-#' @param RE3.lbound argument from meta3
-#' @param intervals.type argument from meta3
-#' @param I2, argument from meta3
-#' @param R2 argument from meta3
-#' @param model.name argument from meta3
-#' @param suppressWarnings argument from meta3
-#' @param silent argument from meta3
-#' @param run argument
-#' @param base a meta3 model. Defaults to NULL. The baseline model is automatically calculated, but can also be supplied with this argument.
-#' @param names a vector of strings. If supplied, the models can be renamed.
+#' @param call
+#' @param moderators
 #' @importFrom metaSEM meta3
 #' @importFrom dplyr filter %>% add_row
 #' @importFrom tibble as_tibble
@@ -297,54 +139,16 @@ meta3_by_factor = function(y,
 #' @importFrom methods setClass representation
 #' @export
 #model0 = metaSEM::meta3(drink_yi, drink_vi, cluster = study_id, data = f)
-#base = model0; assign_call(model0); moderators = c("year","Gender","Age"); data = f
-# assign_call = function(model) {
-#   call = get_call(model)
-#   call_names = names(call)
-#   lapply(seq_along(call), function(i) {
-#     message(call_names[i])
-#     assign(call_names[i], call[[i]], envir = globalenv())
-#   })
-#   assign("data", get(data))
-# }
+#call = get_call(model0); moderators = c("Gender","year")
 
-meta3_moderation = function(y,
-                            v,
-                            cluster,
-                            moderators,
-                            data,
-                            intercept.constraints = NULL,
-                            coef.constraints = NULL,
-                            RE2.constraints = NULL,
-                            RE2.lbound = 1e-10,
-                            RE3.constraints = NULL,
-                            RE3.lbound = 1e-10,
-                            intervals.type = c("z", "LB"),
-                            I2 = "I2q",
-                            R2 = TRUE,
-                            model.name = "Meta analysis with ML",
-                            suppressWarnings = TRUE,
-                            silent = TRUE,
-                            run = TRUE,
-                            base = NULL,
-                            names = NULL) {
-  if (is.null(base)) {
-    base = string_meta3(
-      data = data,
-      y = y,
-      v = v,
-      x = NULL,
-      cluster = cluster,
-      model.name = "Baseline",
-      intercept.constraints = NULL
-    ) %>%
-      try_even_harder
+meta3_moderation = function(call,moderators) {
 
-  } else{
-    base$call$model.name = "Baseline"
-  }
-
-
+  #--------------------------------------- create base
+  base = do.call(meta3,call) %>%
+    try_even_harder() %>%
+    fix_call
+  base$call$model.name = "Baseline"
+  #--------------------------------------
 
   get_vars = function(x) {
     x %>% dplyr::select(
@@ -368,6 +172,8 @@ meta3_moderation = function(y,
     )
   }
 
+  # --------------------------------------------
+
   base_table = base %>% extractData %>%
     dplyr::mutate(moderation = "Baseline") %>%
     get_vars %>%
@@ -379,16 +185,23 @@ meta3_moderation = function(y,
   model_list = list(base)
   table_list = base_table
 
-  data = data.frame(data)
+  data = base$call$data %>%
+    as.character %>%
+    get %>%
+    data.frame
+
+  y = base$call$y %>%
+    as.character
+  v = base$call$v %>%
+    as.character
+  cluster = base$call$y %>%
+    as.character
 
   amazing_result = lapply(moderators, function(x) {
     #----------------- start moderation
     #message(x)
     temp_data = data[, c(y, v, cluster, make.names(x))]
     omitted = temp_data %>% na.omit
-    temp_data$y_internal = temp_data[, y]
-    temp_data$v_internal = temp_data[, v]
-    temp_data$cluster_internal = temp_data[, cluster]
     temp_data$x_internal = temp_data[, make.names(x)]
 
     #so we will mix up this approach.
@@ -409,52 +222,18 @@ meta3_moderation = function(y,
     }
     #if the moderator is numeric ---------------------------------
     if (is.numeric(mod)) {
-      temp_data[, make.names(x)] = scale(temp_data[, make.names(x)], scale = F)
-
       #message("numeric")
+      temp_data[, make.names(x)] = scale(temp_data[, make.names(x)], scale = F)
+      temp_call = call
+      temp_call$x = as.name(x)
+      temp_call$intercept.constraints = base_intercept
 
-      temp_model = metaSEM::meta3(
-        y = y_internal,
-        v = v_internal,
-        cluster = cluster_internal,
-        x = x_internal,
-        data = temp_data,
-        model.name = "x",
-        intercept.constraints = base_intercept,
-        coef.constraints = coef.constraints,
-        RE2.constraints = RE2.constraints,
-        RE2.lbound = RE2.lbound,
-        RE3.constraints = RE3.constraints,
-        RE3.lbound = RE3.lbound,
-        intervals.type = intervals.type,
-        R2 = R2,
-        suppressWarnings = suppressWarnings,
-        silent = silent,
-        run = run
-      ) %>%
-        try_even_harder
+      temp_model = do.call(meta3,temp_call) %>% fix_call %>% try_even_harder()
+      temp_model$call$model.name = x
+      other_call = temp_call
+      other_call$intercept.constraints = call$intercept.constraints
 
-      unconstrained = metaSEM::meta3(
-        y = y_internal,
-        v = v_internal,
-        cluster = cluster_internal,
-        x = x_internal,
-        data = temp_data,
-        model.name = "x",
-        intercept.constraints = intercept.constraints,
-        coef.constraints = coef.constraints,
-        RE2.constraints = RE2.constraints,
-        RE2.lbound = RE2.lbound,
-        RE3.constraints = RE3.constraints,
-        RE3.lbound = RE3.lbound,
-        intervals.type = intervals.type,
-        I2 = I2,
-        R2 = R2,
-        suppressWarnings = suppressWarnings,
-        silent = silent,
-        run = run
-      ) %>%
-        try_even_harder
+      unconstrained = do.call(meta3,other_call) %>% fix_call %>% try_even_harder()
 
       temp_anova = anova(temp_model, base)
       temp_table = extractData(temp_model) %>%
@@ -481,27 +260,14 @@ meta3_moderation = function(y,
 
       ##sting meta won't take cat_x due to its environment.
 
-      temp_model = metaSEM::meta3(
-        y = y_internal,
-        v = v_internal,
-        cluster = cluster_internal,
-        x = cat_x,
-        data = temp_data,
-        model.name = "temp_name",
-        intercept.constraints = 0,
-        coef.constraints = coef.constraints,
-        RE2.constraints = RE2.constraints,
-        RE2.lbound = RE2.lbound,
-        RE3.constraints = RE3.constraints,
-        RE3.lbound = RE3.lbound,
-        intervals.type = intervals.type,
-        I2 = I2,
-        R2 = R2,
-        suppressWarnings = suppressWarnings,
-        silent = silent,
-        run = run
-      ) %>% try_even_harder()
+      temp_call = call
 
+      temp_call$x = substitute(cat_x)
+      temp_call$intercept.constraints = 0
+
+      temp_model = do.call(meta3,temp_call) %>%
+        fix_call() %>%
+        try_even_harder()
 
       temp_model$call$model.name = x
       temp_anova = anova(temp_model, base)
@@ -596,56 +362,12 @@ meta3_moderation = function(y,
 #' @param model meta 3 model
 #' @importFrom dplyr %>%
 
+
 get_call = function(model) {
-  call = model$call %>%
+  call = model$call[-1] %>%
     as.list
-  call = lapply(call[-1],function(x){
-    if(class(x) == "name"){
-    x = as.character(x)
-    } else{
-        x
-      }
-  })
-
-
-  call = call
-
-  ##add defaults
-  defaults = list(
-    y = NULL,
-    v = NULL,
-    cluster = NULL,
-    x = NULL,
-    data = NULL,
-    intercept.constraints = NULL,
-    coef.constraints = NULL,
-    RE2.constraints = NULL,
-    RE2.lbound = 1e-10,
-    RE3.constraints = NULL,
-    RE3.lbound = 1e-10,
-    intervals.type = c("z", "LB"),
-    I2 = "I2q",
-    R2 = TRUE,
-    model.name = "Meta analysis with ML",
-    suppressWarnings = TRUE,
-    silent = TRUE,
-    run = TRUE
-  )
-
-  if (any(!names(call) %in% names(defaults))) {
-    stop(
-      "Sorry, further arguments to run mx are not supported. Please stick to standard meta3 arguments"
-    )
-  }
-
-  call = append(call, defaults[!names(defaults) %in% names(call)])
-
   return(call)
-
-
 }
-
-
 
 #' moderate
 #'
@@ -661,9 +383,7 @@ moderate = function(model, ..., moderators = NULL) {
   if (!identical(class(model), c("meta", "meta3"))) {
     stop("moderate only works  for meta3 objects")
   }
-
   mods = c()
-
   call = get_call(model)
 
   if (call$data == ".") {
@@ -671,43 +391,22 @@ moderate = function(model, ..., moderators = NULL) {
       "moderate grabs the data.frame based on it's name as stored in the metaSEM model call. You've used a pipe (%>%) to specify the model which records the data's name as '.' which cannot be accessed from the global environment. This breaks moderate, please specify the data name in the model explicitly."
     )
   }
-
-  data = call$data %>%
-    get
-  y = call$y
-  v = call$v
-  cluster = call$cluster
-
   mods = substitute(list(...))[-1] %>%
     sapply(deparse)
 
   if (!is.null(moderators)) {
     mods = append(mods, moderators) %>% unlist
   }
-
+  data = model$call$data %>%as.character() %>%  get
   Conigrave::check_names(mods, data)
 
   #return(moderators)
-  meta3_moderation(
-    base = model,
-    y = y,
-    v = v,
-    cluster = cluster,
-    moderators = mods,
-    data = data,
-    intercept.constraints = call$intercept.constraints,
-    coef.constraints = call$coef.constraints,
-    RE2.constraints = call$RE2.constraints,
-    RE2.lbound = call$RE2.lbound,
-    RE3.constraints = call$RE3.constraints,
-    RE3.lbound = call$RE3.lbound,
-    intervals.type = call$intervals.type,
-    I2 = call$I2,
-    R2 = call$R2,
-    model.name = call$model.name,
-    suppressWarnings = call$suppressWarnings,
-    silent = call$silent,
-    run = call$run
-  )
+  meta3_moderation(call,
+                    moderators = mods)
 
+}
+
+fix_call = function(model){
+  model$call[1] = call("meta3")
+  model
 }
