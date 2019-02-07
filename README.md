@@ -19,7 +19,7 @@ This packages is a shell around the metaSEM package. It does not perform
 any calculations itself, but rather converts your instructions into
 metaSEM commands, and then saves the results in a nicely formatted way.
 Currently only meta3 is supported without the ability to set
-contstraints.
+constraints.
 
 I’ll demonstrate how to use it with Marsh’s data included in the metaSEM
 package
@@ -43,9 +43,10 @@ head(example_data)
     ## 5     5 Ackers (2~       1 -0.333  0.0128  1996 Fello~ Social scie~ Europe 
     ## 6     6 Ackers (2~       1 -0.0717 0.0136  1996 Fello~ Physical sc~ Europe
 
-We need to do some basic prep for this data: In this dataset year data
-is held in two columns. This will ruin our plot so I remove them
-parentheses and contents from the author column.
+We need to do some basic prep for this data: In this dataset data for
+‘year’ is held in its own column as well as the Study column. This will
+ruin our plot. I fix this by removing everything in parentheses in the
+Study column.
 
 ``` r
 example_data$Study =  gsub("\\s*\\([^\\)]+\\)","",as.character(example_data$Study))
@@ -206,7 +207,7 @@ moderation_object2 %>%
     ## 10 TRUE   Grant        13    40    -0.01 (-0.08, 0~ 0.04  -     -     -    
     ## 11 TRUE   Fellowship   11    26    -0.20 (-0.28, -~ 0.04  -     -     -
 
-An indent column can be used to send formatting instuctions to word.
+An indent column can be used to send formatting instructions to word.
 
 an extra column can help here msemtools::to\_apa
 
@@ -214,7 +215,7 @@ Funnel plots
 ------------
 
 Finally, a function is provided to create a funnel plot from metaSEM
-models. An egger’s assymetry test is also automatically reported to try
+models. An egger’s asymmetry test is also automatically reported to try
 and detect publication bias.
 
 ``` r
