@@ -296,8 +296,17 @@ meta3_by_factor = function(y,
 #' @importFrom stats anova
 #' @importFrom methods setClass representation
 #' @export
-
-#base = model0; assign_call(model0); moderators = c("year","Gender"); data = f
+#model0 = metaSEM::meta3(drink_yi, drink_vi, cluster = study_id, data = f)
+#base = model0; assign_call(model0); moderators = c("year","Gender","Age"); data = f
+# assign_call = function(model) {
+#   call = get_call(model)
+#   call_names = names(call)
+#   lapply(seq_along(call), function(i) {
+#     message(call_names[i])
+#     assign(call_names[i], call[[i]], envir = globalenv())
+#   })
+#   assign("data", get(data))
+# }
 
 meta3_moderation = function(y,
                             v,
@@ -375,7 +384,8 @@ meta3_moderation = function(y,
   amazing_result = lapply(moderators, function(x) {
     #----------------- start moderation
     #message(x)
-    temp_data = na.omit(data[, c(y, v, cluster, make.names(x))])
+    temp_data = data[, c(y, v, cluster, make.names(x))]
+    omitted = temp_data %>% na.omit
     temp_data$y_internal = temp_data[, y]
     temp_data$v_internal = temp_data[, v]
     temp_data$cluster_internal = temp_data[, cluster]
@@ -417,7 +427,6 @@ meta3_moderation = function(y,
         RE3.constraints = RE3.constraints,
         RE3.lbound = RE3.lbound,
         intervals.type = intervals.type,
-        I2 = I2,
         R2 = R2,
         suppressWarnings = suppressWarnings,
         silent = silent,
@@ -459,8 +468,10 @@ meta3_moderation = function(y,
     #if the moderator is a factor -----------------------------------------
     if (is.factor(mod)) {
       temp_data[, make.names(x)] = droplevels(temp_data[, make.names(x)])
+      omitted[, make.names(x)] = droplevels(omitted [, make.names(x)])
+      keep_levels = levels(omitted[,make.names(x)])
       mod = droplevels(mod) #get rid of empty levels
-      levels = levels(mod)
+      levels = keep_levels
 
       cat_x = lapply(levels, function(y) {
         ifelse(mod == y, 1, 0)
@@ -587,10 +598,17 @@ meta3_moderation = function(y,
 
 get_call = function(model) {
   call = model$call %>%
-    as.list %>%
-    lapply(as.character)
+    as.list
+  call = lapply(call[-1],function(x){
+    if(class(x) == "name"){
+    x = as.character(x)
+    } else{
+        x
+      }
+  })
 
-  call = call[-1]
+
+  call = call
 
   ##add defaults
   defaults = list(
@@ -627,15 +645,7 @@ get_call = function(model) {
 
 }
 
-# assign_call = function(model) {
-#   call = get_call(model)
-#   call_names = names(call)
-#   lapply(seq_along(call), function(i) {
-#     message(call_names[i])
-#     assign(call_names[i], call[[i]], envir = globalenv())
-#   })
-#   assign("data", get(data))
-# }
+
 
 #' moderate
 #'
@@ -662,7 +672,7 @@ moderate = function(model, ..., moderators = NULL) {
     )
   }
 
-  data = call$data  %>%
+  data = call$data %>%
     get
   y = call$y
   v = call$v
