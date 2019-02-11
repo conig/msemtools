@@ -5,7 +5,9 @@
 \title{ninjaFunnel}
 \usage{
 funnel_plot(model, xlab = "Estimate", ylab = "Standard Error",
-  alpha = 0.5, font = "serif", CI = F)
+  font = "serif", CI = F, alpha = 0.7, shape = 1, size = 1.5,
+  CI_linetype = "dashed", CI_size = 0.6, pool_linetype = "dotted",
+  pool_size = 0.5, density = F)
 }
 \arguments{
 \item{model}{an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.}
@@ -14,11 +16,25 @@ funnel_plot(model, xlab = "Estimate", ylab = "Standard Error",
 
 \item{ylab}{a character string. Label for the y-axis.}
 
-\item{alpha}{a scalar. Sets alpha transparency.}
-
 \item{font}{a character string. Set's font family. Defaults to times new roman ('serif')}
 
 \item{CI}{a bool. If true, error bars will be plotted. totally unnecesary, but kind of fun.}
+
+\item{alpha}{a scalar. Sets alpha transparency.}
+
+\item{shape}{a scalar. The ggplot2 shape for the poitns}
+
+\item{size}{a scalar. The ggplot2 size value for the points}
+
+\item{CI_linetype}{ggplot2 linetype for confidence intervals}
+
+\item{CI_size}{ggplot2 size value for confidence intervals}
+
+\item{pool_linetype}{ggplot2 linetype for pooled estimate}
+
+\item{pool_size}{ggplot2 size value for pooled estimate}
+
+\item{density}{a bool. If True, plots densit of points.}
 }
 \description{
 This function is used for plotting funnel plots

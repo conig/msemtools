@@ -225,9 +225,16 @@ ninjaForest = function(model,
 #' @param model an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.
 #' @param xlab a character string. Label for the x-axis.
 #' @param ylab a character string. Label for the y-axis.
-#' @param alpha a scalar. Sets alpha transparency.
 #' @param font a character string. Set's font family. Defaults to times new roman ('serif')
 #' @param CI a bool. If true, error bars will be plotted. totally unnecesary, but kind of fun.
+#' @param alpha a scalar. Sets alpha transparency.
+#' @param shape a scalar. The ggplot2 shape for the poitns
+#' @param size a scalar. The ggplot2 size value for the points
+#' @param CI_linetype ggplot2 linetype for confidence intervals
+#' @param CI_size ggplot2 size value for confidence intervals
+#' @param pool_linetype ggplot2 linetype for pooled estimate
+#' @param pool_size ggplot2 size value for pooled estimate
+#' @param density a bool. If True, plots densit of points.
 #' @importFrom metafor regtest
 #' @importFrom ggplot2 aes theme xlab geom_point coord_flip scale_x_reverse geom_line geom_segment geom_errorbar element_text
 #' @export funnel_plot
@@ -236,9 +243,17 @@ ninjaForest = function(model,
 funnel_plot = function(model,
                        xlab = "Estimate",
                        ylab = "Standard Error",
-                       alpha = .5,
                        font = "serif",
-                       CI = F) {
+                       CI = F,
+                       alpha = .7,
+                       shape = 1,
+                       size = 1.5,
+                       CI_linetype = "dashed",
+                       CI_size = .6,
+                       pool_linetype = "dotted",
+                       pool_size = .5,
+                       density = F
+                       ) {
   t_model = NULL
   if ("meta_ninja" %in% class(model)) {
     t_model = model$models[[1]]
@@ -275,21 +290,28 @@ funnel_plot = function(model,
     ymin = lower,
     ymax = upper
   ))
-  fp = fp + theme_classic() +
-    geom_point(alpha = alpha) +
+  fp = fp + theme_classic()
+
+  if(density){
+    fp = fp +
+      stat_density_2d(aes(fill = ..level..), geom = "polygon", contour = T, color = "white", alpha = 0.2, show.legend = F) +
+      scale_fill_gradient(low = "grey60", high = "grey40")
+  }
+  fp = fp +
+    geom_point(alpha = alpha, shape = shape, size = size) +
     xlab(ylab) + ylab(xlab) +
     geom_line(
       aes(x = se.seq, y = ll95),
-      linetype = 'dashed',
+      linetype = CI_linetype,
       data = dfCI,
-      size = .8,
+      size = CI_size,
       inherit.aes = FALSE
     ) +
     geom_line(
       aes(x = se.seq, y = ul95),
-      linetype = 'dashed',
+      linetype = CI_linetype,
       data = dfCI,
-      size = .8,
+      size = CI_size,
       inherit.aes = FALSE
     ) +
 
@@ -301,9 +323,9 @@ funnel_plot = function(model,
         xend = max(se.seq),
         yend = estimate
       ),
-      linetype = 'solid',
+      linetype = pool_linetype,
       data = dfCI,
-      size = 1,
+      size = pool_size,
       inherit.aes = FALSE
     ) +
     #geom_segment(aes(x = min(se.seq), y = meanul95, xend = max(se.seq), yend = meanul95), linetype='dotted', data=dfCI) +
