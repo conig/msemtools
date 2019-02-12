@@ -108,11 +108,11 @@ Moderation with msemtools
 -------------------------
 
 To run moderation with msemtools, covariates must be set up as factors.
-Let’s look at Type
+Let’s look at Country
 
 ``` r
 #set up factors
-is.factor(example_data$Type)
+is.factor(example_data$Country)
 ```
 
     ## [1] TRUE
@@ -121,17 +121,20 @@ This is already a factor so we’re ready to go.
 
 ``` r
 moderation_object = model0 %>% 
-  moderate(Type)
+  moderate(Country)
 moderation_object
 ```
 
-    ## # A tibble: 4 x 19
+    ## # A tibble: 7 x 19
     ##   moderation model.name     k     n  estimate      SE   lbound   ubound
     ## * <chr>      <chr>      <dbl> <dbl>     <dbl>   <dbl>    <dbl>    <dbl>
     ## 1 Baseline   Baseline      21    66  -0.101    0.0401  -0.179   -0.0221
-    ## 2 Type       Type          21    66  NA       NA       NA       NA     
-    ## 3 Type       Grant         13    40  -0.00661  0.0371  -0.0793   0.0661
-    ## 4 Type       Fellowship    11    26  -0.202    0.0399  -0.280   -0.124 
+    ## 2 Country    Country       21    66  NA       NA       NA       NA     
+    ## 3 Country    United St~     4    12   0.00257  0.0598  -0.115    0.120 
+    ## 4 Country    Canada         1     3  -0.132    0.103   -0.333    0.0697
+    ## 5 Country    Australia      5    13  -0.0214   0.0927  -0.203    0.160 
+    ## 6 Country    United Ki~     4    10   0.0563   0.0790  -0.0986   0.211 
+    ## 7 Country    Europe         7    28  -0.219    0.0501  -0.317   -0.120 
     ## # ... with 11 more variables: I2_2 <dbl>, I2_3 <dbl>, slope <lgl>,
     ## #   slope_se <lgl>, slope_lbound <lgl>, slope_ubound <lgl>, R2_2 <dbl>,
     ## #   R2_3 <dbl>, Mx_status <int>, `anova p-value` <dbl>, type <chr>
