@@ -17,6 +17,7 @@ Imports:
     ggplot2 (>= 3.1.0),
     stats (>= 3.5.1),
     metafor(>= 2.0-0),
+    Hmisc(>= 4.2-0),
     Conigrave,
     papertools,
     papaja

@@ -144,7 +144,7 @@ We can now plot easily \#\# forest plot
 moderation_object %>% plot(author = "Study")
 ```
 
-    ## year was not manually specified, using:'Year'.
+    ## year was not manually specified, using: 'Year'.
 
 ![](README_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
@@ -214,9 +214,9 @@ an extra column can help here msemtools::to\_apa
 Funnel plots
 ------------
 
-Finally, a function is provided to create a funnel plot from metaSEM
-models. An egger’s asymmetry test is also automatically reported to try
-and detect publication bias.
+A function is provided to create a funnel plot from metaSEM models. An
+egger’s asymmetry test is also automatically reported to try and detect
+publication bias.
 
 ``` r
 model0 %>% funnel_plot(density = T)
@@ -235,3 +235,30 @@ model0 %>% funnel_plot(density = T)
     ## predictor: standard error
     ## 
     ## test for funnel plot asymmetry: z = -1.9925, p = 0.0463
+
+Converting moderated tables to text
+-----------------------------------
+
+Finally, a method is provided to convert moderated tables to paragraph
+descriptions which can be rendeded in rmarkdown.
+
+For an example we will use moderation\_object2.
+
+``` r
+as.character(moderation_object2)
+```
+
+    ## [1] "The covariates which significantly moderated the baseline model were 'country' and 'type'. 'Country' explained `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`% of heterogeneity within studies (level 2), and `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`% of heterogeneity between studies (level 3). 'Type' explained `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`% of heterogeneity within studies (level 2), and `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`% of heterogeneity between studies (level 3)."
+
+Which renders to:
+
+The covariates which significantly moderated the baseline model were
+‘country’ and ‘type’. ‘Country’ explained
+`r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
+of heterogeneity within studies (level 2), and
+`r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
+of heterogeneity between studies (level 3). ‘Type’ explained
+`r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
+of heterogeneity within studies (level 2), and
+`r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
+of heterogeneity between studies (level 3).
