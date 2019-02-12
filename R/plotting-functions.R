@@ -294,8 +294,9 @@ funnel_plot = function(model,
 
   if(density){
     fp = fp +
-      stat_density_2d(aes(fill = ..level..), geom = "polygon", contour = T, color = "white", alpha = 0.2, show.legend = F) +
-      scale_fill_gradient(low = "grey60", high = "grey40")
+      stat_density_2d(aes(fill = stat(level)),bins = 6,colour = "white",geom = "polygon", alpha = 0.2, show.legend = F) +
+      scale_fill_gradient(low = "grey60", high = "grey30")
+
   }
   fp = fp +
     geom_point(alpha = alpha, shape = shape, size = size) +

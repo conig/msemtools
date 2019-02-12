@@ -195,3 +195,10 @@ if(docx){
                     escape = escape,...
   )
 }
+
+#TODO: finish this function
+
+default_note = function(){
+  note = "k = number of studies; n = numbers of effect sizes; Estimate = pooled effect; SE = standard error;  I^2^~(2,3)~ = Heterogeneity at level two and three, respectively; R^2^~(2)~ = the proportion of within-cluster heterogeneity explained  ;   proportion of heterogeneity explained by moderator; p-value = ANOVA p-value."
+}
+
