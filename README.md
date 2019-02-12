@@ -248,10 +248,6 @@ For an example we will use moderation\_object2.
 as.character(moderation_object2)
 ```
 
-    ## [1] "The covariates which significantly moderated the baseline model were 'country' and 'type'. 'Country' explained `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`% of heterogeneity within studies (level 2), and `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`% of heterogeneity between studies (level 3). 'Type' explained `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`% of heterogeneity within studies (level 2), and `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`% of heterogeneity between studies (level 3)."
-
-Which renders to:
-
 The covariates which significantly moderated the baseline model were
 ‘country’ and ‘type’. ‘Country’ explained
 `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
@@ -262,3 +258,11 @@ of heterogeneity between studies (level 3). ‘Type’ explained
 of heterogeneity within studies (level 2), and
 `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
 of heterogeneity between studies (level 3).
+
+Which evaluates to:
+
+The covariates which significantly moderated the baseline model were
+‘country’ and ‘type’. ‘Country’ explained 12.09% of heterogeneity within
+studies (level 2), and 66.06% of heterogeneity between studies (level
+3). ‘Type’ explained 6.93% of heterogeneity within studies (level 2),
+and 79.43% of heterogeneity between studies (level 3).
