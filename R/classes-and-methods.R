@@ -62,56 +62,14 @@ as.data.frame.meta_ninja = function(x,
 #' meta_ninja as.character method
 #' @param x a meta_ninja
 #' @param ... extra arguments
-#' @importFrom Hmisc capitalize
-#' @importFrom dplyr filter %>%
 #' @export
 as.character.meta_ninja = function(x, ...) {
-  o = match.call()
-  obj = o$x %>% deparse
-  base_text = "The covariates which significantly moderated the baseline model were"
-  sig_mods_table = x$table %>%
-    filter(!type %in% c("Baseline", "factor level") &
-             `anova p-value` < 0.05)
-  sig_mods = sig_mods_table %>% select(model.name) %>% unlist %>% tolower %>%  paste(collapse = "', '")
-  sig_mods = paste0("'", sig_mods, "'") %>%
-    gsub(",(?!.*,)", " and", ., perl = T)
-
-  first_phrase = paste0(base_text, " ", sig_mods, ".")
-
-  list_text = lapply(seq_along(sig_mods_table$model.name), function(i) {
-    mod_name = sig_mods_table$model.name[i] %>% tolower %>% Hmisc::capitalize() %>% paste0("'", ., "'")
-    R2_code = paste0(
-      "`r ",
-      obj,
-      "$table %>% filter(model.name == ",
-      "'",
-      sig_mods_table$model.name[i],
-      "'",
-      ") %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`"
-    )
-    R2_3_code = paste0(
-      "`r ",
-      obj,
-      "$table %>% filter(model.name == ",
-      "'",
-      sig_mods_table$model.name[i],
-      "'",
-      ") %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`"
-    )
-    paste0(
-      mod_name,
-      " explained ",
-      R2_code,
-      "% of heterogeneity within studies (level 2), and ",
-      R2_3_code,
-      "% of heterogeneity between studies (level 3)."
-    )
-  })
-
-  moderation_text = paste(list_text, collapse = " ")
-
-  final_text = paste0(first_phrase, " ", moderation_text)
-  return(final_text)
+  obj = match.call()
+  obj = obj$x %>% deparse
+  baseline_desc = describe_baseline(obj)
+  moderator_desc = describe_moderators(obj)
+  output = paste(baseline_desc, moderator_desc, collapse = " ")
+  return(output)
 }
 
 

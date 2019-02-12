@@ -199,6 +199,100 @@ if(docx){
 #TODO: finish this function
 
 default_note = function(){
-  note = "k = number of studies; n = numbers of effect sizes; Estimate = pooled effect; SE = standard error;  I^2^~(2,3)~ = Heterogeneity at level two and three, respectively; R^2^~(2)~ = the proportion of within-cluster heterogeneity explained  ;   proportion of heterogeneity explained by moderator; p-value = ANOVA p-value."
+  note = "k = number of studies; n = numbers of effect sizes; Estimate = population average; SE = standard error;  I^2^~(2,3)~ = Heterogeneity at level two and three, respectively; R^2^~(2)~ = the proportion of within-cluster heterogeneity explained by the covariate; R^2^~(3)~ = the proportion of between-cluster heterogeneity explained by the covariate; p-value = ANOVA p-value; * indicates p < 0.05"
+  return(note)
+}
+
+#describing models
+
+#' describe_baseline
+#' @param obj a meta_ninja
+#' @importFrom dplyr %>%
+
+describe_baseline = function(obj) {
+  studies = paste0("`r ", obj, "$table$k[1] %>% papertools::as_word(T)`")
+  effects = paste0("`r ", obj, "$table$n[1] %>% papertools::as_word(F)`")
+  pooled = paste0(
+    "`r papertools::glue_bracket(",
+    obj,
+    "$table$estimate[1],",
+    obj,
+    "$table$lbound[1],",
+    obj,
+    "$table$ubound[1])`"
+  )
+  i2_2 = paste0("`r ",
+                obj,
+                "$table$I2_2[1] %>% '*'(100) %>% papertools::digits(2)`")
+  i2_3 = paste0("`r ",
+                obj,
+                "$table$I2_3[1] %>% '*'(100) %>% papertools::digits(2)`")
+
+  message = paste0(
+    studies,
+    " studies (",
+    effects,
+    " effects) presented data which could be pooled. The estimated population average and 95% Wald CI was ",
+    pooled,
+    ". The heterogeneity at level 2 was ",
+    i2_2,
+    "%. The heterogeneity at level 3 was ",
+    i2_3,
+    "%."
+  )
+  return(message)
+}
+
+#' describe_moderators
+#' @param obj a meta_ninja
+#' @importFrom Hmisc capitalize
+#' @importFrom dplyr filter %>%
+
+describe_moderators = function(obj){
+  base_text = "The covariates which significantly moderated the baseline model were"
+  x = get(obj, envir = globalenv())
+  sig_mods_table = x$table %>%
+    filter(!type %in% c("Baseline", "factor level") &
+             `anova p-value` < 0.05)
+  sig_mods = sig_mods_table %>% select(model.name) %>% unlist %>% tolower %>%  paste(collapse = "', '")
+  sig_mods = paste0("'", sig_mods, "'") %>%
+    gsub(",(?!.*,)", " and", ., perl = T)
+
+  first_phrase = paste0(base_text, " ", sig_mods, ".")
+
+  list_text = lapply(seq_along(sig_mods_table$model.name), function(i) {
+    mod_name = sig_mods_table$model.name[i] %>% tolower %>% Hmisc::capitalize() %>% paste0("'", ., "'")
+    R2_code = paste0(
+      "`r ",
+      obj,
+      "$table %>% filter(model.name == ",
+      "'",
+      sig_mods_table$model.name[i],
+      "'",
+      ") %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`"
+    )
+    R2_3_code = paste0(
+      "`r ",
+      obj,
+      "$table %>% filter(model.name == ",
+      "'",
+      sig_mods_table$model.name[i],
+      "'",
+      ") %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`"
+    )
+    paste0(
+      mod_name,
+      " explained ",
+      R2_code,
+      "% of heterogeneity within studies (level 2), and ",
+      R2_3_code,
+      "% of heterogeneity between studies (level 3)."
+    )
+  })
+
+  moderation_text = paste(list_text, collapse = " ")
+
+  final_text = paste0(first_phrase, " ", moderation_text)
+  return(final_text)
 }
 
