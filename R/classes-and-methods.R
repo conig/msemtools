@@ -88,6 +88,7 @@ utils::globalVariables(
     "Mx_status",
     "extra",
     "anova p-value",
-    "slope_se"
+    "slope_se",
+    "level"
   )
 )

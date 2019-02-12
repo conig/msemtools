@@ -236,7 +236,7 @@ ninjaForest = function(model,
 #' @param pool_size ggplot2 size value for pooled estimate
 #' @param density a bool. If True, plots densit of points.
 #' @importFrom metafor regtest
-#' @importFrom ggplot2 aes theme xlab geom_point coord_flip scale_x_reverse geom_line geom_segment geom_errorbar element_text
+#' @importFrom ggplot2 aes theme xlab geom_point coord_flip scale_x_reverse geom_line geom_segment geom_errorbar element_text stat_density_2d stat scale_fill_gradient
 #' @export funnel_plot
 
 #test arguments:
@@ -245,8 +245,8 @@ funnel_plot = function(model,
                        ylab = "Standard Error",
                        font = "serif",
                        CI = F,
-                       alpha = .7,
-                       shape = 1,
+                       alpha = .6,
+                       shape = 19,
                        size = 1.5,
                        CI_linetype = "dashed",
                        CI_size = .6,
@@ -296,7 +296,6 @@ funnel_plot = function(model,
     fp = fp +
       stat_density_2d(aes(fill = stat(level)),bins = 6,colour = "white",geom = "polygon", alpha = 0.2, show.legend = F) +
       scale_fill_gradient(low = "grey60", high = "grey30")
-
   }
   fp = fp +
     geom_point(alpha = alpha, shape = shape, size = size) +
