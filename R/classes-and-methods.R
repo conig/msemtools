@@ -13,6 +13,7 @@ setClass(
     models = "list",
     table = "list",
     cluster = "character",
+    covariates = "list",
     data = "tbl"
   )
 )
@@ -35,6 +36,14 @@ print.meta_ninja = function(x, ...) {
 #' @export
 plot.meta_ninja = function(x, y, ...) {
   ninjaForest(x, ...)
+}
+
+#' meta_ninja summary method
+#' @param object model to summarise
+#' @param ... additional arguments passed to format_nicely
+#' @export
+summary.meta_ninja = function(object, ...) {
+  format_nicely(object, ...)
 }
 
 #' meta_ninja as.data.frame method

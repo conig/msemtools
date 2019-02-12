@@ -183,6 +183,7 @@ meta3_moderation = function(call,moderators) {
   base_intercept = base_table[[1]]$estimate
   model_list = list(base)
   table_list = base_table
+  covariate_list = list(NULL)
 
   data = base$call$data %>%
     as.character %>%
@@ -240,7 +241,7 @@ meta3_moderation = function(call,moderators) {
         get_vars %>%
         dplyr::mutate("anova p-value" = anova(unconstrained, base)$p[2],
                       type = "numeric")
-      return(list(table = temp_table, model = temp_model))
+      return(list(table = temp_table, model = temp_model, covariates = temp_data[,make.names(x)]))
     }
 
     #if the moderator is a factor -----------------------------------------
@@ -303,7 +304,7 @@ meta3_moderation = function(call,moderators) {
             type = "factor level"
           )
       }
-      return(list(table = temp_table, model = temp_model))
+      return(list(table = temp_table, model = temp_model, covariates = cat_x))
     }
     #got past it
 
@@ -312,6 +313,8 @@ meta3_moderation = function(call,moderators) {
     x$table)
   amazing_models = lapply(amazing_result, function(x)
     x$model)
+  amazing_covariates = lapply(amazing_result, function(x)
+    x$covariates)
 
   final_models = append(model_list, amazing_models)
   model_names = unlist(lapply(final_models, function(x)
@@ -321,6 +324,8 @@ meta3_moderation = function(call,moderators) {
   final_tables = append(table_list, amazing_tables)
   names(final_tables) = model_names
 
+  final_covariates = append(covariate_list,amazing_covariates)
+  names(final_covariates) = model_names
   merged_table = final_tables %>%
     do.call("rbind", .)
 
@@ -330,6 +335,7 @@ meta3_moderation = function(call,moderators) {
     models = final_models,
     table = merged_table,
     cluster = cluster,
+    covariates = final_covariates,
     data = as_tibble(data)
   )
   class(out) = c("meta_ninja")
