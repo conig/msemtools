@@ -108,11 +108,11 @@ Moderation with msemtools
 -------------------------
 
 To run moderation with msemtools, covariates must be set up as factors.
-Let’s look at Discipline
+Let’s look at Type
 
 ``` r
 #set up factors
-is.factor(example_data$Discipline)
+is.factor(example_data$Type)
 ```
 
     ## [1] TRUE
@@ -121,19 +121,17 @@ This is already a factor so we’re ready to go.
 
 ``` r
 moderation_object = model0 %>% 
-  moderate(Discipline)
+  moderate(Type)
 moderation_object
 ```
 
-    ## # A tibble: 6 x 19
-    ##   moderation model.name     k     n estimate      SE  lbound   ubound
-    ## * <chr>      <chr>      <dbl> <dbl>    <dbl>   <dbl>   <dbl>    <dbl>
-    ## 1 Baseline   Baseline      21    66  -0.101   0.0401  -0.179  -0.0221
-    ## 2 Discipline Discipline    21    66  NA      NA       NA      NA     
-    ## 3 Discipline Physical ~     5    14  -0.0239  0.0765  -0.174   0.126 
-    ## 4 Discipline Life scie~    12    26  -0.141   0.0439  -0.227  -0.0549
-    ## 5 Discipline Social sc~     5    13  -0.252   0.102   -0.451  -0.0525
-    ## 6 Discipline Multidisc~     5    13  -0.0147  0.0639  -0.140   0.110 
+    ## # A tibble: 4 x 19
+    ##   moderation model.name     k     n  estimate      SE   lbound   ubound
+    ## * <chr>      <chr>      <dbl> <dbl>     <dbl>   <dbl>    <dbl>    <dbl>
+    ## 1 Baseline   Baseline      21    66  -0.101    0.0401  -0.179   -0.0221
+    ## 2 Type       Type          21    66  NA       NA       NA       NA     
+    ## 3 Type       Grant         13    40  -0.00661  0.0371  -0.0793   0.0661
+    ## 4 Type       Fellowship    11    26  -0.202    0.0399  -0.280   -0.124 
     ## # ... with 11 more variables: I2_2 <dbl>, I2_3 <dbl>, slope <lgl>,
     ## #   slope_se <lgl>, slope_lbound <lgl>, slope_ubound <lgl>, R2_2 <dbl>,
     ## #   R2_3 <dbl>, Mx_status <int>, `anova p-value` <dbl>, type <chr>

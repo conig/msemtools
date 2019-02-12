@@ -196,8 +196,6 @@ if(docx){
   )
 }
 
-#TODO: finish this function
-
 default_note = function(){
   note = "k = number of studies; n = numbers of effect sizes; Estimate = population average; SE = standard error;  I^2^~(2,3)~ = Heterogeneity at level two and three, respectively; R^2^~(2)~ = the proportion of within-cluster heterogeneity explained by the covariate; R^2^~(3)~ = the proportion of between-cluster heterogeneity explained by the covariate; p-value = ANOVA p-value; * indicates p < 0.05"
   return(note)
