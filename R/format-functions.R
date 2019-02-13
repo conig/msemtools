@@ -230,7 +230,7 @@ describe_baseline = function(obj) {
     studies,
     " studies (",
     effects,
-    " effects) presented data which could be pooled. The estimated population average and 95% Wald CI was ",
+    " effects) presented data which could be pooled. The estimated population average and 95% Wald CI were ",
     pooled,
     ". The heterogeneity at level 2 was ",
     i2_2,
@@ -284,7 +284,7 @@ describe_moderators = function(obj){
       R2_code,
       "% of heterogeneity within studies (level 2), and ",
       R2_3_code,
-      "% of heterogeneity between studies (level 3)."
+      "% between studies (level 3)."
     )
   })
 

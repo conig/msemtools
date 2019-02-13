@@ -227,7 +227,7 @@ as.character(moderation_object2)
 `r moderation_object2$table$k[1] %>% papertools::as_word(T)` studies
 (`r moderation_object2$table$n[1] %>% papertools::as_word(F)` effects)
 presented data which could be pooled. The estimated population average
-and 95% Wald CI was
+and 95% Wald CI were
 `r papertools::glue_bracket(moderation_object2$table$estimate[1],moderation_object2$table$lbound[1],moderation_object2$table$ubound[1])`.
 The heterogeneity at level 2 was
 `r moderation_object2$table$I2_2[1] %>% '*'(100) %>% papertools::digits(2)`%.
@@ -238,23 +238,22 @@ The covariates which significantly moderated the baseline model were
 `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
 of heterogeneity within studies (level 2), and
 `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
-of heterogeneity between studies (level 3). ‘Type’ explained
+between studies (level 3). ‘Type’ explained
 `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
 of heterogeneity within studies (level 2), and
 `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
-of heterogeneity between studies (level 3).
+between studies (level 3).
 
 Which evaluates to:
 
 Twenty one studies (sixty six effects) presented data which could be
-pooled. The estimated population average and 95% Wald CI was -0.10
+pooled. The estimated population average and 95% Wald CI were -0.10
 (-0.18, -0.02). The heterogeneity at level 2 was 15.68%. The
 heterogeneity at level 3 was 58.39%. The covariates which significantly
 moderated the baseline model were ‘country’ and ‘type’. ‘Country’
 explained 12.09% of heterogeneity within studies (level 2), and 66.06%
-of heterogeneity between studies (level 3). ‘Type’ explained 6.93% of
-heterogeneity within studies (level 2), and 79.43% of heterogeneity
-between studies (level 3).
+between studies (level 3). ‘Type’ explained 6.93% of heterogeneity
+within studies (level 2), and 79.43% between studies (level 3).
 
 Funnel plots
 ------------
