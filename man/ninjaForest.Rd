@@ -8,7 +8,7 @@ ninjaForest(model, xlab = "Effect size", transform = NULL,
   baseline_name = "All", factor.levels = NULL, vline = NULL,
   cluster = NULL, author = NULL, year = NULL, moderator.shape = 23,
   moderator.size = 3.2, summary.shape = 23, summary.size = 4,
-  font = "serif")
+  diamond = T, font = "serif")
 }
 \arguments{
 \item{model}{an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.}
@@ -36,6 +36,8 @@ ninjaForest(model, xlab = "Effect size", transform = NULL,
 \item{summary.shape}{a scalar ggplot2 geom_point shape value}
 
 \item{summary.size}{a scalar ggplot2 geom_point size value}
+
+\item{diamond}{a bool. If true, diamond is created for summary measure}
 
 \item{font}{A string. The name of a font family. Defaults to serif.}
 }

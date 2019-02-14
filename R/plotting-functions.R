@@ -15,14 +15,15 @@
 #' @param moderator.size a scalar. ggplot2 geom_point size value
 #' @param summary.shape a scalar ggplot2 geom_point shape value
 #' @param summary.size a scalar ggplot2 geom_point size value
+#' @param diamond a bool. If true, diamond is created for summary measure
 #' @param font A string. The name of a font family. Defaults to serif.
 #' @export ninjaForest
 #' @importFrom dplyr filter select %>% mutate
-#' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh theme_classic scale_x_continuous facet_grid geom_vline ylab element_text
+#' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh theme_classic scale_x_continuous facet_grid geom_vline ylab element_text geom_polygon
 #' @importFrom stats reorder
 
 #test arguments:
-#xlab = "effect size"; baseline_name = "All" ; transform = function(x) papertools::logit2prob(x) ; factor.levels = NULL; vline = 0; cluster = NULL; author = NULL; year = NULL
+#xlab = "effect size"; baseline_name = "All" ; transform = function(x) papertools::logit2prob(x) ; factor.levels = NULL; vline = 0; cluster = NULL; author = NULL; year = NULL; moderator.shape = 23;moderator.size = 3.2;summary.shape = 23;summary.size = 4;font = "serif";
 
 ninjaForest = function(model,
                        xlab = "Effect size",
@@ -37,6 +38,7 @@ ninjaForest = function(model,
                        moderator.size = 3.2,
                        summary.shape = 23,
                        summary.size = 4,
+                       diamond = T,
                        font = "serif") {
   if (!"meta_ninja" %in% class(model)) {
     stop("ninjaForest must be provided objects of class 'meta-ninja")
@@ -180,7 +182,7 @@ ninjaForest = function(model,
     xmin = lower,
     xmax = upper
   )) + geom_point(color = "black") +
-    geom_errorbarh(height = .1) +
+    geom_errorbarh(data = dat[dat$type != "baseline",] ,height = .1) +
 
     geom_vline(xintercept = vline, #add horizontal line
                color = 'black',
@@ -192,25 +194,43 @@ ninjaForest = function(model,
       shape = moderator.shape,
       size = moderator.size,
       fill = "white"
-    ) +
+    )
 
-    geom_point( #add summary points
+    if(!diamond){
+    plot = plot + geom_point( #add summary points
       data = dat[dat$type == "baseline", ],
       color = 'black',
       shape = summary.shape,
       size = summary.size,
       fill = "black"
-    ) +
+    )
+
+    }
+
 
 
     #add the CI error bars
     #Specify the limits of the x-axis and relabel it to something more meaningful
-    scale_x_continuous(name = xlab) +
-    ylab(NULL) +
+    plot = plot + scale_x_continuous(name = xlab) +
+    ylab(NULL)
 
-    facet_grid(setting ~ ., scales = 'free', space = 'free') +
+    plot = plot + facet_grid(setting ~ ., scales = 'free', space = 'free') +
     theme_classic()
-
+    #if diamond ------------------------------------
+    if(diamond) {
+      bd = dat %>% filter(type == "baseline")
+      diamond_shape <-
+        data.frame(
+          x = c(bd$lower, bd$est, bd$upper, bd$est),
+          y = c(1, 1.4, 1,0.6),
+          names = c("xmin", "ymax", "xmax", "ymax"),
+          setting = "Pooled"
+        )
+     plot = plot + geom_polygon(data = diamond_shape, aes(x = x, y = y), inherit.aes = F)
+    } else {
+      plot = plot + geom_errorbarh(data = dat[dat$type == "baseline",] ,height = .1)
+    }
+    # change font ---------------------------------
   if (!is.null(font)) {
     plot = plot + theme(text = element_text(family = font))
   }
@@ -340,3 +360,17 @@ funnel_plot = function(model,
 
   return(list(plot = fp, reg_test = reg_test))
 }
+
+#' forest_height
+#'
+#' Use this function to resize funnel plots in rmarkdown.
+#'
+#' @param meta3_plot a moderated meta3 plot
+#' @param slope the numeric value to multiple number of rows by
+#' @param intercept the numeric constant
+#' @export forest_height
+
+forest_height = function(meta3_plot, slope = .18, intercept = .52){
+  length(unique(meta3_plot$data$cluster)) * slope + intercept
+}
+

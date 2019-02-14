@@ -77,6 +77,7 @@ as.character.meta_ninja = function(x, ...) {
 utils::globalVariables(
   c(
     ".",
+    "x",
     "I2_2",
     "I2_3",
     "R2_2",
