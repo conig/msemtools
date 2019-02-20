@@ -234,15 +234,15 @@ The heterogeneity at level 2 was
 The heterogeneity at level 3 was
 `r moderation_object2$table$I2_3[1] %>% '*'(100) %>% papertools::digits(2)`%.
 The covariates which significantly moderated the baseline model were
-‘country’ and ‘type’. ‘Country’ explained
+‘country’ and ‘type’. Country explained
 `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
-of heterogeneity within studies (level 2), and
+of heterogeneity within clusters, and
 `r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
-between studies (level 3). ‘Type’ explained
+between clusters. Type explained
 `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
-of heterogeneity within studies (level 2), and
+of heterogeneity within clusters, and
 `r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
-between studies (level 3).
+between clusters.
 
 Which evaluates to:
 

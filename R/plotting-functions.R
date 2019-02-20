@@ -1,3 +1,28 @@
+#' diamond_df
+#'
+#' This function creates diamonds for moderators and summary statistics.
+#' @param plot a ggplot2
+#' @param data a data.frame
+#' @param fill ggplot2 fill value
+#' @importFrom ggplot2 geom_polygon aes
+
+add_diamond = function(plot, data, fill = "grey20", colour = NA) {
+  diamond_shape = data.frame(
+    x = c(data$lower, data$est, data$upper, data$est),
+    y = c(data$position,data$position + .4,data$position,data$position - .4),
+    names = c("xmin", "ymax", "xmax", "ymax"),
+    setting = "Pooled"
+  )
+  plot = plot + geom_polygon(
+    data = diamond_shape,
+    aes(x = x, y = y),
+    fill = fill,
+    colour = colour,
+    inherit.aes = F
+  )
+  plot
+}
+
 #' ninjaForest
 #'
 #' This function is used for plotting
@@ -16,7 +41,8 @@
 #' @param summary.shape a scalar ggplot2 geom_point shape value
 #' @param summary.size a scalar ggplot2 geom_point size value
 #' @param diamond a bool. If true, diamond is created for summary measure
-#' @param font A string. The name of a font family. Defaults to serif.
+#' @param moderator_diamond a bool. If true, diamond is created for moderators
+#' @param font A string. The name of a font family. Defaults to serif
 #' @export ninjaForest
 #' @importFrom dplyr filter select %>% mutate
 #' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh theme_classic scale_x_continuous facet_grid geom_vline ylab element_text geom_polygon
@@ -35,10 +61,11 @@ ninjaForest = function(model,
                        author = NULL,
                        year = NULL,
                        moderator.shape = 23,
-                       moderator.size = 3.2,
+                       moderator.size = 3,
                        summary.shape = 23,
                        summary.size = 4,
-                       diamond = T,
+                       diamond = TRUE,
+                       moderator_diamond = FALSE,
                        font = "serif") {
   if (!"meta_ninja" %in% class(model)) {
     stop("ninjaForest must be provided objects of class 'meta-ninja")
@@ -117,7 +144,7 @@ ninjaForest = function(model,
     )
   rev = rev(seq_len(nrow(summary)))
   rev = rev[-length(rev)]
-  summary$year = c(1,rev)
+  summary$year = c(1, rev)
   summary$cluster[summary$cluster == "Baseline"] = baseline_name
 
   dat = b_model$data %>%
@@ -133,14 +160,14 @@ ninjaForest = function(model,
 
   dat$author = lapply(dat$cluster, function(x) {
     x = as.numeric(as.character(x))
-    data[data[,cluster] == x, author] %>% unlist() %>% .[1]
+    data[data[, cluster] == x, author] %>% unlist() %>% .[1]
   }) %>% unlist
 
   dat$year = lapply(dat$cluster, function(x) {
     x = as.numeric(as.character(x))
-    data[data[,cluster] == x, year] %>% unlist() %>% .[1]
+    data[data[, cluster] == x, year] %>% unlist() %>% .[1]
   }) %>% unlist
-  dat = dat[order(dat$year), ]
+  dat = dat[order(dat$year),]
   dat$cluster = paste(dat$author, dat$year)
   #create empty columns in summary for author and year
   fun = dat[, c("cluster",
@@ -155,7 +182,7 @@ ninjaForest = function(model,
   #need to make summary have the same column names and orderings.
   dat = rbind(fun,
               summary)
-  dat = dat[order(dat$year), ]
+  dat = dat[order(dat$year),]
 
   if (!is.null(transform)) {
     dat = dat %>%
@@ -174,7 +201,9 @@ ninjaForest = function(model,
     }
   }
 
-  # ------------------------------------- plotting
+  dat$position = 1:nrow(dat)
+
+  # ------------------------------------------------------------------- plotting
 
   plot = ggplot(dat, aes(
     y = reorder(cluster, year),
@@ -182,55 +211,57 @@ ninjaForest = function(model,
     xmin = lower,
     xmax = upper
   )) + geom_point(color = "black") +
-    geom_errorbarh(data = dat[dat$type != "baseline",] ,height = .1) +
+    geom_errorbarh(data = dat[dat$type == "data", ] , height = .1) +
 
-    geom_vline(xintercept = vline, #add horizontal line
+    geom_vline(xintercept = vline,
+               #add horizontal line
                color = 'black',
                linetype = 'dashed') +
 
-    geom_point( #add summary points
-      data = dat[dat$type == "moderator", ],
+    if (!diamond) {
+      plot = plot + geom_point(
+        #add summary points
+        data = dat[dat$type == "baseline",],
+        color = 'black',
+        shape = summary.shape,
+        size = summary.size,
+        fill = "black"
+      )
+
+    }
+
+  #add the CI error bars
+  #Specify the limits of the x-axis and relabel it to something more meaningful
+  plot = plot + scale_x_continuous(name = xlab) +
+    ylab(NULL)
+
+  plot = plot + facet_grid(setting ~ ., scales = 'free', space = 'free') +
+    theme_classic()
+  #if diamond ------------------------------------
+  if (diamond) {
+    bd = dat[dat$type == "baseline",]
+    plot = plot %>% add_diamond(bd)
+  } else {
+    plot = plot + geom_errorbarh(data = dat[dat$type == "baseline", ] , height = .1)
+  }
+
+  if (moderator_diamond) {
+    types = dat$cluster[dat$type == "moderator"]
+    for (i in types) {
+      plot = plot %>% add_diamond(dat[dat$cluster == i, ], fill = "white", colour = "grey20")
+    }
+  } else {
+    plot = plot + geom_errorbarh(data = dat[dat$type == "moderator", ] , height = .25) + geom_point(
+      #add summary points
+      data = dat[dat$type == "moderator",],
       color = 'black',
       shape = moderator.shape,
       size = moderator.size,
       fill = "white"
     )
+  }
 
-    if(!diamond){
-    plot = plot + geom_point( #add summary points
-      data = dat[dat$type == "baseline", ],
-      color = 'black',
-      shape = summary.shape,
-      size = summary.size,
-      fill = "black"
-    )
-
-    }
-
-
-
-    #add the CI error bars
-    #Specify the limits of the x-axis and relabel it to something more meaningful
-    plot = plot + scale_x_continuous(name = xlab) +
-    ylab(NULL)
-
-    plot = plot + facet_grid(setting ~ ., scales = 'free', space = 'free') +
-    theme_classic()
-    #if diamond ------------------------------------
-    if(diamond) {
-      bd = dat %>% filter(type == "baseline")
-      diamond_shape <-
-        data.frame(
-          x = c(bd$lower, bd$est, bd$upper, bd$est),
-          y = c(1, 1.4, 1,0.6),
-          names = c("xmin", "ymax", "xmax", "ymax"),
-          setting = "Pooled"
-        )
-     plot = plot + geom_polygon(data = diamond_shape, aes(x = x, y = y), inherit.aes = F)
-    } else {
-      plot = plot + geom_errorbarh(data = dat[dat$type == "baseline",] ,height = .1)
-    }
-    # change font ---------------------------------
+  # change font ---------------------------------
   if (!is.null(font)) {
     plot = plot + theme(text = element_text(family = font))
   }

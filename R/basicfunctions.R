@@ -1,3 +1,5 @@
+#TODO commands in data field should be evaluated, cannot assume data will be assigned to an object before operating on.
+
 #' extractData
 #'
 #' Grabs pertinent data from a metaSEM model
@@ -114,6 +116,32 @@ extractData = function(model, model.name = NULL) {
   return(as_tibble(result))
 }
 
+
+#' factor_to_matrix
+#'
+#' Converts a factor to a predictor matrix
+#' @param factor a factor.
+#' @param col_names a vector of colnames. If none given, will use factor levels.
+#' @importFrom dplyr %>%
+#' @export factor_to_matrix
+
+factor_to_matrix = function(factor, col_names = NULL) {
+  if (!is.factor(factor)) {
+    stop("factor_to_matrix must be supplied a factor", call. = FALSE)
+  }
+  levels = levels(factor)
+  result = lapply(levels, function(y) {
+    ifelse(factor == y, 1, 0)
+  }) %>%
+    do.call("cbind", .)
+  if (is.null(col_names)) {
+    colnames(result) = levels
+  } else{
+    colnames(result) = col_names
+  }
+  return(result)
+}
+
 #' extractSlopes
 #'
 #' Grabs slope coefficient data
@@ -200,7 +228,7 @@ meta3_moderation = function(call,moderators) {
   amazing_result = lapply(moderators, function(x) {
     #----------------- start moderation
     #message(x)
-    temp_data = data[, c(y, v, cluster, make.names(x))]
+    temp_data = data[, c(make.names(y), make.names(v), cluster, make.names(x))]
     omitted = temp_data %>% na.omit
     temp_data$x_internal = temp_data[, make.names(x)]
 
@@ -246,17 +274,14 @@ meta3_moderation = function(call,moderators) {
 
     #if the moderator is a factor -----------------------------------------
     if (is.factor(mod)) {
-      temp_data[, make.names(x)] = droplevels(temp_data[, make.names(x)])
-      omitted[, make.names(x)] = droplevels(omitted [, make.names(x)])
-      keep_levels = levels(omitted[,make.names(x)])
-      mod = droplevels(mod) #get rid of empty levels
+      keep_levels = omitted[,make.names(x)] %>% droplevels %>%
+        levels
+      mod = factor(mod, levels = keep_levels) #get rid of empty levels
       levels = keep_levels
+      temp_data[,make.names(x)] = factor(temp_data[,make.names(x)], levels = keep_levels)
 
-      cat_x = lapply(levels, function(y) {
-        ifelse(mod == y, 1, 0)
-      }) %>%
-        do.call("cbind", .)
-      colnames(cat_x) = levels
+      cat_x = temp_data[,make.names(x)] %>%
+        factor_to_matrix()
 
       ##sting meta won't take cat_x due to its environment.
 
@@ -404,8 +429,8 @@ moderate = function(model, ..., moderators = NULL) {
   }
   data = model$call$data %>%as.character() %>%  get
   Conigrave::check_names(mods, data)
-
-  #return(moderators)
+ #return(call)
+  #return(mods)
   meta3_moderation(call,
                     moderators = mods)
 

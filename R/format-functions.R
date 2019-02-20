@@ -11,7 +11,7 @@
 #' @importFrom papertools glue_bracket digits
 
 #examples
-#round = 2; transform = NULL; t.name = "Pr (95% CI)"; hide.insig = F
+#round = 2; transform = NULL; t.name = "Pr (95% CI)"; hide.insig = T
 format_nicely = function(x,
                          round = 2,
                          effect.name = NULL,
@@ -32,7 +32,7 @@ format_nicely = function(x,
   df$"Slope SE" = NA
 
   if (hide.insig) { #this code chunk could be improved, was painful to write.
-    mods = unique(df$moderation)
+    mods = unique(df$moderation) #what are the mods?
     for (i in seq_along(mods)) {
       #message(i)
 
@@ -43,14 +43,17 @@ format_nicely = function(x,
         p =  ps %>%
           max(na.rm = T)
         if (p >= 0.05) {
-          rows = which(!(df$moderation == mods[i] &
+          rows = which(!(df$moderation == mods[i] & #rows to keep
                            duplicated(df$moderation)))
           df = df[rows, ] #remove factor levels from the current moderation
           base_table = base_table[rows,]
 
 
         }
-      }
+      }else { #all ps were NAs
+        rows = which(!(df$moderation == mods[i] & duplicated(df$moderation))) #rows to keep
+        df = df[rows,]
+    }
     }
   }
 
@@ -252,14 +255,18 @@ describe_moderators = function(obj){
   sig_mods_table = x$table %>%
     filter(!type %in% c("Baseline", "factor level") &
              `anova p-value` < 0.05)
+  if(nrow(sig_mods_table) > 0){
   sig_mods = sig_mods_table %>% select(model.name) %>% unlist %>% tolower %>%  paste(collapse = "', '")
   sig_mods = paste0("'", sig_mods, "'") %>%
     gsub(",(?!.*,)", " and", ., perl = T)
-
   first_phrase = paste0(base_text, " ", sig_mods, ".")
+  }else{
+    first_phrase = "No covariates were found to be significant moderators of the baseline model."
+  }
+
 
   list_text = lapply(seq_along(sig_mods_table$model.name), function(i) {
-    mod_name = sig_mods_table$model.name[i] %>% tolower %>% Hmisc::capitalize() %>% paste0("'", ., "'")
+    mod_name = sig_mods_table$model.name[i] %>% tolower %>% Hmisc::capitalize()
     R2_code = paste0(
       "`r ",
       obj,
@@ -282,9 +289,9 @@ describe_moderators = function(obj){
       mod_name,
       " explained ",
       R2_code,
-      "% of heterogeneity within studies (level 2), and ",
+      "% of heterogeneity within clusters, and ",
       R2_3_code,
-      "% between studies (level 3)."
+      "% between clusters."
     )
   })
 
