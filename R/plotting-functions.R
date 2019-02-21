@@ -345,7 +345,7 @@ funnel_plot = function(model,
 
   if(density){
     fp = fp +
-      stat_density_2d(aes(fill = stat(level)),bins = 6,colour = "white",geom = "polygon", alpha = 0.2, show.legend = F) +
+      stat_density_2d(aes(fill = stat(level)),bins = 7,colour = "white",geom = "polygon", alpha = 0.2, show.legend = F) +
       scale_fill_gradient(low = "grey60", high = "grey30")
   }
   fp = fp +
@@ -401,7 +401,7 @@ funnel_plot = function(model,
 #' @param intercept the numeric constant
 #' @export forest_height
 
-forest_height = function(meta3_plot, slope = .18, intercept = .52){
+forest_height = function(meta3_plot, slope = .145, intercept = .52){
   length(unique(meta3_plot$data$cluster)) * slope + intercept
 }
 
