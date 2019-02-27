@@ -12,6 +12,8 @@ add_diamond(plot, data, fill = "grey20", colour = NA)
 \item{data}{a data.frame}
 
 \item{fill}{ggplot2 fill value}
+
+\item{colour}{character. A hex code. If provided, gives diamond coloured border}
 }
 \description{
 This function creates diamonds for moderators and summary statistics.

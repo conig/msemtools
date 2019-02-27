@@ -4,6 +4,7 @@
 #' @param plot a ggplot2
 #' @param data a data.frame
 #' @param fill ggplot2 fill value
+#' @param colour character. A hex code. If provided, gives diamond coloured border
 #' @importFrom ggplot2 geom_polygon aes
 
 add_diamond = function(plot, data, fill = "grey20", colour = NA) {
