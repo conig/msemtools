@@ -215,9 +215,8 @@ For an example we will use moderation\_object2.
 as.character(moderation_object2)
 ```
 
-Inspecting the Q statistic revealed significant heterogeneity
-(Q(`r summary(df = moderation_object2$models$Baseline)$Q.stat$Q.df %>% papertools::digits(2)`)
-=
+Inspecting the Q statistic revealed significant heterogeneity (Q(df =
+`r summary(moderation_object2$models$Baseline)$Q.stat$Q.df`) =
 `r summary(moderation_object2$models$Baseline)$Q.stat$Q %>% papertools::digits(2)`,
 *p* =
 `r summary(moderation_object2$models$Baseline)$Q.stat$pval %>% papertools::round_p(2)`).
@@ -276,12 +275,3 @@ model0 %>% funnel_plot(density = T)
     ## predictor: standard error
     ## 
     ## test for funnel plot asymmetry: z = -1.9925, p = 0.0463
-
-Test text
----------
-
-Discipline did not moderate the baseline model
-($\\\\bigtriangleup\\\\chi^2^$(3) = 5.73, *p* = 0.13). Country moderated
-the baseline model($\\\\bigtriangleup\\\\chi^2^$(4) = 11.62, *p* =
-0.02). Type moderated the baseline
-model($\\\\bigtriangleup\\\\chi^2^$(1) = 8.18, *p* = &lt; 0.01).
