@@ -66,9 +66,10 @@ as.data.frame.meta_ninja = function(x,
 as.character.meta_ninja = function(x, ...) {
   obj = match.call()
   obj = obj$x %>% deparse
+  q_desc = describe_q(obj)
   baseline_desc = describe_baseline(obj)
   moderator_desc = describe_moderators(obj)
-  output = paste(baseline_desc, moderator_desc, collapse = " ")
+  output = paste(q_desc,baseline_desc, moderator_desc, collapse = " ")
   return(output)
 }
 

@@ -204,6 +204,33 @@ default_note = function(){
   return(note)
 }
 
+
+
+#describing models
+
+#' describe_baseline
+#' @param obj a meta_ninja
+#' @importFrom dplyr %>%
+
+describe_q = function(obj){
+  meta_ninja = get(obj)
+  q_info = meta_ninja$models$Baseline %>%
+    summary %>%
+    .$Q.stat
+  if(q_info$pval < 0.05){
+    starting_message = "Inspecting the Q statistic revealed significant heterogeneity"
+  } else{
+    starting_message = "Inspecting the Q statistic did not reveal significant heterogeneity"
+  }
+  q = paste0("`r summary(",obj,"$models$Baseline)$Q.stat$Q %>% papertools::digits(2)`")
+  df = paste0("`r summary(",obj,"$models$Baseline)$Q.stat$Q.df`")
+  p = paste0("`r summary(",obj,"$models$Baseline)$Q.stat$pval %>% papertools::round_p(2)`")
+  stats_text = paste0(" (Q(df = ",df,") = ",q, ", *p* = ", p,").")
+  paste0(starting_message, stats_text)
+  }
+
+
+
 #describing models
 
 #' describe_baseline
@@ -285,6 +312,7 @@ describe_moderators = function(obj){
       "'",
       ") %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`"
     )
+
     paste0(
       mod_name,
       " explained ",
@@ -300,4 +328,60 @@ describe_moderators = function(obj){
   final_text = paste0(first_phrase, " ", moderation_text)
   return(final_text)
 }
+
+#' describe_all_mods
+#' @param obj the charcater name of an object
+#' @export describe_all_mods
+
+describe_all_mods = function(obj) {
+  obj = match.call()
+  obj = obj$obj %>% deparse
+
+  x = get(obj, envir = globalenv())
+  models = x$table %>%
+    filter(type == "factor") %>%
+    select(model.name) %>% unlist %>%
+    as.character
+
+  lapply(models, function(i) {
+    anova_string = paste0("anova(",
+                          obj,
+                          "$models$",
+                          "'",
+                          i,
+                          "'",
+                          ", ",obj,"$models$Baseline)")
+
+    diffll = paste0("`r ",
+                    anova_string,
+                    "$diffLL[2] %>% papertools::digits(2)`")
+    df =  paste0("`r ", anova_string, "$diffdf[2]", "`")
+    pval = paste0("`r ", anova_string, "$p[2] %>% papertools::round_p(2)", "`")
+    real_p = eval(parse(text = paste0(anova_string, "$p[2]")))
+
+
+
+    if (real_p < 0.05) {
+      eval_message = " moderated the baseline model"
+    } else{
+      eval_message = " did not moderate the baseline model "
+    }
+
+    paste0(
+      i %>% Hmisc::capitalize(),
+      eval_message,
+      "($\\bigtriangleup$$\\chi$^2^(",
+      df,
+      ") = ",
+      diffll,
+      ", *p* = ",
+      pval,
+      ")."
+    )
+
+  }) %>% paste(collapse = " ")
+
+
+}
+
 

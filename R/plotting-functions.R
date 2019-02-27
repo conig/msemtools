@@ -54,7 +54,7 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 ninjaForest = function(model,
                        xlab = "Effect size",
                        transform = NULL,
-                       baseline_name = "All",
+                       baseline_name = "Pooled estimate",
                        factor.levels = NULL,
                        vline = NULL,
                        cluster = NULL,
