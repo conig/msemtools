@@ -440,3 +440,116 @@ fix_call = function(model){
   model$call[1] = call("meta3")
   model
 }
+
+#' get_args
+#'
+#' Gets arguments from elipse and separates at equals signs.
+#' @param ... arguments to be split with =
+#' @importFrom dplyr %>%
+
+get_args <- function(...) {
+  vars = substitute(list(...))[-1] %>%
+    sapply(deparse) %>%
+    as.list
+#return(vars)
+  if(is.null(names(vars))){
+  names(vars) = vars
+  }
+  vars[names(vars) == vars] = NA
+
+  names = names(vars)
+  names[names == ""] = vars[names == ""]
+  for(i in seq_along(vars)){
+    if(names(vars)[i]== ""){
+      vars[[i]] = NA
+    }
+
+    vars[[i]] = eval(parse(text =(vars[[i]])))
+
+  }
+  names(vars) = names
+  vars
+}
+
+#' split_to_matrix
+#'
+#' creates a predictor matrix when cells can contain multiple tags
+#' @param x a character vector
+#' @param pattern pattern provided to str_split
+#' @importFrom stringr str_split
+#' @importFrom dplyr %>%
+#' @export split_to_matrix
+
+split_to_matrix = function(x, pattern = ",") {
+
+  split = x %>%
+    stringr::str_split(pattern) %>% #split based on pattern
+    lapply(., trimws) #remove whitespace
+
+  contents = split %>%
+    unlist %>%
+    unique
+
+  out = lapply(contents, function(c) {
+    lapply(split, function(s) {
+      as.numeric(c %in% s)
+    }) %>% unlist
+  }) %>% do.call("cbind", .)
+
+  colnames(out) = contents
+
+  return(out)
+}
+
+#' moderate2
+#'
+#' This is a wrapper to perform meta3 moderations with. The original data file must be in the environment.
+#' @param model A meta3 model. The original data file must be available in the environment, with the same name.
+#' @param ... moderators, entered as objects
+#' @param moderators a character vector. A vector of moderator names may be supplied.
+#' @importFrom dplyr %>%
+#' @importFrom Conigrave check_names
+#' @export moderate2
+# example_data <- metaSEM::Bornmann07 %>%
+#   as_tibble
+# model0 <- meta3(
+#   y = logOR,
+#   v = v,
+#   cluster = Cluster,
+#   data = example_data,
+#   model.name = "3 level model"
+# )
+#model = model0
+
+moderate2 = function(model, ..., moderators = NULL) {
+  if (!identical(class(model), c("meta", "meta3"))) {
+    stop("moderate only works  for meta3 objects")
+  }
+  mods = c()
+  call = get_call(model)
+  args = get_args(...)
+
+  if (call$data == ".") {
+    stop(
+      "moderate grabs the data.frame based on it's name as stored in the metaSEM model call. You've used a pipe (%>%) to specify the model which records the data's name as '.' which cannot be accessed from the global environment. This breaks moderate, please specify the data name in the model explicitly."
+    )
+  }
+
+  args
+
+
+
+  if (!is.null(moderators)) {
+    mods = append(mods, moderators) %>% unlist
+  }
+  data = model$call$data %>%as.character() %>%  get
+  Conigrave::check_names(mods, data)
+  #return(call)
+  #return(mods)
+  meta3_moderation(call,
+                   moderators = mods)
+
+}
+
+
+

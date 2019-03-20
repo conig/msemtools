@@ -1,9 +1,35 @@
+get_haiku = function(){
+
+  one = c("A ninja's swift gaze...",
+          "A deathly black cat...",
+          "A dying brown bird...",
+          "A discouraged ant...")
+  two = c("Silver tears falling softly...",
+          "Big legs landing heavily...",
+          "Black pebbles bouncing mournfully...",
+          "Dark stones, shrouded in concern...")
+  three = c("Leaves fall silently...",
+            "Foxes sleep lazily...",
+            "John has chickenpox...",
+            "Some fish with a leer...",
+            "A boggle eyed toad...",
+            "A scary notion...")
+
+  paste(sample(one,1),sample(two,1),sample(three,1),
+        "                             [-_-]~", sep = "\n")
+
+}
+
+
+
 .onAttach <- function(libname, pkgname) {
+  m = get_haiku()
   packageStartupMessage(
-    "A ninja's swift gaze...
-Dark stones, shrouded in concern...
-leaves fall silently.
-                            [-_-]~"
+#     "A ninja's swift gaze...
+# Dark stones, shrouded in concern...
+# leaves fall silently.
+#                             [-_-]~"
+    m
   )
 }
 #Define classes

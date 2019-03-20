@@ -402,7 +402,7 @@ funnel_plot = function(model,
 #' @param intercept the numeric constant
 #' @export forest_height
 
-forest_height = function(meta3_plot, slope = .145, intercept = .52){
+forest_height = function(meta3_plot, slope = .12, intercept = .52){
   length(unique(meta3_plot$data$cluster)) * slope + intercept
 }
 

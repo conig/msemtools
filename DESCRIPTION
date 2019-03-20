@@ -16,11 +16,13 @@ Imports:
     methods (>= 3.5.1),
     ggplot2 (>= 3.1.0),
     stats (>= 3.5.1),
-    metafor(>= 2.0-0),
-    Hmisc(>= 4.2-0),
-    papertools,
+    metafor (>= 2.0-0),
+    Hmisc (>= 4.2-0),
     Conigrave,
-    papaja
+    papaja,
+    papertools,
+    stringr,
+    stringi
 Remotes:
     JConigrave/papertools,
     JConigrave/Conigrave,

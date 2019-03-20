@@ -4,7 +4,7 @@
 \alias{forest_height}
 \title{forest_height}
 \usage{
-forest_height(meta3_plot, slope = 0.145, intercept = 0.52)
+forest_height(meta3_plot, slope = 0.12, intercept = 0.52)
 }
 \arguments{
 \item{meta3_plot}{a moderated meta3 plot}
