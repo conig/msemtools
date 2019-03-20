@@ -509,7 +509,7 @@ split_to_matrix = function(x, pattern = ",") {
 #' @param moderators a character vector. A vector of moderator names may be supplied.
 #' @importFrom dplyr %>%
 #' @importFrom Conigrave check_names
-#' @export moderate2
+
 # example_data <- metaSEM::Bornmann07 %>%
 #   as_tibble
 # model0 <- meta3(
