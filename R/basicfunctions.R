@@ -441,36 +441,6 @@ fix_call = function(model){
   model
 }
 
-#' get_args
-#'
-#' Gets arguments from elipse and separates at equals signs.
-#' @param ... arguments to be split with =
-#' @importFrom dplyr %>%
-
-get_args <- function(...) {
-  vars = substitute(list(...))[-1] %>%
-    sapply(deparse) %>%
-    as.list
-#return(vars)
-  if(is.null(names(vars))){
-  names(vars) = vars
-  }
-  vars[names(vars) == vars] = NA
-
-  names = names(vars)
-  names[names == ""] = vars[names == ""]
-  for(i in seq_along(vars)){
-    if(names(vars)[i]== ""){
-      vars[[i]] = NA
-    }
-
-    vars[[i]] = eval(parse(text =(vars[[i]])))
-
-  }
-  names(vars) = names
-  vars
-}
-
 #' split_to_matrix
 #'
 #' creates a predictor matrix when cells can contain multiple tags
@@ -498,8 +468,87 @@ split_to_matrix = function(x, pattern = ",") {
 
   colnames(out) = contents
 
+  matrix_levels = levels(droplevels(x))
+  levels_length_same <- length(matrix_levels) == ncol(out)
+
+  if(levels_length_same){
+  out = out[,matrix_levels] #reorder matrix if possible
+  }
+
   return(out)
 }
+
+#' get_args
+#'
+#' Derrives arguments from elipses
+#' @param ... elipises
+#' @importFrom dplyr %>%
+
+get_args <- function(...) {
+  vars = substitute(list(...))[-1] %>%
+    sapply(deparse) %>%
+    as.list
+  vars
+}
+
+#' prepare_args
+#'
+#' Takes a list of arguments, puts contents in names when there are none
+#' @param args some args
+
+prepare_args = function(args){
+  vars = args
+  if(is.null(names(vars))){
+    names(vars) = rep("", length(vars))
+  }
+  names = names(vars)
+  names[names == ""] = vars[names == ""] %>%
+    unlist
+
+  # for(i in seq_along(vars)){
+  #   if(names(vars)[i]== ""){
+  #     vars[[i]] = NA
+  #   }
+  #
+  #   vars[[i]] = as.name(vars[[i]])
+  #
+  # }
+  names(vars) = names
+  vars
+}
+
+#' get_k_n
+#'
+#' extracts the numbers of k and n from a predictor matrix
+#' @param model a model
+#' @importFrom dplyr %>%
+
+get_k_n = function(model){
+  if(model$call$model.name == "Baseline"){
+    info = extractData(model)
+    k = info$k
+    n = info$n
+    data.frame(name = "baseline",
+               k = k,
+               n = n)
+  }else{
+    data = eval(parse(text = model$call$data))
+    suppressMessages(attach(data))
+    pred_matrix = eval(parse(text = deparse(model$call$x))) %>%
+      as.matrix
+    suppressMessages(detach(data))
+    lapply(seq_along(pred_matrix[1,]), function(i){
+      clus = as.numeric(unlist(data[,deparse(model$call$cluster)]))
+      mini_matrix = pred_matrix[,i] %>%
+        cbind(moderators = ., cluster = clus) %>%
+        na.omit
+    data.frame(name = "slope",k = length(unique(mini_matrix[,2])),
+         n = nrow(mini_matrix))
+    }) %>%
+      do.call(rbind,.)
+  }
+}
+
 
 #' moderate2
 #'
@@ -507,21 +556,20 @@ split_to_matrix = function(x, pattern = ",") {
 #' @param model A meta3 model. The original data file must be available in the environment, with the same name.
 #' @param ... moderators, entered as objects
 #' @param moderators a character vector. A vector of moderator names may be supplied.
+#' @param binary_intercept a numeric. Constrain the intercept for matricies with binary elements
+#' @param continuous_intercept a numeric. Constrain the intercept for matricies with continuous elements
 #' @importFrom dplyr %>%
 #' @importFrom Conigrave check_names
+#' @return a meta_ninja \(until I rename it\)
+#' @details
+#' moderate simplifies moderation analyses by taking the call from a meta3, and then using it to generate
+#' subsequent moderation models. A few rules are used to do this.
+#' 1. If a continuous variable is used a predictor, then an intercept is recorded
+#' 2. If binary variables are included, then intercepts are forced to be zero, these binary variables become the intercepts.
 
-# example_data <- metaSEM::Bornmann07 %>%
-#   as_tibble
-# model0 <- meta3(
-#   y = logOR,
-#   v = v,
-#   cluster = Cluster,
-#   data = example_data,
-#   model.name = "3 level model"
-# )
-#model = model0
-
-moderate2 = function(model, ..., moderators = NULL) {
+# model = model0; moderators = NULL
+# args = get_args()
+moderate2 = function(model, ..., moderators = NULL,binary_intercept = 0, continuous_intercept = NULL) {
   if (!identical(class(model), c("meta", "meta3"))) {
     stop("moderate only works  for meta3 objects")
   }
@@ -535,21 +583,321 @@ moderate2 = function(model, ..., moderators = NULL) {
     )
   }
 
-  args
-
-
-
   if (!is.null(moderators)) {
-    mods = append(mods, moderators) %>% unlist
+    mods = as.list(moderators) %>%
+      append(args)
+    mods = append(args, moderators) %>% unlist
+  }else{
+    mods = args
   }
-  data = model$call$data %>%as.character() %>%  get
-  Conigrave::check_names(mods, data)
+    mods = mods %>%
+      prepare_args
+
+  data = model$call$data %>%as.character() %>% parse(text = .) %>% eval
+  #Conigrave::check_names(mods, data)
   #return(call)
   #return(mods)
-  meta3_moderation(call,
-                   moderators = mods)
 
+  #return(list(call = call, moderators = mods))
+
+  meta3_ninja(call,
+                   moderators = mods,
+              binary_intercept = binary_intercept,
+              continuous_intercept = continuous_intercept)
 }
 
+#' is_binary
+#'
+#' This function tests whether a matrix column is binary
+#' @param x a matrix
+
+is_binary = function(x){
+  apply(as.matrix(x),2,function(y) { all(y %in% 0:1) })
+}
+
+#' add_function
+#'
+#' wraps text in a function
+#' @param x character
+#' @param f as character
+
+add_function = function(x, f = NULL){
+  if(!is.null(f)){
+    x = paste0(f,"(",x,")")
+  }
+}
+
+#' character_call
+#'
+#' converts character to a call object
+#' @param x a character
+#' @return a call
+
+character_call = function(x){
+  eval(parse(text = paste0("quote(",x,")")))
+}
+
+#' extractSlopes2
+#'
+#' Grabs slope coefficient data
+#'
+#' @param model a model.
+
+extractSlopes2 = function(model) {
+  summary = summary(model)
+  coef = summary$coefficients %>% data.frame %>% rownames_to_column
+  names(coef) = c("row", "est", "stde", "lbound", "ubound", "z", "p")
+  intercept = coef[grepl("Intercept", coef$row),]
+  slopes = coef[grepl("Slope", coef$row),]
+  rbind(intercept,slopes)
+}
+
+#' extract_colnames
+#'
+#' Tries to determine column names of matricies
+#' @param model the model to extract from
+#' @param n the number of names to extract
+#' @param data data
+#' @importFrom dplyr %>%
+#' @importFrom stringr str_split
+
+extract_colnames = function(model, n, data) {
+  names = deparse(model$call$x) #just give the names of the input
+  names = gsub("[\\(\\)]", "", regmatches(names, gregexpr("\\(.*?\\)", names))[[1]]) %>%
+    str_split(pattern = ",") %>%
+    unlist %>%
+    trimws %>%
+    .[1] # keep first argument only
+
+  if (length(names) != n) {
+    #if names isn't equal to n
+    suppressMessages(attach(data))
+    obj = eval(parse(text = deparse(model$call$x))) #
+    names = colnames(obj)
+    suppressMessages(detach(data))
+  }
+
+  if (length(names) != n) {
+    names = as.character(model$call$x)[-1]
+  }
+  if (length(names) != n) {
+    #get multiple names out of function
+    names = deparse(obj)
+    names = gsub("[\\(\\)]", "", regmatches(names, gregexpr("\\(.*?\\)", names))[[1]]) %>%
+      str_split(pattern = ",") %>%
+      unlist %>%
+      trimws
+  }
+  if (length(names) == n) {
+    names
+  } else{
+    rep("unknown variable", n)
+  }
+}
+
+#' meta3_ninja
+#'
+#' This function streamlines the moderation process. Moderation strategy varies based on whether a numeric, or factoral variable is supplied.
+#' @param call a call list
+#' @param moderators a vector of moderators
+#' @param binary_intercept a numeric. Constrain the intercept for matricies with binary elements
+#' @param continuous_intercept a numeric. Constrain the intercept for matricies with continuous elements
+#' @importFrom metaSEM meta3
+#' @importFrom dplyr filter %>% add_row everything
+#' @importFrom tibble as_tibble
+#' @importFrom stats anova na.omit
+#' @importFrom methods setClass representation
+#' @importFrom future.apply future_lapply
+#' @export meta3_ninja
+
+meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_intercept = NULL){
+
+  #--------------------------------------- create base
+  call$model.name = "Baseline"
+  #--------------------------------------
+  #Define variables to extract
+  get_vars = function(x) {
+    x %>% dplyr::select(
+      moderation,
+      model.name,
+      k,
+      n,
+      estimate,
+      SE,
+      lbound,
+      ubound,
+      I2_2,
+      I2_3,
+      R2_2,
+      R2_3,
+      Mx_status
+    )
+  }
+
+  data = call$data %>%
+    as.character %>%
+    parse(text = .) %>%
+    eval %>%
+    data.frame
+
+  y = call$y %>%
+    as.character
+  v = call$v %>%
+    as.character
+  cluster = call$cluster %>%
+    as.character
+
+  # define calls ---------------------------------------------
+  calls = lapply(everything(moderators), function(x) {
+    #grab moderator details ----------------------------------
+    mod_name = names(moderators[x])
+    mod = moderators[x][[1]]
+    new_call = call
+    #grab moderator matrix -----------------------------------
+    suppressMessages(attach(data))
+    mod_matrix = mod %>%
+      parse(text = .) %>%
+      eval
+    detach(data)
+    # if not a matrix apply split to matrix ------------------
+    if (!is.matrix(mod_matrix) & !is.numeric(mod_matrix)) {
+      mod_matrix = split_to_matrix(mod_matrix)
+      new_call$x = mod %>%
+        add_function("split_to_matrix") %>%
+        character_call()
+    }else if(is.numeric(mod_matrix)){
+      new_call$x = mod %>%
+        character_call()
+    }
+
+    # stop if not a matrix -----------------------------------
+    if (!is.matrix(mod_matrix) & !is.numeric(mod_matrix)) {
+      stop(paste0("Could not coerce '", mod, "' to matrix."))
+    }
+
+    # Prepare intercepts -------------------------------------
+    binary_elements = any(is_binary(mod_matrix))
+    model_intercept = NULL
+    if (binary_elements) {
+      model_intercept = 0
+      if (!is.null(binary_intercept)) {
+        model_intercept = 0
+      }
+
+    } else if (!is.null(continuous_intercept)) {
+      model_intercept = continuous_intercept
+    }
+
+    if (!is.null(model_intercept)) {
+      new_call$intercept.constraints = model_intercept
+    }
+
+    new_call$model.name = mod_name
+
+    return(new_call)
+  })
+  # create call list
+  calls = append(list(call), calls)
+  names(calls) = c(call$model.name,moderators)
+
+  # run models ---------------------------------------------
+  models = future.apply::future_lapply(calls, function(x){
+    do.call(meta3,x) %>%
+      try_even_harder() %>%
+      fix_call
+  })
+
+  moderator_models = models[(2:length(models))]
+
+  predictors = future.apply::future_lapply(calls,function(x){
+    pred = x$x
+  })
+
+  # run anovas ---------------------------------------------
+  model_anovas = future.apply::future_lapply(everything(moderator_models), function(x){
+    out = anova(moderator_models[[x]],models$Baseline)
+    data.frame(diffdf = out$diffdf[2], p =out$p[2])
+  }) %>% do.call(rbind,.)
+
+  ################ --------------------------------------------
+  #Baseline table
+  baseline_table = models[[1]] %>% extractData %>%
+    mutate(moderation = "Baseline") %>%
+    get_vars %>%
+    mutate(type = "Baseline")
+
+  ################ ---------------------------------------------------------------------
+  # Moderator table
+  model_table = future.apply::future_lapply(everything(moderator_models), function(x) {
+    #message(x)
+    # overall line --------------
+    model_info = extractData(moderator_models[[x]])
+    overall = data.frame(
+      model.name = model_info$model.name,
+      k = model_info$k,
+      n = model_info$n,
+      R2_2 = model_info$R2_2,
+      R2_3 = model_info$R2_3,
+      `anova p-value` = model_anovas$p[x],
+      Mx_status = model_info$Mx_status,
+      type = "moderator"
+    )
+    # model slopes --------------
+    slopes = extractSlopes2(moderator_models[[x]])
+    n_slopes = slopes$row[grepl("Slope", slopes$row)] %>%
+      length
+    slope_names = extract_colnames(moderator_models[[x]], n = n_slopes , data = data)
+    slope_k_n = get_k_n(moderator_models[[x]]) %>%
+      filter(name == "slope")
+    slopes$k = NA; slopes$n = NA
+    slopes[grepl("Slope",slopes$row),]$k = slope_k_n$k
+    slopes[grepl("Slope",slopes$row),]$n = slope_k_n$n
+    slopes$row[grepl("Slope", slopes$row)] = slope_names
+    slopes = slopes %>% rename(model.name = row) %>%
+      mutate(type = "moderator level")
+
+    #bind
+    plyr::rbind.fill(overall, slopes) %>%
+      mutate(moderation = model_info$model.name) %>%
+      select(moderation, model.name, k, n, estimate = est, SE = stde, lbound, ubound,
+             R2_2,R2_3,
+             Mx_status,`anova p-value`=anova.p.value, type ) %>%
+      as_tibble %>%
+      return()
+
+  }) %>% do.call(rbind,.)
+
+  merged_tables = plyr::rbind.fill(baseline_table,model_table)
+
+
+  out = list(
+    models = models,
+    table = as_tibble(merged_tables),
+    cluster = cluster,
+    covariates = predictors,
+    data = models[[1]]$call$data
+  )
+  class(out) = c("meta_ninja")
+
+  #Flag to the users if models have a mx status of greater than one (which indicates issues)
+  model_names = out$table$model.name
+  model_scores = out$table$Mx_status
+  model_names = paste0(model_names, "[", model_scores, "]")
+  problem_models =  model_names[which(model_scores > 1)]
+
+
+  if (length(problem_models) > 0) {
+    warning(
+      paste0(
+        "The following models had Mx status greater that one which indicates potential issues: '",
+        paste(problem_models, collapse = "', '"),
+        "'."
+      ),
+      call. = F
+    )
+  }
+
+  return(out)
+}
 
 

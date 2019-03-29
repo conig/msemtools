@@ -3,17 +3,22 @@ get_haiku = function(){
   one = c("A ninja's swift gaze...",
           "A deathly black cat...",
           "A dying brown bird...",
-          "A discouraged ant...")
+          "A discouraged ant...",
+          "A reflective thought...",
+          "A knowing rabbit...")
   two = c("Silver tears falling softly...",
           "Big legs landing heavily...",
           "Black pebbles bouncing mournfully...",
-          "Dark stones, shrouded in concern...")
+          "Dark stones, shrouded in concern...",
+          "Black snow, stinging my wide eyes...")
   three = c("Leaves fall silently...",
             "Foxes sleep lazily...",
             "John has chickenpox...",
             "Some fish with a leer...",
             "A boggle eyed toad...",
-            "A scary notion...")
+            "A scary notion...",
+            "An egg with small legs...",
+            "A little black dog?")
 
   paste(sample(one,1),sample(two,1),sample(three,1),
         "                             [-_-]~", sep = "\n")
@@ -51,7 +56,7 @@ setClass(
 #' @export
 print.meta_ninja = function(x, ...) {
   x = x$table %>%
-    select(moderation, model.name, k, n, estimate, lbound, ubound, I2_2, I2_3, slope, slope_lbound, slope_ubound, R2_2, "anova p-value")
+    select(moderation, model.name, k, n, estimate, lbound, ubound, I2_2, I2_3, R2_2,R2_3, "anova p-value")
   print(x)
 }
 
@@ -140,6 +145,9 @@ utils::globalVariables(
     "extra",
     "anova p-value",
     "slope_se",
-    "level"
+    "level",
+    "name",
+    "stde",
+    "anova.p.value"
   )
 )

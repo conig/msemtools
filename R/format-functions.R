@@ -11,7 +11,7 @@
 #' @importFrom papertools glue_bracket digits
 
 #examples
-#round = 2; transform = NULL; t.name = "Pr (95% CI)"; hide.insig = T
+#round = 2; transform = papertools::logit2prob; t.name = "Pr (95% CI)"; hide.insig = T
 format_nicely = function(x,
                          round = 2,
                          effect.name = NULL,
@@ -28,8 +28,6 @@ format_nicely = function(x,
   base_table = x$table
   df = base_table
   df$SE = papertools::digits(as.numeric(as.character(df$SE)), round)
-  df$"Slope (95% CI)" = NA
-  df$"Slope SE" = NA
 
   if (hide.insig) { #this code chunk could be improved, was painful to write.
     mods = unique(df$moderation) #what are the mods?
@@ -62,42 +60,46 @@ format_nicely = function(x,
     if (is.null(t.name)) {
       t.name = deparse(args$transform)
     }
-    df$extra = papertools::glue_bracket(transform(df$estimate),
-                                        transform(df$lbound),
-                                        transform(df$ubound),
-                                        round = round)
+    df$extra = lapply(seq_along(unlist(df[,1])),function(i){
+      papertools::glue_bracket(transform(df[i,]$estimate),
+                               transform(df[i,]$lbound),
+                               transform(df[i,]$ubound),
+                               round = round)
+
+    }) %>% unlist
     df$extra[df$extra == papertools::glue_bracket(NA, NA, NA)] = NA
     df = df %>% dplyr::select(
-      indent = moderation,
+      moderation,
       Moderator= model.name,
       k,
       n,
       extra,
       Estimate = estimate,
       SE,
-      "Slope (95% CI)",
-      "Slope SE",
       I2_2,
       I2_3,
       R2_2,
-      R2_3 = R2_3,
+      R2_3,
       "ANOVA p-value" = `anova p-value`
     )
     df$Estimate = papertools::digits(df$Estimate, round)
     names(df)[names(df) == "extra"] = t.name
   } else{
-    df$estimate = papertools::glue_bracket(df$estimate, df$lbound, df$ubound, round = round)
+    df$estimate = lapply(seq_along(unlist(df[,1])),function(i){
+      papertools::glue_bracket(transform(df[i,]$estimate),
+                               transform(df[i,]$lbound),
+                               transform(df[i,]$ubound),
+                               round = round)
+
+    }) %>% unlist
     df$estimate[df$estimate == papertools::glue_bracket(NA, NA, NA)] = NA
     df = df %>% dplyr::select(
-      indent = moderation,
       moderation,
       Moderator = model.name,
       k,
       n,
       Estimate = estimate,
       SE,
-      "Slope (95% CI)",
-      "Slope SE",
       I2_2,
       I2_3,
       R2_2,
@@ -106,44 +108,23 @@ format_nicely = function(x,
     )
   }
 
-  if(any(!is.na(base_table$slope))){
-    df$`Slope (95% CI)` = papertools::glue_bracket(base_table$slope, base_table$slope_lbound, base_table$slope_ubound, round = round)
-    df$`Slope SE` = papertools::digits(base_table$slope_se, round)
-    df$`Slope (95% CI)`[df$`Slope (95% CI)` == papertools::glue_bracket(NA, NA, NA)] = NA
-  }else{
-      df$`Slope (95% CI)` = NULL
-      df$`Slope SE` = NULL
-    }
+  df$indent_ = duplicated(df$moderation)
 
-  df$indent = duplicated(df$indent)
+  df$`ANOVA p-value` = df$`ANOVA p-value` %>%
+    papertools::round_p(stars= 0.05)
 
-  df$`ANOVA p-value` = lapply(df$`ANOVA p-value`, function(i) { #add in sig stars and round p-value
-    if (is.na(i)) {
-      return(NA)
-    } else{
-      if (i < 0.01) {
-        return("< 0.01*")
-      } else{
-        if (i < 0.05) {
-          return(paste0(papertools::digits(i, 2), "*"))
-        } else {
-          return(papertools::digits(i, 2))
-        }
-      }
-    }
-  }) %>% unlist
-
-  df$Moderator[1] = paste0(df$Moderator[1], " (","I^2^~(2;3)~: ",digits(df$I2_2[1], round),"; ",digits(df$I2_3[1],round),")")
+  df$Moderator[1] = paste0(df$Moderator[1], " (","I^2^~(2;3)~: ",papertools::digits(df$I2_2[1], round),"; ",papertools::digits(df$I2_3[1],round),")")
   df$I2_2 = NULL
   df$I2_3 = NULL
-  df$R2_2 = digits(df$R2_2, round)
-  df$R2_3 = digits(df$R2_3, round)
+  df$R2_2 = papertools::digits(df$R2_2, round)
+  df$R2_3 = papertools::digits(df$R2_3, round)
   df[is.na(df)] = "-"
   df[df == "NA"] = "-"
   df$k = as.character(df$k)
   df$n = as.character(df$n)
   df = df %>%
     rename("p" = "ANOVA p-value")
+  df$moderation = NULL
 
   if(!is.null(effect.name)){
     names(df)[names(df) == "Estimate"] = effect.name
@@ -188,8 +169,8 @@ if(docx){
     note = gsub("\\%", "\\\\%", note)
   }
 
-  indents = x$indent
-  x = x[-1]
+  indents = x$indent_
+  x$indent_ = NULL
 
   papaja::apa_table(x,
                     caption = caption,
@@ -276,57 +257,42 @@ describe_baseline = function(obj) {
 #' @importFrom Hmisc capitalize
 #' @importFrom dplyr filter %>%
 
-describe_moderators = function(obj){
-  base_text = "The covariates which significantly moderated the baseline model were"
+describe_moderators = function(obj) {
   x = get(obj, envir = globalenv())
   sig_mods_table = x$table %>%
     filter(!type %in% c("Baseline", "factor level") &
              `anova p-value` < 0.05)
-  if(nrow(sig_mods_table) > 0){
-  sig_mods = sig_mods_table %>% select(model.name) %>% unlist %>% tolower %>%  paste(collapse = "', '")
-  sig_mods = paste0("'", sig_mods, "'") %>%
-    gsub(",(?!.*,)", " and", ., perl = T)
-  first_phrase = paste0(base_text, " ", sig_mods, ".")
-  }else{
-    first_phrase = "No covariates were found to be significant moderators of the baseline model."
+  if (nrow(sig_mods_table) > 0) {
+  base_text = "The covariates which significantly moderated the baseline model were"
+    list_text = lapply(seq_along(sig_mods_table$model.name), function(i) {
+      mod_name = sig_mods_table$model.name[i] %>% tolower %>%  paste0("'", ., "'")
+      R2_code = paste0(
+        "`r ",
+        obj,
+        "$table %>% filter(model.name == ",
+        "'",
+        sig_mods_table$model.name[i],
+        "'",
+        ") %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`"
+      )
+      R2_3_code = paste0(
+        "`r ",
+        obj,
+        "$table %>% filter(model.name == ",
+        "'",
+        sig_mods_table$model.name[i],
+        "'",
+        ") %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`"
+      )
+
+     paste0(mod_name, "(R^2^~(2)~ = ", R2_code, "%; R^2^~(3)~ = ", R2_3_code,"%)")
+    }) %>% paste(collapse = ", ") %>% gsub(",(?!.*,)", ", and", ., perl = T)
+    final_text = paste0(base_text, " ", list_text,".")
+  }  else{
+  final_text = "No covariates were found to be significant moderators of the baseline model."
+
   }
-
-
-  list_text = lapply(seq_along(sig_mods_table$model.name), function(i) {
-    mod_name = sig_mods_table$model.name[i] %>% tolower %>% Hmisc::capitalize()
-    R2_code = paste0(
-      "`r ",
-      obj,
-      "$table %>% filter(model.name == ",
-      "'",
-      sig_mods_table$model.name[i],
-      "'",
-      ") %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`"
-    )
-    R2_3_code = paste0(
-      "`r ",
-      obj,
-      "$table %>% filter(model.name == ",
-      "'",
-      sig_mods_table$model.name[i],
-      "'",
-      ") %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`"
-    )
-
-    paste0(
-      mod_name,
-      " explained ",
-      R2_code,
-      "% of heterogeneity within clusters, and ",
-      R2_3_code,
-      "% between clusters."
-    )
-  })
-
-  moderation_text = paste(list_text, collapse = " ")
-
-  final_text = paste0(first_phrase, " ", moderation_text)
-  return(final_text)
+return(final_text)
 }
 
 #' describe_all_mods

@@ -7,8 +7,8 @@
 get_args(...)
 }
 \arguments{
-\item{...}{arguments to be split with =}
+\item{...}{elipises}
 }
 \description{
-Gets arguments from elipse and separates at equals signs.
+Derrives arguments from elipses
 }

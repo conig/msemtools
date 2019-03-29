@@ -4,7 +4,8 @@
 \alias{moderate2}
 \title{moderate2}
 \usage{
-moderate2(model, ..., moderators = NULL)
+moderate2(model, ..., moderators = NULL, binary_intercept = 0,
+  continuous_intercept = NULL)
 }
 \arguments{
 \item{model}{A meta3 model. The original data file must be available in the environment, with the same name.}
@@ -12,7 +13,20 @@ moderate2(model, ..., moderators = NULL)
 \item{...}{moderators, entered as objects}
 
 \item{moderators}{a character vector. A vector of moderator names may be supplied.}
+
+\item{binary_intercept}{a numeric. Constrain the intercept for matricies with binary elements}
+
+\item{continuous_intercept}{a numeric. Constrain the intercept for matricies with continuous elements}
+}
+\value{
+a meta_ninja \(until I rename it\)
 }
 \description{
 This is a wrapper to perform meta3 moderations with. The original data file must be in the environment.
+}
+\details{
+moderate simplifies moderation analyses by taking the call from a meta3, and then using it to generate
+subsequent moderation models. A few rules are used to do this.
+1. If a continuous variable is used a predictor, then an intercept is recorded
+2. If binary variables are included, then intercepts are forced to be zero, these binary variables become the intercepts.
 }
