@@ -180,11 +180,18 @@ split_to_matrix = function(x, pattern = ",") {
     unique %>%
     na.omit #don't record NAs
 
-  out = lapply(contents, function(c) {
-    lapply(split, function(s) {
-      ifelse(c == s,1,0)
+  out = lapply(seq_along(contents), function(c) {
+    lapply(seq_along(split), function(s) {
+      tag = contents[c]
+      current = split[s][[1]]
+      out = ifelse(tag %in% current, 1,0)
+
+      if(all(is.na(current))){
+        out = NA
+      }
+      out
     }) %>% unlist
-  }) %>% do.call("cbind", .)
+  }) %>% do.call(cbind, .)
 
   colnames(out) = contents
 
@@ -540,16 +547,21 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
   })
   # create call list
   calls = append(list(call), calls)
-  names(calls) = lapply(calls, function(i){ #label calls with their names
+  call_names = lapply(calls, function(i){ #label calls with their names
     i$model.name
   }) %>% unlist
+  names(calls) = call_names
 
   # run models ---------------------------------------------
-  models = lapply(calls, function(x){
-    do.call(meta3,x) %>%
+  models = lapply(seq_along(calls), function(x){
+    #message(x)
+    temp_call = calls[[x]]
+    do.call(meta3,temp_call) %>%
       try_even_harder() %>%
       fix_call
   })
+
+  names(models) = call_names
 
   moderator_models = models[(2:length(models))]
 
@@ -613,6 +625,12 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
 
   merged_tables = plyr::rbind.fill(baseline_table,model_table)
 
+  if(any(merged_tables$k == 0)){
+    problem_mods = merged_tables[merged_tables$k == 0,"moderation"] %>% unlist %>%
+      paste(collapse = ", ") %>% paste0(".")
+    warning(paste0("The following models contained empty levels: ", problem_mods, " These levels have been hidden."))
+    merged_tables = merged_tables[merged_tables$k > 0,] #remove rows without effect sizes
+  }
 
   out = list(
     models = models,
