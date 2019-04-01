@@ -182,7 +182,7 @@ split_to_matrix = function(x, pattern = ",") {
 
   out = lapply(contents, function(c) {
     lapply(split, function(s) {
-      as.numeric(c %in% s)
+      ifelse(c == s,1,0)
     }) %>% unlist
   }) %>% do.call("cbind", .)
 
@@ -251,18 +251,18 @@ get_k_n = function(model){
                k = k,
                n = n)
   }else{
-    data = eval(parse(text = model$call$data))
-    suppressMessages(attach(data))
-    pred_matrix = eval(parse(text = deparse(model$call$x))) %>%
-      as.matrix
-    suppressMessages(detach(data))
-    lapply(seq_along(pred_matrix[1,]), function(i){
-      clus = as.numeric(unlist(data[,deparse(model$call$cluster)]))
-      mini_matrix = pred_matrix[,i] %>%
-        cbind(moderators = ., cluster = clus) %>%
-        na.omit
-    data.frame(name = "slope",k = length(unique(mini_matrix[,2])),
-         n = nrow(mini_matrix))
+    n_data = model$data
+    x_vars = names(n_data)[grepl("x",names(n_data))]
+
+    lapply(seq_along(x_vars), function(x){
+      temp_data = n_data[,c("y","v","cluster","time",x_vars[x])]
+      temp_data = temp_data[temp_data[,x_vars[x]] == 1, ]
+      k = length(unique(temp_data$cluster))
+      n = nrow(temp_data)
+
+      data.frame(name = "Slope",
+                 k = k,
+                 n = n)
     }) %>%
       do.call(rbind,.)
   }
@@ -346,6 +346,7 @@ moderate = function(model, ..., moderators = NULL,binary_intercept = 0, continuo
 #' @param x a matrix
 
 is_binary = function(x){
+  x = na.omit(x)
   apply(as.matrix(x),2,function(y) { all(y %in% 0:1) })
 }
 
@@ -591,7 +592,7 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
       length
     slope_names = extract_colnames(moderator_models[[x]], n = n_slopes , data = data)
     slope_k_n = get_k_n(moderator_models[[x]]) %>%
-      filter(name == "slope")
+      filter(name == "Slope")
     slopes$k = NA; slopes$n = NA
     slopes[grepl("Slope",slopes$row),]$k = slope_k_n$k
     slopes[grepl("Slope",slopes$row),]$n = slope_k_n$n
