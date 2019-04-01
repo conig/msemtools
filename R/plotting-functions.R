@@ -73,7 +73,9 @@ ninjaForest = function(model,
   }
 
   #find missing variables
-  data = model$data
+  data = model$data %>%
+    parse(text = .) %>%
+    eval
 
   if (is.null(year)) {
     year = find_year(data)
@@ -110,7 +112,7 @@ ninjaForest = function(model,
     if (length(not_present) > 0) {
       stop(
         paste0(
-          "The following supplied factor levels were not found in model.name: '",
+          "The following supplied moderator levels were not found in model.name: '",
           paste0(not_present, collapse = "', '"),
           "'."
         )
@@ -118,10 +120,10 @@ ninjaForest = function(model,
     }
 
     mod_data = df %>%
-      dplyr::filter(type %in% c("factor level"))
+      dplyr::filter(type %in% c("moderator level"))
   } else{
     mod_data = df %>%
-      dplyr::filter(type == "factor level" &
+      dplyr::filter(type == "moderator level" &
                       model.name %in% factor.levels)
   }
 
@@ -335,7 +337,7 @@ funnel_plot = function(model,
   data$lower = data$y  - 1.96 * data$se
   data$upper = data$y + 1.96 * data$se
   dfCI = data.frame(ll95, ul95, se.seq, estimate, meanll95, meanul95)
-  reg_test = (regtest(x = data$y, vi = data$v))
+  reg_test = (metafor::regtest(x = data$y, vi = data$v))
   fp = ggplot(data, aes(
     x = se,
     y = y,

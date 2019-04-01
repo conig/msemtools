@@ -45,6 +45,7 @@ setClass(
     table = "list",
     cluster = "character",
     covariates = "list",
+    calls = "list",
     data = "tbl"
   )
 )
