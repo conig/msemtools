@@ -5,7 +5,7 @@
 \title{meta3_ninja}
 \usage{
 meta3_ninja(call, moderators, binary_intercept = 0,
-  continuous_intercept = NULL)
+  continuous_intercept = NULL, remove_empty_slopes)
 }
 \arguments{
 \item{call}{a call list}
@@ -15,6 +15,8 @@ meta3_ninja(call, moderators, binary_intercept = 0,
 \item{binary_intercept}{a numeric. Constrain the intercept for matricies with binary elements}
 
 \item{continuous_intercept}{a numeric. Constrain the intercept for matricies with continuous elements}
+
+\item{remove_empty_slopes}{a bool. Inspects each matrix and removes empty slopes as neccesary}
 }
 \description{
 This function streamlines the moderation process. Moderation strategy varies based on whether a numeric, or factoral variable is supplied.

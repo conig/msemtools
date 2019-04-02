@@ -4,7 +4,7 @@
 \alias{extract_colnames}
 \title{extract_colnames}
 \usage{
-extract_colnames(model, n, data)
+extract_colnames(model, n, data, iteration, pred_matricies)
 }
 \arguments{
 \item{model}{the model to extract from}
@@ -12,6 +12,10 @@ extract_colnames(model, n, data)
 \item{n}{the number of names to extract}
 
 \item{data}{data}
+
+\item{iteration}{the index to find the predictor matrix}
+
+\item{pred_matricies}{a list of predictor matricies}
 }
 \description{
 Tries to determine column names of matricies

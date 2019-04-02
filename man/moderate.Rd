@@ -5,7 +5,7 @@
 \title{moderate}
 \usage{
 moderate(model, ..., moderators = NULL, binary_intercept = 0,
-  continuous_intercept = NULL)
+  continuous_intercept = NULL, remove_empty_slopes = T)
 }
 \arguments{
 \item{model}{A meta3 model. The original data file must be available in the environment, with the same name.}
@@ -17,6 +17,8 @@ moderate(model, ..., moderators = NULL, binary_intercept = 0,
 \item{binary_intercept}{a numeric. Constrain the intercept for matricies with binary elements}
 
 \item{continuous_intercept}{a numeric. Constrain the intercept for matricies with continuous elements}
+
+\item{remove_empty_slopes}{a bool. If true, removes empty columns from matricies.}
 }
 \value{
 a meta_ninja \(until I rename it\)
