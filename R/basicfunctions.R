@@ -134,7 +134,7 @@ fix_call = function(model){
   model
 }
 
-#' split_to_matrix
+#' character_matrix
 #'
 #' creates a predictor matrix when cells can contain multiple tags
 #' @param x a character vector
@@ -142,9 +142,9 @@ fix_call = function(model){
 #' @param pattern pattern provided to str_split
 #' @importFrom stringr str_split
 #' @importFrom dplyr %>%
-#' @export split_to_matrix
+#' @export character_matrix
 
-split_to_matrix = function(x, pattern = ",", levels = NULL) {
+character_matrix = function(x, pattern = ",", levels = NULL) {
 
   x = factor(x)
 
@@ -518,9 +518,9 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
 
     # if not a matrix apply split to matrix ------------------
     if (!is.matrix(mod_matrix) & !is.numeric(mod_matrix)) {
-      mod_matrix = split_to_matrix(mod_matrix)
+      mod_matrix = character_matrix(mod_matrix)
       new_call$x = mod_string %>%
-        add_function("split_to_matrix") %>%
+        add_function("character_matrix") %>%
         character_call()
     }else if(is.numeric(mod_matrix)){
       new_call$x = mod_string %>%
