@@ -116,32 +116,6 @@ extractData = function(model, model.name = NULL) {
   return(as_tibble(result))
 }
 
-
-#' factor_to_matrix
-#'
-#' Converts a factor to a predictor matrix
-#' @param factor a factor.
-#' @param col_names a vector of colnames. If none given, will use factor levels.
-#' @importFrom dplyr %>%
-#' @export factor_to_matrix
-
-factor_to_matrix = function(factor, col_names = NULL) {
-  if (!is.factor(factor)) {
-    stop("factor_to_matrix must be supplied a factor", call. = FALSE)
-  }
-  levels = levels(factor)
-  result = lapply(levels, function(y) {
-    ifelse(factor == y, 1, 0)
-  }) %>%
-    do.call("cbind", .)
-  if (is.null(col_names)) {
-    colnames(result) = levels
-  } else{
-    colnames(result) = col_names
-  }
-  return(result)
-}
-
 #' get_call
 #'
 #' This function is used to extract calls from meta3 models
@@ -164,12 +138,15 @@ fix_call = function(model){
 #'
 #' creates a predictor matrix when cells can contain multiple tags
 #' @param x a character vector
+#' @param levels a vector. Provides the level (and order) of colnames.
 #' @param pattern pattern provided to str_split
 #' @importFrom stringr str_split
 #' @importFrom dplyr %>%
 #' @export split_to_matrix
 
-split_to_matrix = function(x, pattern = ",") {
+split_to_matrix = function(x, pattern = ",", levels = NULL) {
+
+  x = factor(x)
 
   split = x %>%
     stringr::str_split(pattern) %>% #split based on pattern
@@ -200,6 +177,15 @@ split_to_matrix = function(x, pattern = ",") {
 
   if(levels_length_same){
   out = out[,matrix_levels] #reorder matrix if possible
+  }
+
+  if(!is.null(levels)){
+    if(!all(colnames(out) %in% levels)){
+     current_colnames =  paste0("(",paste(colnames(out), collapse = ","),")")
+     current_levels = paste0("(",paste(levels, collapse = ","),")")
+      stop(paste0("levels ",current_colnames," do not match colnames ",current_levels))
+    }
+    out = out[,as.character(levels)]
   }
 
   return(out)
@@ -396,6 +382,23 @@ extractSlopes = function(model) {
   rbind(intercept,slopes)
 }
 
+#' remove_function
+#'
+#' @param string
+#' @importFrom dplyr %>%
+
+remove_function = function(string){
+  if(grepl("\\(",string)){
+    string = gsub("[\\(\\)]", "", regmatches(string, gregexpr("\\(.*?\\)", string))[[1]]) %>%
+      str_split(pattern = ",") %>%
+      unlist %>%
+      trimws %>%
+      .[1] # keep first argument only
+  }
+  return(string)
+}
+
+
 #' extract_colnames
 #'
 #' Tries to determine column names of matricies
@@ -414,12 +417,9 @@ extract_colnames = function(model, n, data, iteration, pred_matricies) {
     names = colnames(predictor_matrix)
   }
   if (length(names) != n) {
-    names = deparse(model$call$x) #just give the names of the input
-    names = gsub("[\\(\\)]", "", regmatches(names, gregexpr("\\(.*?\\)", names))[[1]]) %>%
-      str_split(pattern = ",") %>%
-      unlist %>%
-      trimws %>%
-      .[1] # keep first argument only
+    names = deparse(model$call$x) %>%
+      remove_function()#just give the names of the input
+
   }
   if (length(names) != n) {
     obj = eval(original_x, data, enclos = sys.frame(sys.parent()))
@@ -460,7 +460,7 @@ extract_colnames = function(model, n, data, iteration, pred_matricies) {
 #' @importFrom future.apply future_lapply
 #' @export meta3_ninja
 
-#binary_intercept =0; continuous_intercept = NULL
+#binary_intercept =0; continuous_intercept = NULL; remove_empty_slopes = T
 
 meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_intercept = NULL,
                        remove_empty_slopes){
@@ -549,7 +549,8 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
       new_call$intercept.constraints = model_intercept
     }
 
-    new_call$model.name = mod_name
+    new_call$model.name = mod_name %>%
+      remove_function() #get rid of pesky functions in model.names
 
     return(new_call)
   })
@@ -569,17 +570,19 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
     temp_call = calls[[x]]
     predictor_matrix = temp_call$x
     if (!is.null(predictor_matrix)) {
-      predictor_matrix = eval(predictor_matrix, data, enclos = sys.frame(sys.parent())) #get mod matrix
+      predictor_matrix = eval(predictor_matrix, data, enclos = sys.frame(sys.parent())) %>% #get mod matrix
+        as.matrix
       whole_matrix = do.call(get_matrix_long, temp_call) #get long data
       slopes = names(whole_matrix)[(grepl("x", names(whole_matrix)))] #find slope references
-      at_least1 = colSums(whole_matrix[, slopes], na.rm = T) > 0
+      at_least1 = which(colSums(abs(as.matrix(whole_matrix[, slopes], na.rm = T))) > 0)
       new_predictor_matrix = predictor_matrix[, at_least1]
 
-      if(remove_empty_slopes){ #if we want to remove slopes
+      if (remove_empty_slopes) {
+        #if we want to remove slopes
         predictor_matrix = new_predictor_matrix
       }
 
-      }
+    }
 
     return(predictor_matrix)
   })

@@ -4,12 +4,14 @@
 \alias{split_to_matrix}
 \title{split_to_matrix}
 \usage{
-split_to_matrix(x, pattern = ",")
+split_to_matrix(x, pattern = ",", levels = NULL)
 }
 \arguments{
 \item{x}{a character vector}
 
 \item{pattern}{pattern provided to str_split}
+
+\item{levels}{a vector. Provides the level (and order) of colnames.}
 }
 \description{
 creates a predictor matrix when cells can contain multiple tags
