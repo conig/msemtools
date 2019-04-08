@@ -384,7 +384,7 @@ extractSlopes = function(model) {
 
 #' remove_function
 #'
-#' @param string
+#' @param string a call represented as a character.
 #' @importFrom dplyr %>%
 
 remove_function = function(string){
@@ -443,6 +443,58 @@ extract_colnames = function(model, n, data, iteration, pred_matricies) {
     rep("unknown variable", n)
   }
 }
+
+#' get_new_matrix
+#'
+#' Gets the final matrix to be used in models.
+#'
+#' @param model_call the call of a matrix
+
+get_new_matrix = function(model_call) {
+  predictor_matrix = eval(model_call$x, eval(model_call$data), enclos = sys.frame(sys.parent())) %>% #get mod matrix
+    as.matrix
+  whole_matrix = do.call(get_matrix_long, model_call) #get long data
+  slopes = names(whole_matrix)[(grepl("x", names(whole_matrix)))] #find slope references
+  at_least1 = which(colSums(abs(as.matrix(
+    whole_matrix[, slopes], na.rm = T
+  ))) > 0)
+  preserve_colnames = colnames(predictor_matrix)[at_least1]
+  new_predictor_matrix = as.matrix(predictor_matrix[, at_least1])
+  colnames(new_predictor_matrix) = preserve_colnames
+  new_predictor_matrix
+}
+
+
+#' get_final_matrix
+#'
+#' Evaluates models to see if sufficient information is available to moderate.
+#'
+#' @param model_call the call of a matrix
+
+final_matrix_singular = function(model_call) {
+  if (!is.null(model_call$x)) {
+    predictor_matrix = eval(model_call$x,
+                            eval(model_call$data),
+                            enclos = sys.frame(sys.parent())) %>% #get mod matrix
+      as.matrix
+    whole_matrix = do.call(get_matrix_long, model_call) #get long data
+    slopes = names(whole_matrix)[(grepl("x", names(whole_matrix)))] #find slope references
+    slope_matrix = as.matrix(
+      whole_matrix[, slopes], na.rm = T
+    )
+    at_least1 = which(colSums(abs(slope_matrix)) > 0)
+    final_matrix = slope_matrix[, at_least1]
+    if (all(final_matrix == 1)) {
+      return(T)
+    } else{
+      return(F)
+    }
+  } else{
+    return(F)
+  }
+}
+
+
 
 #' meta3_ninja
 #'
@@ -554,6 +606,7 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
 
     return(new_call)
   })
+
   # create call list
   calls = append(list(call), calls)
   call_names = lapply(calls, function(i){ #label calls with their names
@@ -563,6 +616,15 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
 
   # predictor_matrticies ------------------------------------
   #----------------------------------------------------------
+
+
+  # remove calls with empty moderators ----------------------
+  #----------------------------------------------------------
+  empty_moderators = lapply(calls, final_matrix_singular) %>% unlist
+  removed_moderators = names(calls)[empty_moderators]
+  calls = calls[!empty_moderators]
+  call_names = call_names[!empty_moderators]
+
   predictor_matricies = lapply(seq_along(calls), function(x) {
     #message(x)
     #load call
@@ -570,22 +632,17 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
     temp_call = calls[[x]]
     predictor_matrix = temp_call$x
     if (!is.null(predictor_matrix)) {
-      predictor_matrix = eval(predictor_matrix, data, enclos = sys.frame(sys.parent())) %>% #get mod matrix
-        as.matrix
-      whole_matrix = do.call(get_matrix_long, temp_call) #get long data
-      slopes = names(whole_matrix)[(grepl("x", names(whole_matrix)))] #find slope references
-      at_least1 = which(colSums(abs(as.matrix(whole_matrix[, slopes], na.rm = T))) > 0)
-      new_predictor_matrix = predictor_matrix[, at_least1]
-
+    new_predictor_matrix = get_new_matrix(temp_call)
       if (remove_empty_slopes) {
         #if we want to remove slopes
         predictor_matrix = new_predictor_matrix
       }
-
     }
 
     return(predictor_matrix)
   })
+
+
 
   # run models ---------------------------------------------
   #---------------------------------------------------------
@@ -630,7 +687,8 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
   baseline_table = models[[1]] %>% extractData %>%
     mutate(moderation = "Baseline") %>%
     get_vars %>%
-    mutate(type = "Baseline")
+    mutate(type = "Baseline",
+           n_slopes = 0)
 
   ################ ---------------------------------------------------------------------
   # Moderator table
@@ -664,10 +722,12 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
 
     #bind
     plyr::rbind.fill(overall, slopes) %>%
-      mutate(moderation = model_info$model.name) %>%
+      mutate(moderation = model_info$model.name,
+             n_slopes = n_slopes) %>%
       select(moderation, model.name, k, n, estimate = est, SE = stde, lbound, ubound,
              R2_2,R2_3,
-             Mx_status,`anova p-value`=anova.p.value, type ) %>%
+             Mx_status,`anova p-value`=anova.p.value, type,
+             n_slopes) %>%
       as_tibble %>%
       return()
 
@@ -681,7 +741,8 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
     cluster = cluster,
     covariates = predictor_matricies,
     calls = calls,
-    data = models[[1]]$call$data
+    data = models[[1]]$call$data,
+    removed_moderators = empty_moderators
   )
   class(out) = c("meta_ninja")
 

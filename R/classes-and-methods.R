@@ -20,7 +20,8 @@ setClass(
     cluster = "character",
     covariates = "list",
     calls = "list",
-    data = "tbl"
+    data = "tbl",
+    removed_moderators = "list"
   )
 )
 
@@ -30,9 +31,58 @@ setClass(
 #' @importFrom dplyr select %>% mutate
 #' @export
 print.meta_ninja = function(x, ...) {
-  x = x$table %>%
-    select(moderation, model.name, k, n, estimate, lbound, ubound, I2_2, I2_3, R2_2,R2_3, "anova p-value")
-  print(x)
+
+  "Moderation results:\n\n" %>%
+    crayon::underline() %>%
+    cat
+
+  "I2(2): " %>%
+    paste0(papertools::digits(x$table$I2_2[1]*100,1), "%") %>%
+    cat()
+
+  cat("\n")
+
+  "I2(3): " %>%
+    paste0(papertools::digits(x$table$I2_3[1]*100,1), "%") %>%
+    cat()
+
+  cat("\n")
+  cat("\n")
+
+  out = x$table %>%
+    select(moderation, k, n,R2_2,R2_3,`p-value` = "anova p-value", type, Mx_status) %>%
+    filter(type == "moderator") %>% data.frame
+  out[,4:5] = round(out[,4:5],2)
+  out$p.value = papertools::round_p(out$p.value, stars = 0.05)
+
+  problem_models = out$moderation[!out$Mx_status %in% c(0,1)]
+
+  out = out %>%
+    select(-type, - Mx_status)
+
+  print(out)
+
+  cat("\n")
+
+  if(length(problem_models) > 0){
+    mx_message = paste0("Did not converge: " ,paste(problem_models, collapse = ", "),".") %>%
+      crayon::red()
+  } else {
+    mx_message = crayon::cyan("All models converged.")
+  }
+
+  cat(mx_message)
+
+  removed_moderators = names(x$removed_moderators)[x$removed_moderators]
+
+  cat("\n\n")
+  if(length(removed_moderators) > 0){
+    removed_moderator_message = paste0(length(removed_moderators) %>% papertools::as_word(T),
+                                       " moderators were removed due to having no variance:\n",
+                                       paste(removed_moderators, collapse = ", "),".")
+    cat(removed_moderator_message)
+  }
+
 }
 
 #' meta_ninja plot method
@@ -49,7 +99,10 @@ plot.meta_ninja = function(x, y, ...) {
 #' @param ... additional arguments passed to format_nicely
 #' @export
 summary.meta_ninja = function(object, ...) {
-  format_nicely(object, ...)
+  out = format_nicely(object, ...) %>%
+    select(-indent_)
+  out$Moderator[1] = "Baseline"
+  print(out, n = 100)
 }
 
 #' meta_ninja as.data.frame method

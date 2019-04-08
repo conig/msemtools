@@ -6,6 +6,9 @@
 \usage{
 remove_function(string)
 }
+\arguments{
+\item{string}{a call represented as a character.}
+}
 \description{
 remove_function
 }
