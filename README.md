@@ -9,7 +9,7 @@ To install msemtools run the following code:
 
 ``` r
 #install.packages("devtools")
-devtools::install_github("JConigrave/msemtools")
+#devtools::install_github("JConigrave/msemtools")
 ```
 
 Running analyses
@@ -125,17 +125,20 @@ moderation_object = model0 %>%
 moderation_object
 ```
 
-|           | moderation | model.name     |    k|    n|    estimate|         SE|      lbound|      ubound|      I2\_2|      I2\_3| slope | slope\_se | slope\_lbound | slope\_ubound |      R2\_2|      R2\_3|  Mx\_status|  anova p-value| type         |
-|-----------|:-----------|:---------------|----:|----:|-----------:|----------:|-----------:|-----------:|----------:|----------:|:------|:----------|:--------------|:--------------|----------:|----------:|-----------:|--------------:|:-------------|
-| Baseline  | Baseline   | Baseline       |   21|   66|  -0.1007784|  0.0401327|  -0.1794371|  -0.0221198|  0.1568322|  0.5839199| NA    | NA        | NA            | NA            |         NA|         NA|           0|             NA| Baseline     |
-| Country.1 | Country    | Country        |   21|   66|          NA|         NA|          NA|          NA|         NA|         NA| NA    | NA        | NA            | NA            |  0.1208598|  0.6605707|           0|      0.0204128| factor       |
-| Country.2 | Country    | United States  |    4|   12|   0.0025681|  0.0597768|  -0.1145923|   0.1197285|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.3 | Country    | Canada         |    1|    3|  -0.1315119|  0.1026488|  -0.3326998|   0.0696760|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.4 | Country    | Australia      |    5|   13|  -0.0214428|  0.0926603|  -0.2030538|   0.1601681|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.5 | Country    | United Kingdom |    4|   10|   0.0562932|  0.0790467|  -0.0986354|   0.2112219|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.6 | Country    | Europe         |    7|   28|  -0.2185120|  0.0500825|  -0.3166718|  -0.1203521|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
+    ## Moderation results:
+    ## 
+    ## I2(2): 15.7%
+    ## I2(3): 58.4%
+    ## 
+    ##   moderation  k  n R2_2 R2_3 p.value
+    ## 1    Country 21 66 0.12 0.66   0.02*
+    ## 
+    ## All models converged.
 
-We can now plot easily \#\# forest plot
+We can now plot easily
+
+forest plot
+-----------
 
 ``` r
 moderation_object %>% plot(author = "Study")
@@ -143,7 +146,7 @@ moderation_object %>% plot(author = "Study")
 
     ## year was not manually specified, using: 'Year'.
 
-![](README_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 If author has et al in it, we would not have to manually specify it.
 
@@ -160,23 +163,17 @@ moderation_object2 = model0 %>%
 moderation_object2
 ```
 
-|              | moderation | model.name                 |    k|    n|    estimate|         SE|      lbound|      ubound|      I2\_2|      I2\_3| slope | slope\_se | slope\_lbound | slope\_ubound |      R2\_2|      R2\_3|  Mx\_status|  anova p-value| type         |
-|--------------|:-----------|:---------------------------|----:|----:|-----------:|----------:|-----------:|-----------:|----------:|----------:|:------|:----------|:--------------|:--------------|----------:|----------:|-----------:|--------------:|:-------------|
-| Baseline     | Baseline   | Baseline                   |   21|   66|  -0.1007784|  0.0401327|  -0.1794371|  -0.0221198|  0.1568322|  0.5839199| NA    | NA        | NA            | NA            |         NA|         NA|           0|             NA| Baseline     |
-| Discipline.1 | Discipline | Discipline                 |   21|   66|          NA|         NA|          NA|          NA|         NA|         NA| NA    | NA        | NA            | NA            |  0.0000000|  0.4974673|           0|      0.1256832| factor       |
-| Discipline.2 | Discipline | Physical sciences          |    5|   14|  -0.0238785|  0.0764858|  -0.1737878|   0.1260308|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Discipline.3 | Discipline | Life sciences/biology      |   12|   26|  -0.1409274|  0.0438924|  -0.2269550|  -0.0548999|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Discipline.4 | Discipline | Social sciences/humanities |    5|   13|  -0.2517048|  0.1016318|  -0.4508995|  -0.0525101|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Discipline.5 | Discipline | Multidisciplinary          |    5|   13|  -0.0147478|  0.0638994|  -0.1399885|   0.1104928|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.1    | Country    | Country                    |   21|   66|          NA|         NA|          NA|          NA|         NA|         NA| NA    | NA        | NA            | NA            |  0.1208598|  0.6605707|           0|      0.0204128| factor       |
-| Country.2    | Country    | United States              |    4|   12|   0.0025681|  0.0597768|  -0.1145923|   0.1197285|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.3    | Country    | Canada                     |    1|    3|  -0.1315119|  0.1026488|  -0.3326998|   0.0696760|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.4    | Country    | Australia                  |    5|   13|  -0.0214428|  0.0926603|  -0.2030538|   0.1601681|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.5    | Country    | United Kingdom             |    4|   10|   0.0562932|  0.0790467|  -0.0986354|   0.2112219|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Country.6    | Country    | Europe                     |    7|   28|  -0.2185120|  0.0500825|  -0.3166718|  -0.1203521|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Type.1       | Type       | Type                       |   21|   66|          NA|         NA|          NA|          NA|         NA|         NA| NA    | NA        | NA            | NA            |  0.0692595|  0.7942804|           0|      0.0042428| factor       |
-| Type.2       | Type       | Grant                      |   13|   40|  -0.0066071|  0.0371125|  -0.0793462|   0.0661320|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
-| Type.3       | Type       | Fellowship                 |   11|   26|  -0.2021940|  0.0399473|  -0.2804893|  -0.1238987|         NA|         NA| NA    | NA        | NA            | NA            |         NA|         NA|          NA|             NA| factor level |
+    ## Moderation results:
+    ## 
+    ## I2(2): 15.7%
+    ## I2(3): 58.4%
+    ## 
+    ##   moderation  k  n R2_2 R2_3 p.value
+    ## 1 Discipline 21 66 0.00 0.50    0.13
+    ## 2    Country 21 66 0.12 0.66   0.02*
+    ## 3       Type 21 66 0.07 0.79 < 0.01*
+    ## 
+    ## All models converged.
 
 We can then format this table with another function
 
@@ -185,19 +182,19 @@ moderation_object2 %>%
   format_nicely
 ```
 
-| indent | Moderator                                            | k   | n   | Estimate (95% CI)    | SE   | R2\_2 | R2\_3 | p           |
-|:-------|:-----------------------------------------------------|:----|:----|:---------------------|:-----|:------|:------|:------------|
-| FALSE  | Baseline (I<sup>2</sup><sub>(2;3)</sub>: 0.16; 0.58) | 21  | 66  | -0.10 (-0.18, -0.02) | 0.04 | \-    | \-    | \-          |
-| FALSE  | Discipline                                           | 21  | 66  | \-                   | \-   | 0.00  | 0.50  | 0.13        |
-| FALSE  | Country                                              | 21  | 66  | \-                   | \-   | 0.12  | 0.66  | 0.02\*      |
-| TRUE   | United States                                        | 4   | 12  | 0.00 (-0.11, 0.12)   | 0.06 | \-    | \-    | \-          |
-| TRUE   | Canada                                               | 1   | 3   | -0.13 (-0.33, 0.07)  | 0.10 | \-    | \-    | \-          |
-| TRUE   | Australia                                            | 5   | 13  | -0.02 (-0.20, 0.16)  | 0.09 | \-    | \-    | \-          |
-| TRUE   | United Kingdom                                       | 4   | 10  | 0.06 (-0.10, 0.21)   | 0.08 | \-    | \-    | \-          |
-| TRUE   | Europe                                               | 7   | 28  | -0.22 (-0.32, -0.12) | 0.05 | \-    | \-    | \-          |
-| FALSE  | Type                                                 | 21  | 66  | \-                   | \-   | 0.07  | 0.79  | &lt; 0.01\* |
-| TRUE   | Grant                                                | 13  | 40  | -0.01 (-0.08, 0.07)  | 0.04 | \-    | \-    | \-          |
-| TRUE   | Fellowship                                           | 11  | 26  | -0.20 (-0.28, -0.12) | 0.04 | \-    | \-    | \-          |
+| Moderator                                            | k   | n   | Estimate (95% CI)    | SE   | R2\_2 | R2\_3 | p           | indent\_ |
+|:-----------------------------------------------------|:----|:----|:---------------------|:-----|:------|:------|:------------|:---------|
+| Baseline (I<sup>2</sup><sub>(2;3)</sub>: 0.16; 0.58) | 21  | 66  | -0.10 (-0.18, -0.02) | 0.04 | \-    | \-    | \-          | FALSE    |
+| Discipline                                           | 21  | 66  | \-                   | \-   | 0.00  | 0.50  | 0.13        | FALSE    |
+| Country                                              | 21  | 66  | \-                   | \-   | 0.12  | 0.66  | 0.02\*      | FALSE    |
+| United States                                        | 4   | 12  | 0.00 (-0.11, 0.12)   | 0.06 | \-    | \-    | \-          | TRUE     |
+| Canada                                               | 1   | 3   | -0.13 (-0.33, 0.07)  | 0.10 | \-    | \-    | \-          | TRUE     |
+| Australia                                            | 5   | 13  | -0.02 (-0.20, 0.16)  | 0.09 | \-    | \-    | \-          | TRUE     |
+| United Kingdom                                       | 4   | 10  | 0.06 (-0.10, 0.21)   | 0.08 | \-    | \-    | \-          | TRUE     |
+| Europe                                               | 7   | 28  | -0.22 (-0.32, -0.12) | 0.05 | \-    | \-    | \-          | TRUE     |
+| Type                                                 | 21  | 66  | \-                   | \-   | 0.07  | 0.79  | &lt; 0.01\* | FALSE    |
+| Grant                                                | 13  | 40  | -0.01 (-0.08, 0.07)  | 0.04 | \-    | \-    | \-          | TRUE     |
+| Fellowship                                           | 11  | 26  | -0.20 (-0.28, -0.12) | 0.04 | \-    | \-    | \-          | TRUE     |
 
 An indent column can be used to send formatting instructions to word.
 
@@ -230,15 +227,14 @@ The heterogeneity at level 2 was
 The heterogeneity at level 3 was
 `r moderation_object2$table$I2_3[1] %>% '*'(100) %>% papertools::digits(2)`%.
 The covariates which significantly moderated the baseline model were
-‘country’ and ‘type’. Country explained
-`r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
-of heterogeneity within clusters, and
-`r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
-between clusters. Type explained
-`r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%
-of heterogeneity within clusters, and
-`r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%
-between clusters.
+‘country’(R<sup>2</sup><sub>(2)</sub> =
+`r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%;
+R<sup>2</sup><sub>(3)</sub> =
+`r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%),
+and ‘type’(R<sup>2</sup><sub>(2)</sub> =
+`r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%;
+R<sup>2</sup><sub>(3)</sub> =
+`r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%).
 
 Which evaluates to:
 
@@ -264,7 +260,7 @@ model0 %>% funnel_plot(density = T)
 
     ## $plot
 
-![](README_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
     ## 
     ## $reg_test
