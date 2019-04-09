@@ -46,7 +46,7 @@ get_haiku = function(){
           "##size_1## ##objects_1## landing ##adjective_object_3##...",
           "##colours_1## ##objects_2## ##verb_2## ##ad_verb_2##...",
           "##adjective_1## ##nature_plural_1##; shrouded in ##mental_2##...",
-          "##colours_2## ##nature_plural_1##. ##exclamation_2## My ##adjective_1## ##body_1##.",
+          "##colours_1## ##nature_plural_1##. ##exclamation_2## My ##adjective_1## ##body_1##.",
           "##colours_1## ##plural_animals_2## ##verb_2## ##plural_animals_2##...",
           "##adjective_2## ##plant_plural_4## ##verb_1##...")
   three = c("##nature_plural_1## falls ##ad_verb_3##...",

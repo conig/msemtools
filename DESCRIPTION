@@ -20,7 +20,7 @@ Imports:
     Hmisc (>= 4.2-0),
     Conigrave,
     papaja,
-    papertools,
+    papertools (>= 0.5.1),
     stringr,
     stringi,
     future.apply,
