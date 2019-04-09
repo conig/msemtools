@@ -5,7 +5,7 @@
 \title{format_nicely}
 \usage{
 format_nicely(x, round = 2, effect.name = NULL, transform = NULL,
-  t.name = NULL, hide.insig = T)
+  t.name = NULL, hide.insig = T, escape.pc = T)
 }
 \arguments{
 \item{x}{a meta_ninja}
@@ -19,6 +19,8 @@ format_nicely(x, round = 2, effect.name = NULL, transform = NULL,
 \item{t.name}{a character string. If provided, will name the transformed column.}
 
 \item{hide.insig}{a bool.}
+
+\item{escape.pc}{a bool. If True, \% symbols will be escaped in header, captions and notes.}
 }
 \description{
 format_nicely

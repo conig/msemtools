@@ -32,9 +32,11 @@ setClass(
 #' @export
 print.meta_ninja = function(x, ...) {
 
-  "Moderation results:\n\n" %>%
+  "Moderation results:\n" %>%
     crayon::underline() %>%
     cat
+
+  cat("\n")
 
   "I2(2): " %>%
     paste0(papertools::digits(x$table$I2_2[1]*100,1), "%") %>%
@@ -47,13 +49,20 @@ print.meta_ninja = function(x, ...) {
     cat()
 
   cat("\n")
+  cat("-------------------------------------------------")
   cat("\n")
 
   out = x$table %>%
     select(moderation, k, n,R2_2,R2_3,`p-value` = "anova p-value", type, Mx_status) %>%
     filter(type == "moderator") %>% data.frame
   out[,4:5] = round(out[,4:5],2)
-  out$p.value = papertools::round_p(out$p.value, stars = 0.05)
+  out$p.value = papertools::round_p(out$p.value, stars = 0.05) %>%
+    lapply(function(i){
+      if(!grepl("\\*",i)){
+        i = paste0(i," ") #if no star, add a space to keep things nicely lined up
+      }
+      return(i)
+    }) %>% unlist
 
   problem_models = out$moderation[!out$Mx_status %in% c(0,1)]
 
@@ -62,6 +71,7 @@ print.meta_ninja = function(x, ...) {
 
   print(out)
 
+  cat("-------------------------------------------------")
   cat("\n")
 
   if(length(problem_models) > 0){
@@ -78,8 +88,9 @@ print.meta_ninja = function(x, ...) {
   cat("\n\n")
   if(length(removed_moderators) > 0){
     removed_moderator_message = paste0(length(removed_moderators) %>% papertools::as_word(T),
-                                       " moderators were removed due to having no variance:\n",
-                                       paste(removed_moderators, collapse = ", "),".")
+                                       " moderator(s) were removed due to no variance:\n",
+                                       paste(removed_moderators, collapse = ", "),".") %>%
+      crayon::red()
     cat(removed_moderator_message)
   }
 
@@ -99,9 +110,11 @@ plot.meta_ninja = function(x, y, ...) {
 #' @param ... additional arguments passed to format_nicely
 #' @export
 summary.meta_ninja = function(object, ...) {
-  out = format_nicely(object, ...) %>%
-    select(-indent_)
+  out = format_nicely(object, ...)
   out$Moderator[1] = "Baseline"
+  out$Moderator = ifelse(out$indent_, paste0('__',out$Moderator), out$Moderator)
+  out = out %>%
+    select(- indent_)
   print(out, n = 100)
 }
 
@@ -178,6 +191,7 @@ utils::globalVariables(
     "stde",
     "anova.p.value",
     "original_x",
-    "predictor_matricies"
+    "predictor_matricies",
+    "indent_"
   )
 )

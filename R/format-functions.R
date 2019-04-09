@@ -6,6 +6,7 @@
 #' @param effect.name a string. If provided, will rename Estimate column with string provided.
 #' @param t.name a character string. If provided, will name the transformed column.
 #' @param hide.insig a bool.
+#' @param escape.pc a bool. If True, \% symbols will be escaped in header, captions and notes.
 #' @export format_nicely
 #' @importFrom dplyr select rename
 #' @importFrom papertools glue_bracket digits
@@ -17,7 +18,8 @@ format_nicely = function(x,
                          effect.name = NULL,
                          transform = NULL,
                          t.name = NULL,
-                         hide.insig = T) {
+                         hide.insig = T,
+                         escape.pc = T) {
   if (!"meta_ninja" %in% class(x)) {
     stop(
       "'format_nicely' only works with objects of class meta_ninja. See Fn meta3_moderation",
@@ -113,7 +115,7 @@ format_nicely = function(x,
   df$`ANOVA p-value` = df$`ANOVA p-value` %>%
     papertools::round_p(stars= 0.05)
 
-  df$Moderator[1] = paste0(df$Moderator[1], " (","I^2^~(2;3)~: ",papertools::digits(df$I2_2[1], round),"; ",papertools::digits(df$I2_3[1],round),")")
+  df$Moderator[1] = paste0(df$Moderator[1], " (","$I^2_{(2;3)}$: ",papertools::digits(df$I2_2[1], round),"; ",papertools::digits(df$I2_3[1],round),")")
   df$I2_2 = NULL
   df$I2_3 = NULL
   df$R2_2 = papertools::digits(df$R2_2, round)
@@ -122,8 +124,6 @@ format_nicely = function(x,
   df[df == "NA"] = "-"
   df$k = as.character(df$k)
   df$n = as.character(df$n)
-  df = df %>%
-    rename("p" = "ANOVA p-value")
   df$moderation = NULL
 
   if(!is.null(effect.name)){
@@ -132,6 +132,16 @@ format_nicely = function(x,
     if(is.null(transform)){
     names(df)[names(df) == "Estimate"] = "Estimate (95% CI)"
     }
+  }
+
+  df = df %>%
+    rename("$p$" = "ANOVA p-value",
+           "$SE$" = SE,
+           "$R^2_{(2)}$" = R2_2,
+           "$R^2_{(3)}$" = R2_3)
+
+  if (escape.pc) {
+    names(df) = gsub("\\%", "\\\\%", names(df))
   }
   return(df)
 
@@ -150,24 +160,25 @@ format_nicely = function(x,
 #' @importFrom dplyr %>%
 #' @export to_apa
 
-to_apa = function(x, caption, note,escape = F, escape.pc = T,docx = T, ...){
+to_apa = function(x, caption, note,escape = F,
+                  escape.pc = T,docx = T, ...){
   if("meta_ninja" %in% class(x)){
     x = format_nicely(x)
   }
-if(docx){
-  names(x)[names(x) %in% c("R2_2","R2_3")] = c("R^2^~(2)~","R^2^~(3)~")
-  #x$Moderator = gsub("\\(I2_2 =","(I^2^~(2)~ =",x$Moderator)
-  #x$Moderator = gsub("I2_3 =","I^2^~(3)~",x$Moderator)
-
-}else{
-  names(x)[names(x) %in% c("I2","R2")] = c("I\\textsuperscript{2}", "R\\textsuperscript{2}")
-}
-
+# if(docx){
+#   names(x)[names(x) %in% c("R2_2","R2_3")] = c("R^2^~(2)~","R^2^~(3)~")
+#   #x$Moderator = gsub("\\(I2_2 =","(I^2^~(2)~ =",x$Moderator)
+#   #x$Moderator = gsub("I2_3 =","I^2^~(3)~",x$Moderator)
+#
+# }else{
+#   names(x)[names(x) %in% c("I2","R2")] = c("I\\textsuperscript{2}", "R\\textsuperscript{2}")
+# }
   if (escape.pc) {
-    names(x) = gsub("\\%", "\\\\%", names(x))
-    caption = gsub("\\%", "\\\\%", caption)
-    note = gsub("\\%", "\\\\%", note)
+  names(x) = gsub("\\%", "\\\\%", names(x))
+  caption = gsub("\\%", "\\\\%", caption)
+  note = gsub("\\%", "\\\\%", note)
   }
+
 
   indents = x$indent_
   x$indent_ = NULL

@@ -1,44 +1,11 @@
-
+#' get_haiku
+#'
+#' Generates a haiku
+#' @importFrom papertools hash_replace
 
 get_haiku = function(){
 
-  replace_text = function(string){
-    #message(string)
-
-    iteration = 0
-    while(grepl("#", string) & iteration < 100){
-      string = sub("##adjective_2##",sample(adjective_2,1),string) %>%
-        sub("##adjective_1##",sample(adjective_1,1),.) %>%
-        sub("##possesive_noun_1##",sample(possesive_noun_1,1),.) %>%
-        sub("##adjective_3##",sample(adjective_3,1),.) %>%
-        sub("##animal_1##",sample(animal_1,1),.) %>%
-        sub("##animal_2##",sample(animal_2,1),.) %>%
-        sub("##animal_or_plant_1##",sample(animal_or_plant_1,1),.) %>%
-        sub("##colours_1##",sample(colours_1,1),.) %>%
-        sub("##colours_2##",sample(colours_2,1),.) %>%
-        sub("##object_verb_2##",sample(object_verb_2,1),.) %>%
-        sub("##plural_objects_1##",sample(plural_objects_1,1),.) %>%
-        sub("##size_1##",sample(size_1,1),.) %>%
-        sub("##plural_animals_2##",sample(plural_animals_2,1),.) %>%
-        sub("##names_1##",sample(names_1,1),.) %>%
-        sub("##adjective_object_3##",sample(adjective_object_3,1),.) %>%
-        sub("##nature_plural_1##",sample(nature_plural_1,1),.) %>%
-        sub("##mental_2##",sample(mental_2,1),.) %>%
-        sub("##body_1##",sample(body_1,1),.) %>%
-        sub("##objects_2##",sample(objects_2,1),.) %>%
-        sub("##possessed_3##",sample(possessed_3,1),.) %>%
-        sub("##verb_1##",sample(verb_1,1),.) %>%
-        sub("##ad_verb_3##",sample(ad_verb_3,1),.) %>%
-        sub("##ad_verb_2##",sample(ad_verb_2,1),.) %>%
-        sub("##exclamation_2##",sample(exclamation_2,1),.) %>%
-        sub("##verb_2##",sample(verb_2,1),.) %>%
-        sub("##objects_1##",sample(objects_1,1),.)
-      iteration = iteration + 1
-    }
-    if(iteration == 100) stop("haiku broke")
-
-    return(string)
-  }
+  #envir = environment()
 
   possesive_noun_1 = c("gaze","sneer","sword","blade","smirk")
   adjective_1 = c("wide","red","pale","white","gaunt","iced","dark")
@@ -48,6 +15,7 @@ get_haiku = function(){
   ad_verb_2 = c("slightly","softly","bleakly")
   adjective_object_3 = c("heavily","quietly")
   plant_1 = c("tree","plant", "leaf")
+  plant_plural_4 = c("jacarandas")
   animal_1 = c("frog","fish","cat","bear","bird","dog","wolf","ant","gnat","toad")
   animal_or_plant_1 = c(animal_1, plant_1)
   animal_2 = c("rabbit","flower")
@@ -78,8 +46,9 @@ get_haiku = function(){
           "##size_1## ##objects_1## landing ##adjective_object_3##...",
           "##colours_1## ##objects_2## ##verb_2## ##ad_verb_2##...",
           "##adjective_1## ##nature_plural_1##; shrouded in ##mental_2##...",
-          "##colours_1## ##nature_plural_1##. ##exclamation_2## My ##adjective_1## ##body_1##.",
-          "##colours_1## ##plural_animals_2## ##verb_2## ##plural_animals_2##...")
+          "##colours_2## ##nature_plural_1##. ##exclamation_2## My ##adjective_1## ##body_1##.",
+          "##colours_1## ##plural_animals_2## ##verb_2## ##plural_animals_2##...",
+          "##adjective_2## ##plant_plural_4## ##verb_1##...")
   three = c("##nature_plural_1## falls ##ad_verb_3##...",
             "##plural_animals_2## ##verb_1## lazily...",
             "##names_1## has ##possessed_3##...",
@@ -88,20 +57,26 @@ get_haiku = function(){
             "A scary notion...",
             "An egg with small ##objects_1##...",
             "A little black ##animal_1##?",
-            "All is clear. Katsu!")
+            "All is clear. Katsu!",
+            "All is lost. My word!")
 
   first = sample(one,1) %>%
-    replace_text %>%
-    Hmisc::capitalize()
+    papertools::hash_replace(sample = 1) %>%
+    Hmisc::capitalize() %>%
+    crayon::white()
+
   second = sample(two,1) %>%
-    replace_text %>%
-    Hmisc::capitalize()
+    papertools::hash_replace(sample = 1) %>%
+    Hmisc::capitalize() %>%
+    crayon::white()
+
   third = sample(three,1) %>%
-    replace_text %>%
-    Hmisc::capitalize()
+    papertools::hash_replace(sample = 1) %>%
+    Hmisc::capitalize() %>%
+    crayon::white()
 
   haiku = paste(first,second,third,
-                "                             [-_-]~", sep = "\n")
+                crayon::red("                            [-_-]~"), sep = "\n")
   #message(haiku)
 
 
