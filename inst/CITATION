@@ -1,0 +1,13 @@
+citHeader("To cite the 'msemtools' package in publications use:")
+
+citEntry(entry="Manual",
+         title = "{msemtools}: Routines, tables, and figures for metaSEM analyses",
+         author = personList(person("J.H.","Conigrave")),
+         year 		= "2019",
+         url            = "https://github.com/JConigrave/msemtools",
+
+         textVersion =
+             paste("Conigrave, J.H. (2019).",
+                   "msemtools: Routines, tables, and figures for metaSEM analyses.",
+                   "https://github.com/JConigrave/msemtools")
+)

@@ -6,9 +6,8 @@
 get_haiku = function(){
 
   #envir = environment()
-
   possesive_noun_1 = c("gaze","sneer","sword","blade","smirk")
-  adjective_1 = c("wide","red","pale","white","gaunt","iced","dark")
+  adjective_1 = c("wide","red","pale","white","gaunt","iced","dark","small","big","great","slight","bare")
   adjective_2 = c("deathly","corrupt","charming","smirking","knowing","dying","panicked","fearful")
   adjective_3 = c("discouraged","tremulous","reflective","boggle-eyed")
   ad_verb_3 = c("mournfully","peacefully","painfully","silently")
@@ -17,6 +16,7 @@ get_haiku = function(){
   plant_1 = c("tree","plant", "leaf")
   plant_plural_4 = c("jacarandas")
   animal_1 = c("frog","fish","cat","bear","bird","dog","wolf","ant","gnat","toad")
+  vowel_actor_1 = c("egg","ant")
   animal_or_plant_1 = c(animal_1, plant_1)
   animal_2 = c("rabbit","flower")
   plural_animals_2 = c("foxes", "ponies","wizards")
@@ -28,13 +28,14 @@ get_haiku = function(){
   object_verb_2 = c("falling","rolling")
   plural_objects_1 = c("tears","walls","veils","vests","hats","hands","pipes")
   size_1 = c("Big","Small")
-  objects_1 = c("legs","fists","tables")
+  objects_1 = c("legs","fists","feet","hands","birds","thoughts","dreams","eyes")
   objects_2 = c("pebbles", "peanuts","poppers","doughnuts","talons","sapphires")
   names_1 = c("Kate","John","Joe","Bob","Phil")
   nature_plural_1 = c("leaves","snow","rocks","stones","rain")
   mental_2 = c("concern","regret","insight","wisdom","respite")
   possessed_3 = c("big ##colours_1## ##plural_objects_1##","chickenpox","elephants","coffee stains")
   exclamation_2 = c("O hark!", "Heavens!","Dear lord!","Good grief!","Oh no!","My word!")
+  state_1 = c("lost","gone","done","clear")
 
   one = c("A ninja's swift ##possesive_noun_1##...",
           "A ##adjective_2## ##colours_1## ##animal_or_plant_1##...",
@@ -48,6 +49,7 @@ get_haiku = function(){
           "##adjective_1## ##nature_plural_1##; shrouded in ##mental_2##...",
           "##colours_1## ##nature_plural_1##. ##exclamation_2## My ##adjective_1## ##body_1##.",
           "##colours_1## ##plural_animals_2## ##verb_2## ##plural_animals_2##...",
+          "The ##adjective_1## ##animal_1## has funny ##objects_1##...",
           "##adjective_2## ##plant_plural_4## ##verb_1##...")
   three = c("##nature_plural_1## falls ##ad_verb_3##...",
             "##plural_animals_2## ##verb_1## lazily...",
@@ -55,10 +57,10 @@ get_haiku = function(){
             "Some ##animal_1## with a leer...",
             "A ##adjective_3## ##animal_1##...",
             "A scary notion...",
-            "An egg with small ##objects_1##...",
-            "A little black ##animal_1##?",
-            "All is clear. Katsu!",
-            "All is lost. My word!")
+            "An ##vowel_actor_1## with ##adjective_1## ##objects_1##...",
+            "A little ##colours_1## ##animal_1##?",
+            "All is ##state_1##. Katsu!",
+            "All is ##state_1##. ##exclamation_2##")
 
   first = sample(one,1) %>%
     papertools::hash_replace(sample = 1) %>%
@@ -79,6 +81,7 @@ get_haiku = function(){
                 crayon::red("                            [-_-]~"), sep = "\n")
   #message(haiku)
 
+  class(haiku) = "haiku"
 
   return(haiku)
 }

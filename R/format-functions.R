@@ -7,6 +7,7 @@
 #' @param t.name a character string. If provided, will name the transformed column.
 #' @param hide.insig a bool.
 #' @param escape.pc a bool. If True, \% symbols will be escaped in header, captions and notes.
+#' @param p_digits a scalar. The number of digits to round p to.
 #' @export format_nicely
 #' @importFrom dplyr select rename
 #' @importFrom papertools glue_bracket digits
@@ -19,7 +20,8 @@ format_nicely = function(x,
                          transform = NULL,
                          t.name = NULL,
                          hide.insig = T,
-                         escape.pc = T) {
+                         escape.pc = F,
+                         p_digits = 3) {
   if (!"meta_ninja" %in% class(x)) {
     stop(
       "'format_nicely' only works with objects of class meta_ninja. See Fn meta3_moderation",
@@ -113,7 +115,7 @@ format_nicely = function(x,
   df$indent_ = duplicated(df$moderation)
 
   df$`ANOVA p-value` = df$`ANOVA p-value` %>%
-    papertools::round_p(stars= 0.05)
+    papertools::round_p(p_digits, stars= 0.05)
 
   df$Moderator[1] = paste0(df$Moderator[1], " (","$I^2_{(2;3)}$: ",papertools::digits(df$I2_2[1], round),"; ",papertools::digits(df$I2_3[1],round),")")
   df$I2_2 = NULL

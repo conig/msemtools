@@ -195,3 +195,11 @@ utils::globalVariables(
     "indent_"
   )
 )
+
+#' haiku print
+#' @param x object to print
+#' @param ... additional arguments. Not currently used.
+#' @export
+print.haiku = function(x, ...) {
+cat(x)
+}

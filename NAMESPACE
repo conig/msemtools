@@ -3,6 +3,7 @@
 S3method(as.character,meta_ninja)
 S3method(as.data.frame,meta_ninja)
 S3method(plot,meta_ninja)
+S3method(print,haiku)
 S3method(print,meta_ninja)
 S3method(summary,meta_ninja)
 export(character_matrix)
