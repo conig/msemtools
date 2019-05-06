@@ -249,9 +249,14 @@ get_k_n = function(model){
     n_data = model$data
     x_vars = names(n_data)[grepl("x",names(n_data))]
 
-    lapply(seq_along(x_vars), function(x){
-      temp_data = n_data[,c("y","v","cluster","time",x_vars[x])]
-      temp_data = temp_data[temp_data[,x_vars[x]] == 1, ]
+    lapply(seq_along(x_vars), function(i){
+
+      temp_data = n_data[,c("y","v","cluster","time",x_vars[i])]
+
+      if(is_binary(n_data[,x_vars[i]])){
+      temp_data = temp_data[temp_data[,x_vars[i]] == 1, ]
+      }
+
       k = length(unique(temp_data$cluster))
       n = nrow(temp_data)
 

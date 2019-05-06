@@ -86,13 +86,13 @@ get_name = function(x) {
 
 try_even_harder = function(model) {
   if (!summary(model)$Mx.status %in% c(0, 1)) {
-    suppressMessages(model <- metaSEM::rerun(model))
+    suppressMessages(model <- metaSEM::rerun(model, extraTries = 19))
   }
   if (!summary(model)$Mx.status %in% c(0, 1)) {
     suppressMessages(model <- #all the rerun messages in bulk just get in the way.
                        metaSEM::rerun(
                          model,
-                         extraTries = 19,
+                         extraTries = 29,
                          finetuneGradient = F
                        ))
   }
