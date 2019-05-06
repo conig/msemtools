@@ -146,7 +146,9 @@ fix_call = function(model){
 
 character_matrix = function(x, pattern = ",", levels = NULL) {
 
+  if(!(is.factor(x))){
   x = factor(x)
+  }
 
   split = x %>%
     stringr::str_split(pattern) %>% #split based on pattern
@@ -175,7 +177,7 @@ character_matrix = function(x, pattern = ",", levels = NULL) {
   matrix_levels = levels(droplevels(x))
   levels_length_same <- length(matrix_levels) == ncol(out)
 
-  if(levels_length_same){
+  if(levels_length_same & all(matrix_levels %in% colnames(out))){
   out = out[,matrix_levels] #reorder matrix if possible
   }
 
