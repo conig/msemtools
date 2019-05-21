@@ -144,10 +144,9 @@ fix_call = function(model){
 #' @importFrom dplyr %>%
 #' @export character_matrix
 
-character_matrix = function(x, pattern = ",", levels = NULL) {
-
-  if(!(is.factor(x))){
-  x = factor(x)
+character_matrix = function(x, levels = NULL, pattern = ",") {
+  if (!(is.factor(x))) {
+    x = factor(x)
   }
 
   split = x %>%
@@ -163,9 +162,9 @@ character_matrix = function(x, pattern = ",", levels = NULL) {
     lapply(seq_along(split), function(s) {
       tag = contents[c]
       current = split[s][[1]]
-      out = ifelse(tag %in% current, 1,0)
+      out = ifelse(tag %in% current, 1, 0)
 
-      if(all(is.na(current))){
+      if (all(is.na(current))) {
         out = NA
       }
       out
@@ -177,17 +176,48 @@ character_matrix = function(x, pattern = ",", levels = NULL) {
   matrix_levels = levels(droplevels(x))
   levels_length_same <- length(matrix_levels) == ncol(out)
 
-  if(levels_length_same & all(matrix_levels %in% colnames(out))){
-  out = out[,matrix_levels] #reorder matrix if possible
+  if (levels_length_same & all(matrix_levels %in% colnames(out))) {
+    out = out[, matrix_levels] #reorder matrix if possible
   }
 
-  if(!is.null(levels)){
-    if(!all(colnames(out) %in% levels)){
-     current_colnames =  paste0("(",paste(colnames(out), collapse = ","),")")
-     current_levels = paste0("(",paste(levels, collapse = ","),")")
-      stop(paste0("levels ",current_colnames," do not match colnames ",current_levels))
+  if (!is.null(levels)) {
+    if (!all(colnames(out) %in% levels)) {
+      current_colnames =  paste0("(", paste(colnames(out), collapse = ","), ")")
+      current_levels = paste0("(", paste(levels, collapse = ","), ")")
+      stop(
+        paste0(
+          "colnames ",
+          current_colnames,
+          " do not match supplied levels: ",
+          current_levels
+        )
+      )
+    } else {
+      levels_missing = levels[!levels %in% colnames(out)]
+
+      if (length(levels_missing) > 0) {
+        find_data_rows = lapply(seq_along(out[, 1]), function(r) {
+          all(!is.na(out[r, ]))
+        }) %>% unlist
+        warning(
+          paste0(
+            "The following levels were not found in the vector: ",
+            paste(levels_missing, collapse = ", "),
+            ". They have been added."
+          )
+        )
+
+        for (l in levels_missing) {
+          missing = matrix(rep(NA, nrow(out)))
+          colnames(missing) = l
+
+
+          missing[, 1][find_data_rows] = 0
+          out =  cbind(out, missing)
+        }
+      }
     }
-    out = out[,as.character(levels)]
+    out = out[, as.character(levels)]
   }
 
   return(out)
