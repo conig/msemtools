@@ -392,7 +392,7 @@ get_model_value = function(x, value, m = NULL){
     }
 
   output = c(output[1, call$value])
-  if(length(unlist(output) == 1)) output <- as.numeric(unname(output))
+  if(length(unlist(output)) == 1) output <- as.numeric(unname(output))
 
   return(output)
 
