@@ -59,7 +59,7 @@ format_nicely = function(x,
     }
   }
 
-
+  # apply transformation
   if (!is.null(transform)) {
     if (is.null(t.name)) {
       t.name = deparse(args$transform)
@@ -309,8 +309,7 @@ return(final_text)
 }
 
 #' describe_all_mods
-#' @param obj the charcater name of an object
-#' @export describe_all_mods
+#' @param obj the character names of an object
 
 describe_all_mods = function(obj) {
   obj = match.call()
@@ -362,5 +361,63 @@ describe_all_mods = function(obj) {
 
 
 }
+
+#' get_value
+#'
+#' Returns a value for models contained in meta_ninja
+#'
+#' @param x a meta_ninja object
+#' @param value the value to extract
+#' @param m the moderator to extract
+#' @importFrom dplyr %>%
+#' @export get_model_value
+
+get_model_value = function(x, value, m = NULL){
+
+  call = match.call() %>%
+    lapply(as.character)
+
+  if(is.null(call$value)) call$value = names(x$table)
+
+  if(class(x) != "meta_ninja") stop("get_model_value() only works for objects of class meta_ninja")
+
+  output = x$table
+  mods = get_moderators(x)
+
+  if(!is.null(call$m)){
+    if(!call$m %in% mods$moderator) stop("moderator could not be found in the model table")
+
+    output = output %>%
+      filter(moderation == call$m)
+    }
+
+  output = c(output[1, call$value])
+  if(length(unlist(output) == 1)) output <- as.numeric(unname(output))
+
+  return(output)
+
+}
+
+#' get_moderators
+#'
+#' return moderators and significe status
+#' @importFrom dplyr %>%
+#' @param meta_ninja a meta_ninja object
+#' @param p p value with which to assess significance
+
+get_moderators = function(meta_ninja, p = 0.05){
+
+  m = meta_ninja$table %>%
+    dplyr::select(moderation, `anova p-value`) %>%
+    .[-1,] %>%
+    filter(!duplicated(moderation)) %>%
+    rename(moderator = moderation)
+
+  m$sig = m$`anova p-value` < p
+
+  return(m)
+}
+
+
 
 

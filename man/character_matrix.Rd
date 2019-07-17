@@ -4,14 +4,14 @@
 \alias{character_matrix}
 \title{character_matrix}
 \usage{
-character_matrix(x, pattern = ",", levels = NULL)
+character_matrix(x, levels = NULL, pattern = ",")
 }
 \arguments{
 \item{x}{a character vector}
 
-\item{pattern}{pattern provided to str_split}
-
 \item{levels}{a vector. Provides the level (and order) of colnames.}
+
+\item{pattern}{pattern provided to str_split}
 }
 \description{
 creates a predictor matrix when cells can contain multiple tags

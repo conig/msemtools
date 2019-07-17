@@ -547,7 +547,6 @@ final_matrix_singular = function(model_call) {
 #' @importFrom stats anova na.omit
 #' @importFrom methods setClass representation
 #' @importFrom future.apply future_lapply
-#' @export meta3_ninja
 
 #binary_intercept =0; continuous_intercept = NULL; remove_empty_slopes = T
 

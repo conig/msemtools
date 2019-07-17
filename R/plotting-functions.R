@@ -5,7 +5,7 @@
 #' @param data a data.frame
 #' @param fill ggplot2 fill value
 #' @param colour character. A hex code. If provided, gives diamond coloured border
-#' @importFrom ggplot2 geom_polygon aes
+#' @importFrom ggplot2 aes
 
 add_diamond = function(plot, data, fill = "grey20", colour = NA) {
   diamond_shape = data.frame(
@@ -14,7 +14,7 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
     names = c("xmin", "ymax", "xmax", "ymax"),
     setting = "Pooled"
   )
-  plot = plot + geom_polygon(
+  plot = plot + ggplot2::geom_polygon(
     data = diamond_shape,
     aes(x = x, y = y),
     fill = fill,
@@ -46,12 +46,11 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @param font A string. The name of a font family. Defaults to serif
 #' @export ninjaForest
 #' @importFrom dplyr filter select %>% mutate
-#' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh theme_classic scale_x_continuous facet_grid geom_vline ylab element_text geom_polygon
-#' @importFrom stats reorder
+#' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh theme_classic scale_x_continuous facet_grid geom_vline ylab element_text
 
 #test arguments:
 #xlab = "effect size"; baseline_name = "All" ; transform = function(x) papertools::logit2prob(x) ; factor.levels = NULL; vline = 0; cluster = NULL; author = NULL; year = NULL; moderator.shape = 23;moderator.size = 3.2;summary.shape = 23;summary.size = 4;font = "serif";diamond = T; moderator_diamond = F
-
+#TODO create method for meta3. Add heterogeneity indicies to plot with argument
 ninjaForest = function(model,
                        xlab = "Effect size",
                        transform = NULL,
@@ -190,6 +189,7 @@ ninjaForest = function(model,
               summary)
   dat = dat[order(dat$year),]
 
+  # Apply transformation
   if (!is.null(transform)) {
     dat = dat %>%
       dplyr::mutate(
@@ -212,7 +212,7 @@ ninjaForest = function(model,
   # ------------------------------------------------------------------- plotting
 
   plot = ggplot(dat, aes(
-    y = reorder(cluster, year),
+    y = stats::reorder(cluster, year),
     x = est,
     xmin = lower,
     xmax = upper

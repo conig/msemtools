@@ -115,7 +115,7 @@ summary.meta_ninja = function(object, ...) {
   out$Moderator = ifelse(out$indent_, paste0('__',out$Moderator), out$Moderator)
   out = out %>%
     select(- indent_)
-  print(out, n = 100)
+
 }
 
 #' meta_ninja as.data.frame method

@@ -7,7 +7,7 @@
 describe_all_mods(obj)
 }
 \arguments{
-\item{obj}{the charcater name of an object}
+\item{obj}{the character names of an object}
 }
 \description{
 describe_all_mods

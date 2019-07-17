@@ -1,10 +1,10 @@
 Package: msemtools
 Type: Package
 Title: Routines, tables, and figures for metaSEM analyses
-Version: 1.0.2
+Version: 1.0.3
 Author: James Conigrave
 Maintainer: James Conigrave <jamesconigrave@gmail.com>
-Description: The functions contained in this package are designed to streamline the meta-analysis process. MetaSEM is an extremely powerful package, however the base functions require the manual creation of summary tables. This package helps, by performing these processes for you.
+Description: The functions contained in this package are designed to streamline metaSEM analyses
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
