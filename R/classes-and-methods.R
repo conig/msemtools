@@ -96,6 +96,63 @@ print.meta_ninja = function(x, ...) {
 
 }
 
+#' removed_mod_note
+#'
+#' Generates text to describe the removal of moderators
+#' @param x a meta_ninja model
+#' @param capitalise_first A bool. Set to true if you want to capitalise the first word
+#' @param case one of "default", "lower" or "sentence"
+#' @export removed_mod_note
+#' @importFrom dplyr %>%
+
+#TODO integrate with print metaninja
+removed_mod_note = function(x,
+                            capitalise_first = T,
+                            case = c("default", "lower", "sentence")) {
+  case = case[1]
+  removed_moderators = names(x$removed_moderators)[x$removed_moderators]
+
+  removed_n = length(removed_moderators)
+
+  #number of moderators as a word
+  number_w = paste0(length(removed_moderators) %>% papertools::as_word(capitalise_first))
+
+  #get moderator word grammar
+  if (removed_n > 1) {
+    mods_w <- "moderators were"
+
+  } else{
+    mods_w <- "moderator was"
+  }
+
+  moderators_sentence = removed_moderators %>%
+    paste(collapse = ", ") %>%
+    gsub(",([^,]*)$", ", and\\1", .)
+
+
+  out =  glue::glue("{number_w} {mods_w} removed due to no variance: {moderators_sentence}") %>% as.character
+
+  if (!case %in% c("lower", "default", "sentence"))
+    stop("case must be one of 'default', 'lower' or 'sentence'")
+
+  if (case == "lower") {
+    out <- stringr::str_to_lower(out)
+  }
+
+  if (case == "sentence") {
+    out <- stringr::str_to_sentence(out)
+  }
+
+  if (removed_n == 0) {
+    return("")
+  } else{
+    return(out)
+  }
+
+}
+
+
+
 #' meta_ninja plot method
 #' @param x model to print
 #' @param y not used.

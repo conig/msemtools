@@ -1,10 +1,10 @@
 Package: msemtools
 Type: Package
 Title: Routines, tables, and figures for metaSEM analyses
-Version: 1.0.3
+Version: 1.0.4
 Author: James Conigrave
 Maintainer: James Conigrave <jamesconigrave@gmail.com>
-Description: The functions contained in this package are designed to streamline metaSEM analyses
+Description: The functions contained in this package are designed to streamline metaSEM analyses.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -25,7 +25,8 @@ Imports:
     stringi,
     future.apply,
     plyr,
-    crayon
+    crayon,
+    glue
 Remotes:
     JConigrave/papertools,
     JConigrave/Conigrave,
