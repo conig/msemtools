@@ -362,17 +362,17 @@ describe_all_mods = function(obj) {
 
 }
 
-#' get_value
+#' get_val
 #'
-#' Returns a value for models contained in meta_ninja
+#' Returns a value for models contained in meta_ninja objects
 #'
 #' @param x a meta_ninja object
 #' @param value the value to extract
 #' @param m the moderator to extract
 #' @importFrom dplyr %>%
-#' @export get_model_value
+#' @export get_val
 
-get_model_value = function(x, value, m = NULL){
+get_val = function(x, value, m = NULL){
 
   call = match.call() %>%
     lapply(as.character)
