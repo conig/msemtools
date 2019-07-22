@@ -5,7 +5,8 @@
 \title{format_nicely}
 \usage{
 format_nicely(x, round = 2, effect.name = NULL, transform = NULL,
-  t.name = NULL, hide.insig = T, escape.pc = F, p_digits = 3)
+  t.name = NULL, hide.insig = T, escape.pc = F, p_digits = 3,
+  leading.zero = FALSE)
 }
 \arguments{
 \item{x}{a meta_ninja}
@@ -20,9 +21,11 @@ format_nicely(x, round = 2, effect.name = NULL, transform = NULL,
 
 \item{hide.insig}{a bool.}
 
-\item{escape.pc}{a bool. If True, \% symbols will be escaped in header, captions and notes.}
+\item{escape.pc}{a bool. If TRUE, \% symbols will be escaped in header, captions and notes.}
 
 \item{p_digits}{a scalar. The number of digits to round p to.}
+
+\item{leading.zero}{a bool. If TRUE, p-values will have leading zeros}
 }
 \description{
 format_nicely
