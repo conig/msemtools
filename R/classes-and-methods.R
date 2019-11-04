@@ -159,7 +159,7 @@ removed_mod_note = function(x,
 #' @param ... additional arguments passed to ninjaForest.
 #' @export
 plot.meta_ninja = function(x, y, ...) {
-  ninjaForest(x, ...)
+  forest_plot(x, ...)
 }
 
 #' meta_ninja summary method

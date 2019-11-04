@@ -34,7 +34,6 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @param baseline_name a string. The label for the baseline model
 #' @param factor.levels  a charcater vector. If supplied, only the factor.levels specified will be plotted.
 #' @param vline a scalar. Dictates the x-intercept (the dashed line).
-#' @param cluster study_id column
 #' @param author the name of the author column
 #' @param year the name of the year column
 #' @param moderator.shape a scalar ggplot2 geom_point shape value
@@ -44,20 +43,19 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @param diamond a bool. If true, diamond is created for summary measure
 #' @param moderator_diamond a bool. If true, diamond is created for moderators
 #' @param font A string. The name of a font family. Defaults to serif
-#' @export ninjaForest
+#' @export forest_plot
 #' @importFrom dplyr filter select %>% mutate
 #' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh theme_classic scale_x_continuous facet_grid geom_vline ylab element_text
 
 #test arguments:
 #xlab = "effect size"; baseline_name = "All" ; transform = function(x) papertools::logit2prob(x) ; factor.levels = NULL; vline = 0; cluster = NULL; author = NULL; year = NULL; moderator.shape = 23;moderator.size = 3.2;summary.shape = 23;summary.size = 4;font = "serif";diamond = T; moderator_diamond = F
 #TODO create method for meta3. Add heterogeneity indicies to plot with argument
-ninjaForest = function(model,
+forest_plot = function(model,
                        xlab = "Effect size",
                        transform = NULL,
                        baseline_name = "Pooled estimate",
                        factor.levels = NULL,
                        vline = NULL,
-                       cluster = NULL,
                        author = NULL,
                        year = NULL,
                        moderator.shape = 23,
@@ -67,12 +65,20 @@ ninjaForest = function(model,
                        diamond = TRUE,
                        moderator_diamond = FALSE,
                        font = "serif") {
-  if (!"meta_ninja" %in% class(model)) {
-    stop("ninjaForest must be provided objects of class 'meta-ninja")
+  if (!any(c("meta_ninja", "meta") %in% class(model))) {
+    stop("must be provided objects of class 'meta-ninja")
   }
 
   #find missing variables
-  data = model$data %>%
+  if("meta" %in% class(model)){
+    data_name = model$call$data
+    cluster = as.character(model$call$cluster)
+  }else{
+    data_name = model$data
+    cluster = model$cluster
+  }
+
+  data = data_name %>%
     parse(text = .) %>%
     eval
 
@@ -82,56 +88,67 @@ ninjaForest = function(model,
   if (is.null(author)) {
     author = find_author(data)
   }
-  if (is.null(cluster)) {
-    cluster = model$cluster
-  }
 
   #this chunk sets up summary object
-  df = model$table
-  b_model = model$models$Baseline
-  #check that all moderators are factor, otherwise warn user
-  numeric_moderators = data.frame(df[df$type == "numeric", "model.name"])
-  if (nrow(numeric_moderators) > 0) {
-    warning(
-      paste0(
-        "Only categorical moderators are plotted. The following moderators will be ignored: '",
-        paste(numeric_moderators, collapse = "', '"),
-        "'."
-      ),
-      call. = F
-    )
-  }
+  if ("meta" %in% class(model)) {
+    b_model <- model
+    baseline <- extractData(model)
+    baseline$model.name = "Baseline"
+    mod_data = NULL
 
-  #### next we separte out the bits of the summary table we want to plot.
-  baseline = df %>%
-    dplyr::filter(type %in% c("Baseline"))
 
-  if (is.null(factor.levels)) {
-    not_present = factor.levels[!factor.levels %in% df$model.name]
-    if (length(not_present) > 0) {
-      stop(
+  } else{
+    b_model = model$models$Baseline
+    df = model$table
+
+    numeric_moderators = data.frame(df[df$type == "numeric", "model.name"])
+    if (nrow(numeric_moderators) > 0) {
+      warning(
         paste0(
-          "The following supplied moderator levels were not found in model.name: '",
-          paste0(not_present, collapse = "', '"),
+          "Only categorical moderators are plotted. The following moderators will be ignored: '",
+          paste(numeric_moderators, collapse = "', '"),
           "'."
-        )
+        ),
+        call. = F
       )
     }
 
-    mod_data = df %>%
-      dplyr::filter(type %in% c("moderator level"))
-  } else{
-    mod_data = df %>%
-      dplyr::filter(type == "moderator level" &
-                      model.name %in% factor.levels)
-  }
+    baseline = df %>%
+      dplyr::filter(type %in% c("Baseline"))
 
-  #prepare mod and baseline data
-  mod_data =  mod_data %>%
-    mutate(type = "moderator", setting = "Pooled")
+    #check that all moderators are factor, otherwise warn user
+
+    #### next we separte out the bits of the summary table we want to plot.
+
+    if (is.null(factor.levels)) {
+      not_present = factor.levels[!factor.levels %in% df$model.name]
+      if (length(not_present) > 0) {
+        stop(
+          paste0(
+            "The following supplied moderator levels were not found in model.name: '",
+            paste0(not_present, collapse = "', '"),
+            "'."
+          )
+        )
+      }
+
+      mod_data = df %>%
+        dplyr::filter(type %in% c("moderator level")) %>%
+        mutate(type = "moderator", setting = "Pooled")
+    } else{
+      mod_data = df %>%
+        dplyr::filter(type == "moderator level" &
+                        model.name %in% factor.levels)
+      #prepare mod and baseline data
+      mod_data =  mod_data %>%
+        mutate(type = "moderator", setting = "Pooled")
+    }
+  } # if statement end
 
   baseline = baseline %>%
     mutate(type = "baseline", setting = "Pooled")
+
+  if(is.null(mod_data)) mod_data <- baseline[NULL,]
 
   summary = rbind(baseline, mod_data) %>%
     dplyr::select(
@@ -270,6 +287,13 @@ ninjaForest = function(model,
   # change font ---------------------------------
   if (!is.null(font)) {
     plot = plot + theme(text = element_text(family = font))
+  }
+
+  if(nrow(mod_data) == 0){
+  plot = plot + theme(
+      strip.background = element_blank(),
+      strip.text = element_blank()
+    )
   }
 
   return(plot)
