@@ -4,10 +4,21 @@
 \alias{funnel_plot}
 \title{ninjaFunnel}
 \usage{
-funnel_plot(model, xlab = "Estimate", ylab = "Standard Error",
-  font = "serif", CI = F, alpha = 0.6, shape = 19, size = 1.5,
-  CI_linetype = "dashed", CI_size = 0.6, pool_linetype = "dotted",
-  pool_size = 0.5, density = F)
+funnel_plot(
+  model,
+  xlab = "Estimate",
+  ylab = "Standard Error",
+  font = "serif",
+  CI = F,
+  alpha = 0.6,
+  shape = 19,
+  size = 1.5,
+  CI_linetype = "dashed",
+  CI_size = 0.6,
+  pool_linetype = "dotted",
+  pool_size = 0.5,
+  density = F
+)
 }
 \arguments{
 \item{model}{an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.}

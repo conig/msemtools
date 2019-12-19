@@ -33,10 +33,10 @@ get_haiku = function(){
   objects_2 = c("pebbles", "peanuts","poppers","doughnuts","talons","sapphires")
   names_1 = c("Jake","John","Joe","Bob","Phil","Jim","James")
   nature_plural_1 = c("leaves","snow","rocks","stones","rain")
-  mental_2 = c("concern","regret","insight","wisdom","respite")
+  mental_2 = c("concern","regret","insight","wisdom","respite","thoughts","gloom")
   possessed_3 = c("big ##colours_1## ##plural_objects_1##","chickenpox","elephants","coffee stains")
-  exclamation_2 = c("O hark!", "Heavens!","Dear lord!","Good grief!","Oh no!","My word!")
-  state_1 = c("lost","gone","done","clear")
+  exclamation_2 = c("O hark!", "Heavens!","Dear lord!","Good grief!","Oh no!","My word!","Ah kids!","The times!","Black snow!","My eyes!","My ears!")
+  state_1 = c("lost","gone","done","clear","still")
 
   one = c("A ninja's swift ##possesive_noun_1##...",
           "A ##adjective_2## ##colours_1## ##animal_or_plant_1##...",

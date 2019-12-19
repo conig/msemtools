@@ -202,6 +202,111 @@ as.character.meta_ninja = function(x, ...) {
   return(output)
 }
 
+#' coef.meta_ninja
+#' @param object the meta_ninja
+#' @param ... specific moderators to extract
+#' @importFrom stats coef
+#' @export
+
+coef.meta_ninja = function(object,...){
+  model = object
+  # summary ---------------------------
+  tab = model$table
+  tab = tidyr::fill(tab, `anova p-value`)
+  tab = tab[model$table$type != "moderator",]
+  tab$setting = "Pooled"
+  tab$order = seq_along(tab$moderation)
+
+  mods = c("Baseline",tidyselect::vars_select(unique(tab$moderation),...))
+
+  tab = tab[tab$moderation %in% mods, ]
+
+  tab$model.name[tab$year == 1] = "Pooled estimate"
+
+  summary_final = dplyr::select(
+    tab,
+    moderation,
+    cluster = model.name,
+    k,
+    SE,
+    n,
+    est = estimate,
+    lower = lbound,
+    upper = ubound,
+    type = type,
+    setting = setting,
+    model_p = `anova p-value`
+  )
+
+  eff_final = dplyr::select(get_effects(model$models[[1]]),
+                      moderation,
+                      cluster,
+                      k,
+                      n,
+                      est,
+                      SE,
+                      lower,
+                      upper,
+                      type,
+                      setting
+  )
+  eff_final$model_p = NA
+
+  out = data.frame(rbind(summary_final, eff_final))
+  out$order = seq_along(out$moderation)
+  rownames(out) = NULL
+return(out)
+}
+
+get_effects = function(model, baseline = FALSE) {
+  eff = model$data
+  eff$SE = sqrt(eff$v)
+  eff$lower = eff$y - 1.96 * eff$SE
+  eff$upper = eff$y + 1.96 * eff$SE
+  eff$est = eff$y
+  eff$moderation = NA
+  eff$k = NA
+  eff$n = 1
+  eff$type = "effect size"
+  eff$setting = "Effect sizes"
+  eff = eff[, c("moderation",
+                "cluster",
+                "k",
+                "n",
+                "est",
+                "SE",
+                "lower",
+                "upper",
+                "type",
+                "setting")]
+
+  if (baseline) {
+    b_mod <- extractData(model)
+    b_mod$moderation = "Baseline"
+    b_mod$cluster = "Baseline"
+    b_mod$type = "Baseline"
+    b_mod$setting = "Pooled"
+    b_mod = dplyr::select(
+      b_mod,
+      moderation,
+      cluster,
+      k,
+      n,
+      est = estimate,
+      SE,
+      lower = lbound,
+      upper = ubound,
+      type,
+      setting
+    )
+    eff = data.frame(rbind(b_mod, eff))
+  }
+
+
+  return(eff)
+
+}
+
 
 #Define global variables
 utils::globalVariables(
@@ -249,7 +354,14 @@ utils::globalVariables(
     "anova.p.value",
     "original_x",
     "predictor_matricies",
-    "indent_"
+    "indent_",
+    "cluster",
+    "mod_data",
+    "Q",
+    "Q_df",
+    "Q_p",
+    "value",
+    "sig"
   )
 )
 

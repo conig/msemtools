@@ -4,8 +4,7 @@
 \alias{as.data.frame.meta_ninja}
 \title{meta_ninja as.data.frame method}
 \usage{
-\method{as.data.frame}{meta_ninja}(x, row.names = NULL,
-  optional = NULL, ...)
+\method{as.data.frame}{meta_ninja}(x, row.names = NULL, optional = NULL, ...)
 }
 \arguments{
 \item{x}{an R object}

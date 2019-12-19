@@ -4,8 +4,14 @@
 \alias{moderate}
 \title{moderate}
 \usage{
-moderate(model, ..., moderators = NULL, binary_intercept = 0,
-  continuous_intercept = NULL, remove_empty_slopes = T)
+moderate(
+  model,
+  ...,
+  moderators = NULL,
+  binary_intercept = 0,
+  continuous_intercept = NULL,
+  remove_empty_slopes = T
+)
 }
 \arguments{
 \item{model}{A meta3 model. The original data file must be available in the environment, with the same name.}

@@ -4,8 +4,13 @@
 \alias{meta3_ninja}
 \title{meta3_ninja}
 \usage{
-meta3_ninja(call, moderators, binary_intercept = 0,
-  continuous_intercept = NULL, remove_empty_slopes)
+meta3_ninja(
+  call,
+  moderators,
+  binary_intercept = 0,
+  continuous_intercept = NULL,
+  remove_empty_slopes
+)
 }
 \arguments{
 \item{call}{a call list}

@@ -4,8 +4,11 @@
 \alias{removed_mod_note}
 \title{removed_mod_note}
 \usage{
-removed_mod_note(x, capitalise_first = T, case = c("default", "lower",
-  "sentence"))
+removed_mod_note(
+  x,
+  capitalise_first = T,
+  case = c("default", "lower", "sentence")
+)
 }
 \arguments{
 \item{x}{a meta_ninja model}

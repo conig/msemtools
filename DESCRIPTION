@@ -1,14 +1,14 @@
 Package: msemtools
 Type: Package
 Title: Routines, tables, and figures for metaSEM analyses
-Version: 1.0.4
+Version: 1.0.6
 Author: James Conigrave
 Maintainer: James Conigrave <jamesconigrave@gmail.com>
-Description: The functions contained in this package are designed to streamline metaSEM analyses.
+Description: Batch together univare metaSEM analyses. Format results into rmarkdown tables. Generate forest plots. Publication bias analyses and plotting. Automatic reporting.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.1
 Imports:
     metaSEM (>= 1.2.0),
     dplyr (>= 0.7.8),
@@ -26,7 +26,12 @@ Imports:
     future.apply,
     plyr,
     crayon,
-    glue
+    glue,
+    tidyselect,
+    data.table,
+    reshape2,
+    rlang,
+    tidyr
 Remotes:
     JConigrave/papertools,
     JConigrave/Conigrave,

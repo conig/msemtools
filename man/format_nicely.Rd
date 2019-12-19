@@ -4,9 +4,17 @@
 \alias{format_nicely}
 \title{format_nicely}
 \usage{
-format_nicely(x, round = 2, effect.name = NULL, transform = NULL,
-  t.name = NULL, hide.insig = T, escape.pc = F, p_digits = 3,
-  leading.zero = FALSE)
+format_nicely(
+  x,
+  round = 2,
+  effect.name = NULL,
+  transform = NULL,
+  t.name = NULL,
+  hide.insig = T,
+  escape.pc = F,
+  p_digits = 3,
+  leading.zero = FALSE
+)
 }
 \arguments{
 \item{x}{a meta_ninja}

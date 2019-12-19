@@ -4,14 +4,29 @@
 \alias{forest_plot}
 \title{ninjaForest}
 \usage{
-forest_plot(model, xlab = "Effect size", transform = NULL,
-  baseline_name = "Pooled estimate", factor.levels = NULL,
-  vline = NULL, author = NULL, year = NULL, moderator.shape = 23,
-  moderator.size = 3, summary.shape = 23, summary.size = 4,
-  diamond = TRUE, moderator_diamond = FALSE, font = "serif")
+forest_plot(
+  model,
+  ...,
+  xlab = "Effect size",
+  transform = NULL,
+  baseline_name = "Pooled estimate",
+  factor.levels = NULL,
+  vline = NULL,
+  author = NULL,
+  year = NULL,
+  moderator.shape = 23,
+  moderator.size = 3,
+  summary.shape = 23,
+  summary.size = 4,
+  diamond = TRUE,
+  moderator_diamond = FALSE,
+  font = "serif"
+)
 }
 \arguments{
 \item{model}{an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.}
+
+\item{...}{moderators to plot}
 
 \item{xlab}{a string.}
 

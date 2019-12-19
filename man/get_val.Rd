@@ -4,7 +4,7 @@
 \alias{get_val}
 \title{get_val}
 \usage{
-get_val(x, value, m = NULL)
+get_val(x, value, m = NULL, digits = Inf, transform = NULL)
 }
 \arguments{
 \item{x}{a meta_ninja object}
@@ -12,6 +12,10 @@ get_val(x, value, m = NULL)
 \item{value}{the value to extract}
 
 \item{m}{the moderator to extract}
+
+\item{digits}{the number of digits}
+
+\item{transform}{a function to transform returned values.}
 }
 \description{
 Returns a value for models contained in meta_ninja objects

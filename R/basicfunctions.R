@@ -25,6 +25,7 @@ extractData = function(model, model.name = NULL) {
     "t2_3p",
     "I2_3",
     "Q",
+    "Q_df",
     "Q_p",
     "slope",
     "slope_se",
@@ -65,6 +66,7 @@ extractData = function(model, model.name = NULL) {
   result$t2_3 = coef[coef$row == "Tau2_3", "est"] %>% safe_add
   result$t2_3p = coef[coef$row == "Tau2_3", "p"] %>% safe_add
   result$Q = summary$Q.stat$Q %>% safe_add
+  result$Q_df = summary$Q.stat$Q.df %>% safe_add
   result$Q_p = summary$Q.stat$pval %>% safe_add
   if (!all(is.na(summary$I2.values))) {
     result$I2_2 = summary$I2.values[1, 2] %>% safe_add
@@ -78,18 +80,18 @@ extractData = function(model, model.name = NULL) {
     result$R2_2 = summary$R2.values[3, 1] %>% safe_add
     result$R2_3 = summary$R2.values[3, 2] %>% safe_add
   }
-  if (!is.na(coef[coef$row == "Tau2_2", "p"])) {
-    if (coef[coef$row == "Tau2_2", "p"] < 0.05) {
-      result$t2 = paste(result$t2, "*", sep = "")
-    }
-  }
-  if (!is.na(result$t2_3)) {
-    if (!is.na(coef[coef$row == "Tau2_3", "p"])) {
-      if (coef[coef$row == "Tau2_3", "p"] < 0.05) {
-        result$t2_3 = paste(result$t2_3, "*", sep = "")
-      }
-    }
-  }
+  # if (!is.na(coef[coef$row == "Tau2_2", "p"])) {
+  #   if (coef[coef$row == "Tau2_2", "p"] < 0.05) {
+  #     result$t2 = paste(result$t2, "*", sep = "")
+  #   }
+  # }
+  # if (!is.na(result$t2_3)) {
+  #   if (!is.na(coef[coef$row == "Tau2_3", "p"])) {
+  #     if (coef[coef$row == "Tau2_3", "p"] < 0.05) {
+  #       result$t2_3 = paste(result$t2_3, "*", sep = "")
+  #     }
+  #   }
+  # }
   slopes = sum(grepl("Slope", coef$row))
 
   if (slopes > 0 & slopes < 2) {
@@ -571,6 +573,9 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
       I2_3,
       R2_2,
       R2_3,
+      Q,
+      Q_df,
+      Q_p,
       Mx_status
     )
   }
@@ -738,6 +743,9 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
       n = model_info$n,
       R2_2 = model_info$R2_2,
       R2_3 = model_info$R2_3,
+      Q = model_info$Q,
+      Q_df = model_info$Q_df,
+      Q_p = model_info$Q_p,
       `anova p-value` = model_anovas$p[x],
       Mx_status = model_info$Mx_status,
       type = "moderator"
@@ -761,7 +769,7 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
       mutate(moderation = model_info$model.name,
              n_slopes = n_slopes) %>%
       select(moderation, model.name, k, n, estimate = est, SE = stde, lbound, ubound,
-             R2_2,R2_3,
+             R2_2,R2_3,Q,Q_df, Q_p,
              Mx_status,`anova p-value`=anova.p.value, type,
              n_slopes) %>%
       as_tibble %>%
@@ -778,7 +786,8 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
     covariates = predictor_matricies,
     calls = calls,
     data = models[[1]]$call$data,
-    removed_moderators = empty_moderators
+    removed_moderators = empty_moderators,
+    moderators = moderators
   )
   class(out) = c("meta_ninja")
 

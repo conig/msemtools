@@ -70,10 +70,10 @@ format_nicely = function(x,
       papertools::glue_bracket(transform(df[i,]$estimate),
                                transform(df[i,]$lbound),
                                transform(df[i,]$ubound),
-                               round = round)
+                               round = round , brackets = c("[","]"))
 
     }) %>% unlist
-    df$extra[df$extra == papertools::glue_bracket(NA, NA, NA)] = NA
+    df$extra[df$extra == papertools::glue_bracket(NA, NA, NA,brackets = c("[","]"))] = NA
     df = df %>% dplyr::select(
       moderation,
       Moderator= model.name,
@@ -95,10 +95,11 @@ format_nicely = function(x,
       papertools::glue_bracket(transform(df[i,]$estimate),
                                transform(df[i,]$lbound),
                                transform(df[i,]$ubound),
-                               round = round)
+                               round = round,
+                               brackets = c("[","]"))
 
     }) %>% unlist
-    df$estimate[df$estimate == papertools::glue_bracket(NA, NA, NA)] = NA
+    df$estimate[df$estimate == papertools::glue_bracket(NA, NA, NA,brackets = c("[","]"))] = NA
     df = df %>% dplyr::select(
       moderation,
       Moderator = model.name,
@@ -165,7 +166,7 @@ format_nicely = function(x,
 #' @export to_apa
 
 to_apa = function(x, caption, note,escape = F,
-                  escape.pc = T,docx = T, ...){
+                  escape.pc = F,docx = T, ...){
   if("meta_ninja" %in% class(x)){
     x = format_nicely(x)
   }
@@ -371,13 +372,17 @@ describe_all_mods = function(obj) {
 #' @param x a meta_ninja object
 #' @param value the value to extract
 #' @param m the moderator to extract
+#' @param digits the number of digits
+#' @param transform a function to transform returned values.
 #' @importFrom dplyr %>%
 #' @export get_val
 
-get_val = function(x, value, m = NULL){
+get_val = function(x, value, m = NULL, digits = Inf, transform = NULL){
 
-  call = match.call() %>%
-    lapply(as.character)
+  call = match.call()
+  #return(call)
+
+  x = eval(call$x)
 
   if(is.null(call$value)) call$value = names(x$table)
 
@@ -387,14 +392,24 @@ get_val = function(x, value, m = NULL){
   mods = get_moderators(x)
 
   if(!is.null(call$m)){
-    if(!call$m %in% mods$moderator) stop("moderator could not be found in the model table")
+    if(!as.character(call$m) %in% mods$moderator) stop("moderator could not be found in the model table")
 
     output = output %>%
       filter(moderation == call$m)
     }
 
-  output = c(output[1, call$value])
+  values = tidyselect::vars_select(names(output), {{value}})
+
+  output = c(output[1, values])
   if(length(unlist(output)) == 1) output <- as.numeric(unname(output))
+
+  if(!is.null(transform)){
+    output = transform(output)
+  }
+
+  if(!is.infinite(digits)){
+  output = papertools::digits(output, n = digits)
+  }
 
   return(output)
 
@@ -408,9 +423,10 @@ get_val = function(x, value, m = NULL){
 #' @param p p value with which to assess significance
 
 get_moderators = function(meta_ninja, p = 0.05){
+  call = match.call()
 
   m = meta_ninja$table %>%
-    dplyr::select(moderation, `anova p-value`) %>%
+    dplyr::select(moderation,R2_2,R2_3, `anova p-value`) %>%
     .[-1,] %>%
     filter(!duplicated(moderation)) %>%
     rename(moderator = moderation)
