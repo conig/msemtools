@@ -8,7 +8,7 @@ envir = sys.parent()
 if(class(x) != "name") x <- call$x
  stat_q = rmarkdown_wrap(glue::glue('get_val({x}, "Q", digits = {digits})'), rmarkdown = rmarkdown, envir = envir)
  stat_df = rmarkdown_wrap(glue::glue('get_val({x}, "Q_df", digits = 0)'), rmarkdown = rmarkdown, envir = envir)
- stat_p = rmarkdown_wrap(glue::glue('papertools::round_p(get_val({x}, "Q_p"),3)'), rmarkdown = rmarkdown, envir = envir)
+ stat_p = rmarkdown_wrap(glue::glue('papyr::round_p(get_val({x}, "Q_p"),3)'), rmarkdown = rmarkdown, envir = envir)
 
  if(stat_p < 0.05){
    mess = glue::glue("Inspecting the Q statistic revealed significant heterogeneity $Q$({stat_df}) = {stat_q}, $p$ {stat_p}.")
@@ -25,7 +25,7 @@ report_n = function(x, rmarkdown = FALSE){
   envir = sys.parent()
   #return(call)
   if(class(x) != "name") x <- call$x
-  stat_k = rmarkdown_wrap(glue::glue('papertools::as_word(get_val({x}, k, digits = 0), T)'), rmarkdown = rmarkdown, envir = envir)
+  stat_k = rmarkdown_wrap(glue::glue('papyr::as_word(get_val({x}, k, digits = 0), T)'), rmarkdown = rmarkdown, envir = envir)
   stat_n = rmarkdown_wrap(glue::glue('get_val({x}, n, digits = 0)'), rmarkdown = rmarkdown, envir = envir)
 
     mess = glue::glue("{stat_k} studies ({stat_n} effects) reported data which could be pooled.")
@@ -51,8 +51,8 @@ report_i2 = function(x, rmarkdown = FALSE, digits = 2){
   call = match.call()
   envir = sys.parent()
   if(class(x) != "name") x <- call$x
-  stat_i2_2 = rmarkdown_wrap(glue::glue('papertools::digits(get_val({x}, I2_2) * 100)'), rmarkdown = rmarkdown, envir = envir)
-  stat_i2_3 = rmarkdown_wrap(glue::glue('papertools::digits(get_val({x}, I2_3) *100)'), rmarkdown = rmarkdown, envir = envir)
+  stat_i2_2 = rmarkdown_wrap(glue::glue('papyr::digits(get_val({x}, I2_2) * 100)'), rmarkdown = rmarkdown, envir = envir)
+  stat_i2_3 = rmarkdown_wrap(glue::glue('papyr::digits(get_val({x}, I2_3) *100)'), rmarkdown = rmarkdown, envir = envir)
   mess = glue::glue("The heterogeneity at level 2 was {stat_i2_2}%. The heterogeneity at level 3 was {stat_i2_3}%.")
   return(mess)
 }
@@ -70,8 +70,8 @@ report_moderators = function(x, rmarkdown = FALSE, digits = 2){
     return("No covariate was found to be a significant moderator of the baseline model.")
     }
 
-  mods$r2_2.md = rmarkdown_wrap(glue::glue("papertools::digits(get_val({x}, R2_2, '{mods$moderator}')*100,{digits})"),rmarkdown, envir=envir)
-  mods$r2_3.md = rmarkdown_wrap(glue::glue("papertools::digits(get_val({x}, R2_3, '{mods$moderator}')*100,{digits})"),rmarkdown, envir=envir)
+  mods$r2_2.md = rmarkdown_wrap(glue::glue("papyr::digits(get_val({x}, R2_2, '{mods$moderator}')*100,{digits})"),rmarkdown, envir=envir)
+  mods$r2_3.md = rmarkdown_wrap(glue::glue("papyr::digits(get_val({x}, R2_3, '{mods$moderator}')*100,{digits})"),rmarkdown, envir=envir)
 
   if (nrow(mods) == 1) {
     sent_mods = glue::glue(
@@ -80,7 +80,7 @@ report_moderators = function(x, rmarkdown = FALSE, digits = 2){
       .close = ">>"
     )
   } else{
-    sent_mods = papertools::c_sentence(
+    sent_mods = papyr::c_sentence(
       glue::glue(
         "'<<mods$moderator>>' ($R^2_{(2)}$ = <<mods$r2_2.md>>%; $R^2_{(3)}$ = <<mods$r2_3.md>>%)",
         .open = "<<",

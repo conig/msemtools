@@ -49,7 +49,7 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh theme_classic scale_x_continuous facet_grid geom_vline ylab element_text
 
 #test arguments:
-#xlab = "effect size"; baseline_name = "All" ; transform = function(x) papertools::logit2prob(x) ; factor.levels = NULL; vline = 0; cluster = NULL; author = NULL; year = NULL; moderator.shape = 23;moderator.size = 3.2;summary.shape = 23;summary.size = 4;font = "serif";diamond = T; moderator_diamond = F
+#xlab = "effect size"; baseline_name = "All" ; transform = function(x) papyr::logit2prob(x) ; factor.levels = NULL; vline = 0; cluster = NULL; author = NULL; year = NULL; moderator.shape = 23;moderator.size = 3.2;summary.shape = 23;summary.size = 4;font = "serif";diamond = T; moderator_diamond = F
 #TODO create method for meta3. Add heterogeneity indicies to plot with argument
 forest_plot = function(model,
                        ...,

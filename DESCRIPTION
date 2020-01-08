@@ -33,6 +33,6 @@ Imports:
     rlang,
     tidyr
 Remotes:
-    JConigrave/papertools,
+    JConigrave/papyr,
     JConigrave/Conigrave,
     crsh/papaja

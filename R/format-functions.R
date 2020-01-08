@@ -11,10 +11,10 @@
 #' @param leading.zero a bool. If TRUE, p-values will have leading zeros
 #' @export format_nicely
 #' @importFrom dplyr select rename
-#' @importFrom papertools glue_bracket digits
+#' @importFrom papyr glue_bracket digits
 
 #examples
-#round = 2; transform = papertools::logit2prob; t.name = "Pr (95% CI)"; hide.insig = T
+#round = 2; transform = papyr::logit2prob; t.name = "Pr (95% CI)"; hide.insig = T
 format_nicely = function(x,
                          round = 2,
                          effect.name = NULL,
@@ -33,7 +33,7 @@ format_nicely = function(x,
   args = as.list(match.call()) #I capture the call here, to give t_name a name if necessary.
   base_table = x$table
   df = base_table
-  df$SE = papertools::digits(as.numeric(as.character(df$SE)), round)
+  df$SE = papyr::digits(as.numeric(as.character(df$SE)), round)
 
   if (hide.insig) { #this code chunk could be improved, was painful to write.
     mods = unique(df$moderation) #what are the mods?
@@ -67,13 +67,13 @@ format_nicely = function(x,
       t.name = deparse(args$transform)
     }
     df$extra = lapply(seq_along(unlist(df[,1])),function(i){
-      papertools::glue_bracket(transform(df[i,]$estimate),
+      papyr::glue_bracket(transform(df[i,]$estimate),
                                transform(df[i,]$lbound),
                                transform(df[i,]$ubound),
                                round = round , brackets = c("[","]"))
 
     }) %>% unlist
-    df$extra[df$extra == papertools::glue_bracket(NA, NA, NA,brackets = c("[","]"))] = NA
+    df$extra[df$extra == papyr::glue_bracket(NA, NA, NA,brackets = c("[","]"))] = NA
     df = df %>% dplyr::select(
       moderation,
       Moderator= model.name,
@@ -88,18 +88,18 @@ format_nicely = function(x,
       R2_3,
       "ANOVA p-value" = `anova p-value`
     )
-    df$Estimate = papertools::digits(df$Estimate, round)
+    df$Estimate = papyr::digits(df$Estimate, round)
     names(df)[names(df) == "extra"] = t.name
   } else{
     df$estimate = lapply(seq_along(unlist(df[,1])),function(i){
-      papertools::glue_bracket(transform(df[i,]$estimate),
+      papyr::glue_bracket(transform(df[i,]$estimate),
                                transform(df[i,]$lbound),
                                transform(df[i,]$ubound),
                                round = round,
                                brackets = c("[","]"))
 
     }) %>% unlist
-    df$estimate[df$estimate == papertools::glue_bracket(NA, NA, NA,brackets = c("[","]"))] = NA
+    df$estimate[df$estimate == papyr::glue_bracket(NA, NA, NA,brackets = c("[","]"))] = NA
     df = df %>% dplyr::select(
       moderation,
       Moderator = model.name,
@@ -118,13 +118,13 @@ format_nicely = function(x,
   df$indent_ = duplicated(df$moderation)
 
   df$`ANOVA p-value` = df$`ANOVA p-value` %>%
-    papertools::round_p(p_digits, stars= 0.05, leading.zero = F)
+    papyr::round_p(p_digits, stars= 0.05, leading.zero = F)
 
-  df$Moderator[1] = paste0(df$Moderator[1], " (","$I^2_{(2;3)}$: ",papertools::digits(df$I2_2[1], round),"; ",papertools::digits(df$I2_3[1],round),")")
+  df$Moderator[1] = paste0(df$Moderator[1], " (","$I^2_{(2;3)}$: ",papyr::digits(df$I2_2[1], round),"; ",papyr::digits(df$I2_3[1],round),")")
   df$I2_2 = NULL
   df$I2_3 = NULL
-  df$R2_2 = papertools::digits(df$R2_2, round)
-  df$R2_3 = papertools::digits(df$R2_3, round)
+  df$R2_2 = papyr::digits(df$R2_2, round)
+  df$R2_3 = papyr::digits(df$R2_3, round)
   df[is.na(df)] = "-"
   df[df == "NA"] = "-"
   df$k = as.character(df$k)
@@ -219,9 +219,9 @@ describe_q = function(obj){
   } else{
     starting_message = "Inspecting the Q statistic did not reveal significant heterogeneity"
   }
-  q = paste0("`r summary(",obj,"$models$Baseline)$Q.stat$Q %>% papertools::digits(2)`")
+  q = paste0("`r summary(",obj,"$models$Baseline)$Q.stat$Q %>% papyr::digits(2)`")
   df = paste0("`r summary(",obj,"$models$Baseline)$Q.stat$Q.df`")
-  p = paste0("`r summary(",obj,"$models$Baseline)$Q.stat$pval %>% papertools::round_p(2)`")
+  p = paste0("`r summary(",obj,"$models$Baseline)$Q.stat$pval %>% papyr::round_p(2)`")
   stats_text = paste0(" (Q(df = ",df,") = ",q, ", *p* = ", p,").")
   paste0(starting_message, stats_text)
   }
@@ -235,10 +235,10 @@ describe_q = function(obj){
 #' @importFrom dplyr %>%
 
 describe_baseline = function(obj) {
-  studies = paste0("`r ", obj, "$table$k[1] %>% papertools::as_word(T)`")
-  effects = paste0("`r ", obj, "$table$n[1] %>% papertools::as_word(F)`")
+  studies = paste0("`r ", obj, "$table$k[1] %>% papyr::as_word(T)`")
+  effects = paste0("`r ", obj, "$table$n[1] %>% papyr::as_word(F)`")
   pooled = paste0(
-    "`r papertools::glue_bracket(",
+    "`r papyr::glue_bracket(",
     obj,
     "$table$estimate[1],",
     obj,
@@ -248,10 +248,10 @@ describe_baseline = function(obj) {
   )
   i2_2 = paste0("`r ",
                 obj,
-                "$table$I2_2[1] %>% '*'(100) %>% papertools::digits(2)`")
+                "$table$I2_2[1] %>% '*'(100) %>% papyr::digits(2)`")
   i2_3 = paste0("`r ",
                 obj,
-                "$table$I2_3[1] %>% '*'(100) %>% papertools::digits(2)`")
+                "$table$I2_3[1] %>% '*'(100) %>% papyr::digits(2)`")
 
   message = paste0(
     studies,
@@ -289,7 +289,7 @@ describe_moderators = function(obj) {
         "'",
         sig_mods_table$model.name[i],
         "'",
-        ") %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`"
+        ") %>% select(R2_2) %>% '*'(100) %>% papyr::digits(2)`"
       )
       R2_3_code = paste0(
         "`r ",
@@ -298,7 +298,7 @@ describe_moderators = function(obj) {
         "'",
         sig_mods_table$model.name[i],
         "'",
-        ") %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`"
+        ") %>% select(R2_3) %>% '*'(100) %>% papyr::digits(2)`"
       )
 
      paste0(mod_name, "(R^2^~(2)~ = ", R2_code, "%; R^2^~(3)~ = ", R2_3_code,"%)")
@@ -335,9 +335,9 @@ describe_all_mods = function(obj) {
 
     diffll = paste0("`r ",
                     anova_string,
-                    "$diffLL[2] %>% papertools::digits(2)`")
+                    "$diffLL[2] %>% papyr::digits(2)`")
     df =  paste0("`r ", anova_string, "$diffdf[2]", "`")
-    pval = paste0("`r ", anova_string, "$p[2] %>% papertools::round_p(2)", "`")
+    pval = paste0("`r ", anova_string, "$p[2] %>% papyr::round_p(2)", "`")
     real_p = eval(parse(text = paste0(anova_string, "$p[2]")))
 
 
@@ -408,7 +408,7 @@ get_val = function(x, value, m = NULL, digits = Inf, transform = NULL){
   }
 
   if(!is.infinite(digits)){
-  output = papertools::digits(output, n = digits)
+  output = papyr::digits(output, n = digits)
   }
 
   return(output)

@@ -1,7 +1,7 @@
 #' get_haiku
 #'
 #' Generates a haiku
-#' @importFrom papertools hash_replace
+#' @importFrom papyr hash_replace
 
 get_haiku = function(){
 
@@ -65,17 +65,17 @@ get_haiku = function(){
             "A ##adjective_2## ##animal_2##.")
 
   first = sample(one,1) %>%
-    papertools::hash_replace(sample = 1) %>%
+    papyr::hash_replace(sample = 1) %>%
     Hmisc::capitalize() %>%
     crayon::white()
 
   second = sample(two,1) %>%
-    papertools::hash_replace(sample = 1) %>%
+    papyr::hash_replace(sample = 1) %>%
     Hmisc::capitalize() %>%
     crayon::white()
 
   third = sample(three,1) %>%
-    papertools::hash_replace(sample = 1) %>%
+    papyr::hash_replace(sample = 1) %>%
     Hmisc::capitalize() %>%
     crayon::white()
 

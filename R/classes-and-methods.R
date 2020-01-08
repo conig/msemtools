@@ -39,13 +39,13 @@ print.meta_ninja = function(x, ...) {
   cat("\n")
 
   "I2(2): " %>%
-    paste0(papertools::digits(x$table$I2_2[1]*100,1), "%") %>%
+    paste0(papyr::digits(x$table$I2_2[1]*100,1), "%") %>%
     cat()
 
   cat("\n")
 
   "I2(3): " %>%
-    paste0(papertools::digits(x$table$I2_3[1]*100,1), "%") %>%
+    paste0(papyr::digits(x$table$I2_3[1]*100,1), "%") %>%
     cat()
 
   cat("\n")
@@ -54,7 +54,7 @@ print.meta_ninja = function(x, ...) {
     select(moderation, k, n,R2_2,R2_3,`p-value` = "anova p-value", type, Mx_status) %>%
     filter(type == "moderator") %>% data.frame
   out[,4:5] = round(out[,4:5],2)
-  out$p.value = papertools::round_p(out$p.value, stars = 0.05) %>%
+  out$p.value = papyr::round_p(out$p.value, stars = 0.05) %>%
     lapply(function(i){
       if(!grepl("\\*",i)){
         i = paste0(i," ") #if no star, add a space to keep things nicely lined up
@@ -95,7 +95,7 @@ print.meta_ninja = function(x, ...) {
 
   cat("\n\n")
   if(length(removed_moderators) > 0){
-    removed_moderator_message = paste0(length(removed_moderators) %>% papertools::as_word(T),
+    removed_moderator_message = paste0(length(removed_moderators) %>% papyr::as_word(T),
                                        " moderator(s) were removed due to no variance:\n",
                                        paste(removed_moderators, collapse = ", "),".") %>%
       crayon::red()
@@ -123,7 +123,7 @@ removed_mod_note = function(x,
   removed_n = length(removed_moderators)
 
   #number of moderators as a word
-  number_w = paste0(length(removed_moderators) %>% papertools::as_word(capitalise_first))
+  number_w = paste0(length(removed_moderators) %>% papyr::as_word(capitalise_first))
 
   #get moderator word grammar
   if (removed_n > 1) {
