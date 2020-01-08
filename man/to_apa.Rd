@@ -4,7 +4,7 @@
 \alias{to_apa}
 \title{to_apa}
 \usage{
-to_apa(x, caption, note, escape = F, escape.pc = T, docx = T, ...)
+to_apa(x, caption, note, escape = F, escape.pc = F, docx = T, ...)
 }
 \arguments{
 \item{x}{a pretty_ninja}
