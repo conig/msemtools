@@ -49,8 +49,6 @@ print.meta_ninja = function(x, ...) {
     cat()
 
   cat("\n")
-  cat("-------------------------------------------------")
-  cat("\n")
 
   out = x$table %>%
     select(moderation, k, n,R2_2,R2_3,`p-value` = "anova p-value", type, Mx_status) %>%
@@ -67,11 +65,21 @@ print.meta_ninja = function(x, ...) {
   problem_models = out$moderation[!out$Mx_status %in% c(0,1)]
 
   out = out %>%
-    select(-type, - Mx_status)
+    select(-type, - Mx_status) %>%
+    utils::capture.output()
 
-  print(out)
+  header = out[1]
+  width = max(nchar(out))
+  bar = paste(rep(crayon::silver("-"), width),collapse = "")
+  text = gsub("\\*", crayon::yellow("*"),out[-1])
 
-  cat("-------------------------------------------------")
+  tab = paste(c(bar,
+        header,
+        bar,
+        text,
+        bar), collapse = "\n")
+
+  cat(tab)
   cat("\n")
 
   if(length(problem_models) > 0){
