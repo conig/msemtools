@@ -20,7 +20,6 @@ Imports:
     Hmisc (>= 4.2-0),
     Conigrave,
     papaja,
-    papertools (>= 0.5.1),
     stringr,
     stringi,
     future.apply,
@@ -31,7 +30,9 @@ Imports:
     data.table,
     reshape2,
     rlang,
-    tidyr
+    tidyr,
+    papyr,
+    cli
 Remotes:
     JConigrave/papyr,
     JConigrave/Conigrave,

@@ -97,9 +97,8 @@ print.meta_ninja = function(x, ...) {
   if(length(removed_moderators) > 0){
     removed_moderator_message = paste0(length(removed_moderators) %>% papyr::as_word(T),
                                        " moderator(s) were removed due to no variance:\n",
-                                       paste(removed_moderators, collapse = ", "),".") %>%
-      crayon::red()
-    cat(removed_moderator_message)
+                                       paste(removed_moderators, collapse = ", "),".")
+    cli::cli_alert_warning(crayon::red(removed_moderator_message))
   }
 
 }
@@ -369,7 +368,8 @@ utils::globalVariables(
     "Q_df",
     "Q_p",
     "value",
-    "sig"
+    "sig",
+    "weight"
   )
 )
 

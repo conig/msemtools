@@ -137,10 +137,13 @@ forest_plot = function(model,
     temp_dat$est = as.numeric(temp_dat$est)
     temp_dat$cluster = as.character(temp_dat$cluster) # make types the same as in dat
     temp_dat$SE = sqrt(temp_dat$SE) # square root the sampling variance to get the SE.
+    temp_dat$effect_shape = as.character(temp_dat$effect_shape)
+    temp_dat$effect_shape[is.na(temp_dat$effect_shape)] = "Not reported"
 
     dat = dplyr::left_join(dat, temp_dat, by = c("est","SE","cluster"))
+  }else{
+    dat$effect_shape = "no facet"
   }
-
 
   dat$year[is.na(dat$year)] = dat$order[is.na(dat$year)]
 
@@ -182,12 +185,13 @@ forest_plot = function(model,
     y = stats::reorder(cluster, year),
     x = est,
     xmin = lower,
-    xmax = upper
+    xmax = upper,
+    shape = effect_shape
   ))
 
   if(include_weights){
-    plot = plot + aes(alpha = weight) + scale_alpha(range = c(0.4,1)) +
-      guides(alpha = FALSE)
+    plot = plot + aes(alpha = weight) + ggplot2::scale_alpha(range = c(0.4,1)) +
+      ggplot2::guides(alpha = FALSE)
   }
 
   plot = plot + geom_point(color = "black") +
@@ -253,7 +257,13 @@ forest_plot = function(model,
     )
   }
 
+  # turn off shape if not used ------------------
+  if(length(unique(dat$effect_shape)) == 1){
+    plot = plot + ggplot2::theme(legend.position = "none")
+  }
+
   return(plot)
+
 }
 
 #' ninjaFunnel

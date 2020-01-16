@@ -70,10 +70,10 @@ format_nicely = function(x,
       papyr::glue_bracket(transform(df[i,]$estimate),
                                transform(df[i,]$lbound),
                                transform(df[i,]$ubound),
-                               round = round , brackets = c("[","]"))
+                               round = round , brackets = c("[","]"),
+                          collapse = " - ")
 
     }) %>% unlist
-    df$extra[df$extra == papyr::glue_bracket(NA, NA, NA,brackets = c("[","]"))] = NA
     df = df %>% dplyr::select(
       moderation,
       Moderator= model.name,
@@ -96,10 +96,11 @@ format_nicely = function(x,
                                transform(df[i,]$lbound),
                                transform(df[i,]$ubound),
                                round = round,
-                               brackets = c("[","]"))
+                               brackets = c("[","]"),
+                          collapse = " - ")
 
     }) %>% unlist
-    df$estimate[df$estimate == papyr::glue_bracket(NA, NA, NA,brackets = c("[","]"))] = NA
+
     df = df %>% dplyr::select(
       moderation,
       Moderator = model.name,
@@ -433,7 +434,7 @@ get_moderators = function(meta_ninja, p = 0.05){
 
   m$sig = m$`anova p-value` < p
 
-  return(m)
+  return(data.table::data.table(m))
 }
 
 
