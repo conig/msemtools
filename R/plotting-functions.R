@@ -34,7 +34,7 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @param effect_label a string. If provided relabels "effect size" in facetting.
 #' @param transform a function. If supplied effect sizes are transformed by this function
 #' @param baseline_name a string. The label for the baseline model
-#' @param factor.levels  a charcater vector. If supplied, only the factor.levels specified will be plotted.
+#' @param factor.levels  a character vector. If supplied, only the factor.levels specified will be plotted.
 #' @param facet_by a colname. Facets effect sizes by a supplied variable.
 #' @param vline a scalar. Dictates the x-intercept (the dashed line).
 #' @param author the name of the author column
