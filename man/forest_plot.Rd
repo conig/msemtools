@@ -8,11 +8,11 @@ forest_plot(
   model,
   ...,
   xlab = "Effect size",
+  effect_label = NULL,
   transform = NULL,
   baseline_name = "Pooled estimate",
   factor.levels = NULL,
   facet_by = NULL,
-  effect_colour = NULL,
   vline = NULL,
   author = NULL,
   year = NULL,
@@ -33,17 +33,23 @@ forest_plot(
 
 \item{xlab}{a string.}
 
+\item{effect_label}{a string. If provided relabels "effect size" in facetting.}
+
 \item{transform}{a function. If supplied effect sizes are transformed by this function}
 
 \item{baseline_name}{a string. The label for the baseline model}
 
 \item{factor.levels}{a charcater vector. If supplied, only the factor.levels specified will be plotted.}
 
+\item{facet_by}{a colname. Facets effect sizes by a supplied variable.}
+
 \item{vline}{a scalar. Dictates the x-intercept (the dashed line).}
 
 \item{author}{the name of the author column}
 
 \item{year}{the name of the year column}
+
+\item{include_weights}{a bool. If true, effect sizes become transparent proportional to their weight}
 
 \item{moderator.shape}{a scalar ggplot2 geom_point shape value}
 

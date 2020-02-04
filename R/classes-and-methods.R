@@ -369,7 +369,8 @@ utils::globalVariables(
     "Q_p",
     "value",
     "sig",
-    "weight"
+    "weight",
+    "effect_shape"
   )
 )
 

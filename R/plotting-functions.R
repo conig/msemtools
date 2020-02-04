@@ -31,12 +31,15 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @param model an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.
 #' @param ... moderators to plot
 #' @param xlab a string.
+#' @param effect_label a string. If provided relabels "effect size" in facetting.
 #' @param transform a function. If supplied effect sizes are transformed by this function
 #' @param baseline_name a string. The label for the baseline model
 #' @param factor.levels  a charcater vector. If supplied, only the factor.levels specified will be plotted.
+#' @param facet_by a colname. Facets effect sizes by a supplied variable.
 #' @param vline a scalar. Dictates the x-intercept (the dashed line).
 #' @param author the name of the author column
 #' @param year the name of the year column
+#' @param include_weights a bool. If true, effect sizes become transparent proportional to their weight
 #' @param moderator.shape a scalar ggplot2 geom_point shape value
 #' @param moderator.size a scalar. ggplot2 geom_point size value
 #' @param summary.shape a scalar ggplot2 geom_point shape value
@@ -54,11 +57,11 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 forest_plot = function(model,
                        ...,
                        xlab = "Effect size",
+                       effect_label = NULL,
                        transform = NULL,
                        baseline_name = "Pooled estimate",
                        factor.levels = NULL,
                        facet_by = NULL,
-                       effect_colour = NULL,
                        vline = NULL,
                        author = NULL,
                        year = NULL,
@@ -178,6 +181,14 @@ forest_plot = function(model,
 
     dat$weight = 1 / dat$SE^2
     dat$weight[dat$type != "effect size"] = max(dat$weight)
+
+  # re-label effect size.
+    if(!is.null(effect_label)){
+
+      dat$setting[dat$setting == "Effect sizes"] = effect_label
+      dat$setting = forcats::fct_relevel(factor(dat$setting), "Pooled", after = Inf) # make pooled last.
+    }
+
 
   # ------------------------------------------------------------------- plotting
 
