@@ -64,14 +64,14 @@ format_nicely = function(x,
   }
 
   # apply transformation
-  if (!is.null(transform)) {
+  if (!is.null(transform)) { # if transform is present
     if (is.null(t.name)) {
       t.name = deparse(args$transform)
     }
     df$extra = lapply(seq_along(unlist(df[,1])),function(i){
-      papyr::glue_bracket(transform(df[i,]$estimate),
-                               transform(df[i,]$lbound),
-                               transform(df[i,]$ubound),
+      papyr::glue_bracket(unlist(transform(df[i,]$estimate)),
+                               unlist(transform(df[i,]$lbound)),
+                               unlist(transform(df[i,]$ubound)),
                                round = round , brackets = c("[","]"),
                           collapse = ci_sep)
 
@@ -94,9 +94,9 @@ format_nicely = function(x,
     names(df)[names(df) == "extra"] = t.name
   } else{
     df$estimate = lapply(seq_along(unlist(df[,1])),function(i){
-      papyr::glue_bracket(transform(df[i,]$estimate),
-                               transform(df[i,]$lbound),
-                               transform(df[i,]$ubound),
+      papyr::glue_bracket(df[i,]$estimate,
+                               df[i,]$lbound,
+                               df[i,]$ubound,
                                round = round,
                                brackets = c("[","]"),
                           collapse = ci_sep)
@@ -147,6 +147,7 @@ format_nicely = function(x,
            "$SE$" = SE,
            "$R^2_{(2)}$" = R2_2,
            "$R^2_{(3)}$" = R2_3)
+
 
   if (escape.pc) {
     names(df) = gsub("\\%", "\\\\%", names(df))
