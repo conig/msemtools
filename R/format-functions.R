@@ -9,6 +9,7 @@
 #' @param escape.pc a bool. If TRUE, \% symbols will be escaped in header, captions and notes.
 #' @param p_digits a scalar. The number of digits to round p to.
 #' @param leading.zero a bool. If TRUE, p-values will have leading zeros
+#' @param ci_sep separator for confidence intervals
 #' @export format_nicely
 #' @importFrom dplyr select rename
 #' @importFrom papyr glue_bracket digits
@@ -23,7 +24,8 @@ format_nicely = function(x,
                          hide.insig = T,
                          escape.pc = F,
                          p_digits = 3,
-                         leading.zero = FALSE) {
+                         leading.zero = FALSE,
+                         ci_sep = " - ") {
   if (!"meta_ninja" %in% class(x)) {
     stop(
       "'format_nicely' only works with objects of class meta_ninja. See Fn meta3_moderation",
@@ -71,7 +73,7 @@ format_nicely = function(x,
                                transform(df[i,]$lbound),
                                transform(df[i,]$ubound),
                                round = round , brackets = c("[","]"),
-                          collapse = " - ")
+                          collapse = ci_sep)
 
     }) %>% unlist
     df = df %>% dplyr::select(
@@ -97,7 +99,7 @@ format_nicely = function(x,
                                transform(df[i,]$ubound),
                                round = round,
                                brackets = c("[","]"),
-                          collapse = " - ")
+                          collapse = ci_sep)
 
     }) %>% unlist
 
