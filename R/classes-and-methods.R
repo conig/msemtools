@@ -179,6 +179,7 @@ summary.meta_ninja = function(object, ...) {
   out$Moderator = ifelse(out$indent_, paste0('__',out$Moderator), out$Moderator)
   out = out %>%
     select(- indent_)
+  out
 
 }
 
