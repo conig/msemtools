@@ -323,15 +323,27 @@ moderation_instructions = function(...){
 #' @param binary_intercept a numeric. Constrain the intercept for matricies with binary elements
 #' @param continuous_intercept a numeric. Constrain the intercept for matricies with continuous elements
 #' @param remove_empty_slopes a bool. If true, removes empty columns from matricies.
-#' @importFrom dplyr %>%
 #' @importFrom Conigrave check_names
 #' @return a meta_ninja \(until I rename it\)
+#' @examples
 #' @export moderate
 #' @details
 #' moderate simplifies moderation analyses by taking the call from a meta3, and then using it to generate
 #' subsequent moderation models. A few rules are used to do this.
 #' 1. If a continuous variable is used a predictor, then an intercept is recorded
 #' 2. If binary variables are included, then intercepts are forced to be zero, these binary variables become the intercepts.
+#' @examples
+#' library(metaSEM); library(msemtools)
+#'
+#' model0 = meta3(y = drink_yi, v = drink_vi, cluster = study_id, dat = conigrave20)
+#' summary(model0)
+#'
+#' m_moderated = model0 %>%
+#'  moderate(Gender, Age)
+#'
+#' format_nicely(m_moderated, transform = metafor::transf.ilogit)
+#'
+#' plot(m_moderated)
 
 # model = model0; moderators = NULL
 # args = get_args()

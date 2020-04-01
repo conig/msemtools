@@ -38,3 +38,16 @@ subsequent moderation models. A few rules are used to do this.
 1. If a continuous variable is used a predictor, then an intercept is recorded
 2. If binary variables are included, then intercepts are forced to be zero, these binary variables become the intercepts.
 }
+\examples{
+library(metaSEM); library(msemtools)
+
+model0 = meta3(y = drink_yi, v = drink_vi, cluster = study_id, dat = conigrave20)
+summary(model0)
+
+m_moderated = model0 \%>\%
+ moderate(Gender, Age)
+
+format_nicely(m_moderated, transform = metafor::transf.ilogit)
+
+plot(m_moderated)
+}
