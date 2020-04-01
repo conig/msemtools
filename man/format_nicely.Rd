@@ -13,7 +13,8 @@ format_nicely(
   hide.insig = T,
   escape.pc = F,
   p_digits = 3,
-  leading.zero = FALSE
+  leading.zero = FALSE,
+  ci_sep = " - "
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ format_nicely(
 \item{p_digits}{a scalar. The number of digits to round p to.}
 
 \item{leading.zero}{a bool. If TRUE, p-values will have leading zeros}
+
+\item{ci_sep}{separator for confidence intervals}
 }
 \description{
 format_nicely

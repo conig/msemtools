@@ -39,7 +39,7 @@ forest_plot(
 
 \item{baseline_name}{a string. The label for the baseline model}
 
-\item{factor.levels}{a charcater vector. If supplied, only the factor.levels specified will be plotted.}
+\item{factor.levels}{a character vector. If supplied, only the factor.levels specified will be plotted.}
 
 \item{facet_by}{a colname. Facets effect sizes by a supplied variable.}
 
