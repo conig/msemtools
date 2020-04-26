@@ -34,7 +34,8 @@ Imports:
     papyr,
     cli,
     magrittr,
-    forcats
+    forcats,
+    weightr
 Remotes:
     JConigrave/papyr,
     JConigrave/Conigrave,
