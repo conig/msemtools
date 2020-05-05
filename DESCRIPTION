@@ -1,7 +1,7 @@
 Package: msemtools
 Type: Package
 Title: Routines, tables, and figures for metaSEM analyses
-Version: 1.0.8.2
+Version: 1.0.8.3
 Author: James Conigrave
 Maintainer: James Conigrave <jamesconigrave@gmail.com>
 Description: Batch together univare metaSEM analyses. Format results into rmarkdown tables. Generate forest plots. Publication bias analyses and plotting. Automatic reporting.
