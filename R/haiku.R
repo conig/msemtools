@@ -15,7 +15,7 @@ get_haiku = function(){
   adjective_object_3 = c("heavily","quietly")
   plant_1 = c("tree","plant", "leaf")
   plant_plural_4 = c("jacarandas")
-  animal_1 = c("frog","fish","cat","bear","bird","dog","wolf","ant","gnat","toad")
+  animal_1 = c("frog","fish","cat","bear","bird","dog","wolf","ant","gnat","toad","bug")
   vowel_actor_1 = c("egg","ant")
   animal_or_plant_1 = c(animal_1, plant_1)
   animal_2 = c("rabbit","flower","doughnut")
@@ -53,7 +53,7 @@ get_haiku = function(){
           "The ##adjective_1## ##animal_1## has funny ##objects_1##...",
           "##adjective_2## ##plant_plural_4## ##verb_1##...")
   three = c("##nature_plural_1## falls ##ad_verb_3##...",
-            "##plural_animals_2## ##verb_1## lazily...",
+            "##plural_animals_1## ##verb_1## lazily...",
             "##names_1## has ##possessed_3##...",
             "Some ##animal_1## with a leer...",
             "A ##adjective_3## ##animal_1##...",

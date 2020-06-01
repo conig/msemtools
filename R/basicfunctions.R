@@ -791,6 +791,7 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
 
   merged_tables = plyr::rbind.fill(baseline_table,model_table)
 
+
   out = list(
     models = models,
     table = as_tibble(merged_tables),
@@ -803,11 +804,14 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
   )
   class(out) = c("meta_ninja")
 
+  names(out$covariates) = names(out$models)
+
   #Flag to the users if models have a mx status of greater than one (which indicates issues)
   model_names = out$table$model.name
   model_scores = out$table$Mx_status
   model_names = paste0(model_names, "[", model_scores, "]")
   problem_models =  model_names[which(model_scores > 1)]
+
 
 
   if (length(problem_models) > 0) {
