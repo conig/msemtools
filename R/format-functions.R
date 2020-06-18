@@ -11,6 +11,7 @@
 #' @param leading.zero a bool. If TRUE, p-values will have leading zeros
 #' @param ci_sep separator for confidence intervals
 #' @export format_nicely
+#' @import data.table
 #' @importFrom dplyr select rename
 #' @importFrom papyr glue_bracket digits
 
@@ -93,7 +94,7 @@ format_nicely = function(x,
     df$Estimate = papyr::digits(df$Estimate, round)
     names(df)[names(df) == "extra"] = t.name
   } else{
-    df$estimate = lapply(seq_along(unlist(df[,1])),function(i){
+    df$estimate = unlist(lapply(seq_along(unlist(df[,1])),function(i){
       papyr::glue_bracket(df[i,]$estimate,
                                df[i,]$lbound,
                                df[i,]$ubound,
@@ -101,7 +102,7 @@ format_nicely = function(x,
                                brackets = c("[","]"),
                           collapse = ci_sep)
 
-    }) %>% unlist
+    }))
 
     df = df %>% dplyr::select(
       moderation,
@@ -128,6 +129,8 @@ format_nicely = function(x,
   df$I2_3 = NULL
   df$R2_2 = papyr::digits(df$R2_2, round)
   df$R2_3 = papyr::digits(df$R2_3, round)
+
+  df = data.table::data.table(df)
   df[is.na(df)] = "-"
   df[df == "NA"] = "-"
   df$k = as.character(df$k)
@@ -143,7 +146,7 @@ format_nicely = function(x,
   }
 
   df = df %>%
-    rename("$p$" = "ANOVA p-value",
+    dplyr::rename("$p$" = "ANOVA p-value",
            "$SE$" = SE,
            "$R^2_{(2)}$" = R2_2,
            "$R^2_{(3)}$" = R2_3)
@@ -152,7 +155,7 @@ format_nicely = function(x,
   if (escape.pc) {
     names(df) = gsub("\\%", "\\\\%", names(df))
   }
-  return(df)
+  return(tibble::tibble(df))
 
 }
 
