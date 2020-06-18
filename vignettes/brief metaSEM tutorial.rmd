@@ -1,0 +1,202 @@
+---
+output: pdf_document
+header-includes:
+  - \usepackage{threeparttable}
+  - \usepackage{booktabs}
+  - \usepackage{float}
+---
+
+# Moderated univariate meta-analysis in MetaSEM
+
+For metaSEM you generally create a different model per moderation (e.g. age, gender, education). You can think of each moderated model as a regression with a predictor. A regression without predictors (just the intercept) just tells you the mean (the baseline model).
+
+To give the basic flow of what we're doing with metaSEM you can check out an analogy with regression:
+
+Let's use mtcars and miles per galon (mpg)
+
+## Baseline model
+
+```{r}
+mean(mtcars$mpg)
+```
+
+The baseline model's intercept just gets you the mean of mpg
+
+```{r}
+baseline <-lm(mpg ~ 1 , data = mtcars)
+coef(baseline)
+```
+
+## Moderated model
+
+The moderated model gives you the relationship between another variable and miles per galon
+
+```{r}
+moderated_model <-lm(mpg ~ 1 + wt , data = mtcars)
+summary(moderated_model)
+```
+
+## Check that moderated model improves baseline
+
+We can then compare the moderated model to the baseline to see if it explains more variance.
+
+```{r}
+anova(baseline, moderated_model)
+```
+
+Given the p-value is tiny, we can see the moderated model improves on the baseline model.
+
+# metaSEM
+
+We do a similar process with meta-analytic models. I'll use a dataset in the metaSEM package you can play with.
+
+In this dataset we are looking at the odds of women vs men getting grants. log-odds are the effect size (negative log-odds is less likely, positive log-odds is more likely). We use log-odds as they can be averaged together, whereas odds cannot.
+
+```{r}
+dat <- metaSEM::Bornmann07
+```
+## Baseline model
+
+```{r, message=FALSE}
+library(metaSEM)
+baseline <- meta3(y = logOR, v = v, cluster = Cluster, data = dat)
+summary(baseline)
+```
+
+The intercept (just like in the regression example) tells us the average log-odds for women getting grants. We can convert this to odds by taking its exponential
+
+```{r}
+exp(coef(baseline)[1])
+```
+
+For every man that gets a grant, only .9 women get one.
+
+## Moderated model
+
+You can do regressions to see if other variables are related to the odds of getting grants.
+E.g. by discipline.
+
+For the lm function, you just needed to tell R the variable and it creates the underlying matrices used in calculations. E.g. for mpg ~ wt this is (more or less) what r did before doing calculations
+
+```{r}
+matrix <- mtcars[,c("mpg","wt")]
+matrix$intercept = 1
+as.matrix(matrix[1:5,])
+```
+
+R then uses this matrix to do matrix algebra etc and work out the regression coefficients.
+
+In metaSEM you have to construct the matrix of the predictors yourself. metaSEM then stitches it to the outcome and clustering variables. This final matrix is used with OpenMx to get model results.
+
+These are the disciplines in our dataset
+
+```{r}
+unique(dat$Discipline)
+```
+
+We leave off the first discipline ("Physical") because if a grant isn't in any of the other disciplines, it must be in the physical sciences. Adding an extra column with redundant information would give us really confusing results.
+
+```{r}
+Physical <- as.numeric(dat$Discipline == 'Physical sciences')
+Social <- as.numeric(dat$Discipline == 'Social sciences/humanities')
+Life <- as.numeric(dat$Discipline == 'Life sciences/biology')
+Multi <- as.numeric(dat$Discipline == 'Multidisciplinary')
+
+moderator_matrix <- cbind(Social, Life, Multi)
+moderator_matrix[1:5,] # I just show the first five rows.
+```
+
+The intercept then becomes the average for Physical sciences (when all the others disciplines are zero)
+
+You can then give that matrix to metaSEM to perform the meta-regression.
+
+```{r}
+moderated_model <- meta3(y = logOR, v = v, x = moderator_matrix, cluster = Cluster, data = dat)
+summary(moderated_model)
+```
+
+We can see the log-odds of physical sciences was -.02 (the intercept), Slope 1 to 3 are social sciences through multi-discipline. The slopes show the difference between physical science to a given level.
+
+We can see this model's fit is not significantly better than the baseline model (discipline may not affect how likely women are to get grants).
+
+```{r}
+anova(moderated_model, baseline)
+```
+
+If we wanted to just see the values for the slope without a reference level we could have just supplied all four categories and set the intercept to equal zero:
+
+```{r}
+moderator_matrix <- cbind(Physical, Social, Life, Multi)
+moderated_model <- meta3(y = logOR, v = v, x = moderator_matrix, intercept.constraints = 0, cluster = Cluster, data = dat)
+summary(moderated_model)
+```
+
+Note slope 1 and the previous model's intercept are identical. The slopes are changed as they are no longer relative to slope 1. They are relative to the intercept which we constrained to be zero (in other words they just give you the log odds for each of those disciplines).
+
+# msemtools
+
+All msemtools is, is a wrapper for metaSEM.
+
+It is not on CRAN, it's currently github-only.
+Install it like this:
+
+```{r eval = FALSE}
+remotes::install_github("conig/msemtools")
+```
+
+msemtools makes the moderator matrices for you, renames the slopes and formats things to make life easier.
+
+E.g.
+
+```{r}
+library(msemtools)
+
+mod_res <- baseline %>% 
+  moderate(Discipline)
+mod_res
+```
+
+We can see immediately that disciple is not a significant moderator.
+We can get the slopes like this:
+
+```{r}
+mod_res %>% 
+  summary(hide.insig = FALSE)
+```
+
+The way it does this is by automatically creating the matrices based on the predictors you give it. It them supplies the predictors to the metaSEM.
+
+E.g.
+
+```{r}
+msemtools::character_matrix(dat$Discipline)[1:5,]
+```
+
+
+The nice thing is this allows you to test multiple moderated models all in one step without having to laboriously set up all the matrices:
+
+```{r}
+res2 <- baseline %>% 
+  moderate(Discipline, Type, Year, Country)
+res2
+```
+
+The results should never be different to metaSEM, your code should just be more efficient.
+
+```{r}
+summary(res2, hide.insig = FALSE)
+```
+
+Also if you're willing to play with LaTeX, or the github package papaja you can automatically create tables (in PDF or word) like so:
+
+\newpage
+
+```{r}
+res2 %>% 
+  format_nicely() %>% 
+  to_apa(caption = "Moderator analysis results", note = "", escape.pc = TRUE)
+```
+
+
+
+
