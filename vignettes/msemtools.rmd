@@ -1,5 +1,9 @@
 ---
 output: pdf_document
+vignette: >
+  %\VignetteIndexEntry{msemtools}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 header-includes:
   - \usepackage{threeparttable}
   - \usepackage{booktabs}
@@ -29,12 +33,26 @@ coef(baseline)
 
 ## Moderated model
 
-The moderated model gives you the relationship between another variable and miles per galon
+The moderated model gives you the relationship between another variable and miles per galon.
+E.g. the number of cylanders a car has.
+
+Here are the average mpg per cylander
+
+```{r message = FALSE}
+library(dplyr)
+mtcars %>% 
+  group_by(cyl) %>% 
+  summarise(avg_mpg = mean(mpg))
+```
+
+Here's the same information using a regression (analagous to a moderated meta-analsis):
 
 ```{r}
-moderated_model <-lm(mpg ~ 1 + wt , data = mtcars)
+moderated_model <-lm(mpg ~ 1 + factor(cyl) , data = mtcars)
 summary(moderated_model)
 ```
+
+The intercept is the average mpg at the reference level (cyl == 4). We can see that when cyl == 6, mpg is 6.92 points lower than the reference level. When it's 8, it's lower again. These values when added to the intercept match our averages calculated above.
 
 ## Check that moderated model improves baseline
 
@@ -55,6 +73,7 @@ In this dataset we are looking at the odds of women vs men getting grants. log-o
 ```{r}
 dat <- metaSEM::Bornmann07
 ```
+
 ## Baseline model
 
 ```{r, message=FALSE}
@@ -73,20 +92,27 @@ For every man that gets a grant, only .9 women get one.
 
 ## Moderated model
 
-You can do regressions to see if other variables are related to the odds of getting grants.
-E.g. by discipline.
+We can introduce predictor variables to  our model to see if other variables are related to the odds of getting grants (just like regression).
+For example, perhaps the discipline of a grant proposal affects the odds of women vs men being successful?
 
-For the lm function, you just needed to tell R the variable and it creates the underlying matrices used in calculations. E.g. for mpg ~ wt this is (more or less) what r did before doing calculations
+### Under the hood
+
+For the lm function, you just needed to tell R the variable and it creates the underlying matrices used in calculations. E.g. for mpg ~ cyl this is (more or less) what r did before doing calculations
 
 ```{r}
-matrix <- mtcars[,c("mpg","wt")]
-matrix$intercept = 1
-as.matrix(matrix[1:5,])
+cyl6 <- as.numeric(mtcars$cyl == 6)
+cyl8 <- as.numeric(mtcars$cyl == 8)
+pred_matrix = cbind(cyl6, cyl8)
+
+matrix <- cbind(y = mtcars$mpg, intercept = 1, cyl6, cyl8)
+matrix[1:5,]
 ```
 
-R then uses this matrix to do matrix algebra etc and work out the regression coefficients.
+R then uses this matrix to work out the regression slopes for each of the predictors (including for the intercept).
 
-In metaSEM you have to construct the matrix of the predictors yourself. metaSEM then stitches it to the outcome and clustering variables. This final matrix is used with OpenMx to get model results.
+In metaSEM you have to construct the matrix of the predictors yourself. metaSEM then stitches the outcome, clustering variables, and your predictor matrix together. This final matrix is used with the OpenMx package to get model results.
+
+### Creating the predictor matrix for metaSEM
 
 These are the disciplines in our dataset
 
@@ -94,7 +120,7 @@ These are the disciplines in our dataset
 unique(dat$Discipline)
 ```
 
-We leave off the first discipline ("Physical") because if a grant isn't in any of the other disciplines, it must be in the physical sciences. Adding an extra column with redundant information would give us really confusing results.
+We leave off the first discipline ("Physical") because if a grant isn't in any of the other disciplines, it must be in the physical sciences. Adding an extra column with redundant information would give us really confusing results. What we're doing by leaving off the first level is the same as what is done in regression using categorical variables.
 
 ```{r}
 Physical <- as.numeric(dat$Discipline == 'Physical sciences')
@@ -106,9 +132,7 @@ moderator_matrix <- cbind(Social, Life, Multi)
 moderator_matrix[1:5,] # I just show the first five rows.
 ```
 
-The intercept then becomes the average for Physical sciences (when all the others disciplines are zero)
-
-You can then give that matrix to metaSEM to perform the meta-regression.
+We then give that predictor matrix to metaSEM to perform the meta-regression.
 
 ```{r}
 moderated_model <- meta3(y = logOR, v = v, x = moderator_matrix, cluster = Cluster, data = dat)
@@ -127,11 +151,12 @@ If we wanted to just see the values for the slope without a reference level we c
 
 ```{r}
 moderator_matrix <- cbind(Physical, Social, Life, Multi)
-moderated_model <- meta3(y = logOR, v = v, x = moderator_matrix, intercept.constraints = 0, cluster = Cluster, data = dat)
+moderated_model <- meta3(y = logOR, v = v, x = moderator_matrix,
+                         intercept.constraints = 0, cluster = Cluster, data = dat)
 summary(moderated_model)
 ```
 
-Note slope 1 and the previous model's intercept are identical. The slopes are changed as they are no longer relative to slope 1. They are relative to the intercept which we constrained to be zero (in other words they just give you the log odds for each of those disciplines).
+Note slope 1 and the previous model's intercept are identical. Slopes 2:4 are changed as they are no longer relative to slope 1. They are relative to the intercept which we constrained to be zero (in other words they just give you the log odds for each of those disciplines).
 
 # msemtools
 
@@ -173,7 +198,7 @@ msemtools::character_matrix(dat$Discipline)[1:5,]
 ```
 
 
-The nice thing is this allows you to test multiple moderated models all in one step without having to laboriously set up all the matrices:
+One nice feature of msemtools is it helps you test multiple moderated models all in one step without having to set up all the matrices:
 
 ```{r}
 res2 <- baseline %>% 
@@ -181,20 +206,29 @@ res2 <- baseline %>%
 res2
 ```
 
-The results should never be different to metaSEM, your code should just be more efficient.
+The results should never be different to metaSEM (if they are, you've found a bug - let me know!), your code should just be more efficient.
 
 ```{r}
 summary(res2, hide.insig = FALSE)
 ```
 
-Also if you're willing to play with LaTeX, or the github package papaja you can automatically create tables (in PDF or word) like so:
+Also if you're willing to play with LaTeX, or the github package 'papaja' you can automatically create moderator tables (in PDF or word). Note if you're not using papaja you'll need to add this to the YAML header to make this table in PDF documents:
+
+```{r eval=FALSE}
+header-includes:
+  - \usepackage{threeparttable}
+  - \usepackage{booktabs}
+  - \usepackage{float}
+```
+
 
 \newpage
 
 ```{r}
 res2 %>% 
   format_nicely() %>% 
-  to_apa(caption = "Moderator analysis results", note = "", escape.pc = TRUE)
+  to_apa(caption = "Moderator analysis results",
+         note = "p-values are from likelihood ratio tests comparing the baseline model to moderated models")
 ```
 
 

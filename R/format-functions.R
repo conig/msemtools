@@ -141,7 +141,7 @@ format_nicely = function(x,
     names(df)[names(df) == "Estimate"] = effect.name
   }else{
     if(is.null(transform)){
-    names(df)[names(df) == "Estimate"] = "Estimate (95% CI)"
+    names(df)[names(df) == "Estimate"] = "Estimate (95\\% CI)"
     }
   }
 
@@ -173,7 +173,7 @@ format_nicely = function(x,
 #' @export to_apa
 
 to_apa = function(x, caption, note,escape = F,
-                  escape.pc = F,docx = T, ...){
+                  escape.pc = FALSE,docx = T, ...){
   if("meta_ninja" %in% class(x)){
     x = format_nicely(x)
   }

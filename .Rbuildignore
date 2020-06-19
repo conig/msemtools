@@ -8,3 +8,5 @@
 ^pkgdown$
 ^\.travis\.yml$
 README_files
+^doc$
+^Meta$
