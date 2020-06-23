@@ -49,7 +49,7 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @param font A string. The name of a font family. Defaults to serif
 #' @export forest_plot
 #' @importFrom dplyr filter select %>% mutate
-#' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh theme_classic scale_x_continuous facet_grid geom_vline ylab element_text
+#' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh scale_x_continuous facet_grid geom_vline ylab element_text
 
 #test arguments:
 #xlab = "effect size"; baseline_name = "All" ; transform = function(x) papyr::logit2prob(x) ; factor.levels = NULL; vline = 0; cluster = NULL; author = NULL; year = NULL; moderator.shape = 23;moderator.size = 3.2;summary.shape = 23;summary.size = 4;font = "serif";diamond = T; moderator_diamond = F
@@ -225,7 +225,7 @@ forest_plot = function(model,
     ylab(NULL)
 
   plot = plot + facet_grid(setting ~ ., scales = 'free', space = 'free') +
-    theme_classic()
+    ggplot2::theme_classic()
   #if diamond ------------------------------------
   if (diamond) {
     bd = dat[dat$type == "Baseline",]
