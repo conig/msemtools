@@ -118,17 +118,11 @@ forest_plot = function(model,
 
   } # if statement end
 
-  dat$author = suppressWarnings(lapply(dat$cluster, function(x) {
-    x = as.numeric(as.character(x))
-    data[data[, cluster] == x, author] %>% unlist() %>% .[1]
-  }) %>% unlist)
+  key <- data.table::data.table(data)[,c(cluster, year, author), with = FALSE]
+  names(key) = c("cluster","year","author")
+  key$cluster = as.character(key$cluster)
 
-  dat$year = suppressWarnings(lapply(dat$cluster, function(x) {
-    x = as.numeric(as.character(x))
-    data[data[, cluster] == x, year] %>% unlist() %>% .[1]
-  })) %>% unlist %>%
-    as.character() %>% ## in one case year was coming out as a character
-    as.numeric() # so I'm converting it to numeric again to make sure.
+  dat <- dplyr::left_join(dat, key, by = "cluster")
 
   # facet shape merge in extra data ------------------------------------------------
   if (!is.null(facet_by)) {
