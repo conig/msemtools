@@ -14,7 +14,7 @@ format_nicely(
   escape.pc = F,
   p_digits = 3,
   leading.zero = FALSE,
-  ci_sep = " - "
+  ci_sep = ", "
 )
 }
 \arguments{

@@ -133,7 +133,7 @@ mess = list(
 )
 
 mess = paste(mess[filt], collapse = " ")
-
+mess = gsub("call\\$transform","NULL",mess)
 
 if(rmarkdown){
   return(cat(mess))
