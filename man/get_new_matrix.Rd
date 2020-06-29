@@ -4,7 +4,7 @@
 \alias{get_new_matrix}
 \title{get_new_matrix}
 \usage{
-get_new_matrix(model_call)
+get_new_matrix(model_call, dat)
 }
 \arguments{
 \item{model_call}{the call of a matrix}

@@ -1,7 +1,7 @@
 Package: msemtools
 Type: Package
 Title: Routines, tables, and figures for metaSEM analyses
-Version: 1.0.8.6
+Version: 1.0.9.0
 Author: James Conigrave
 Maintainer: James Conigrave <jamesconigrave@gmail.com>
 Description: Batch together univare metaSEM analyses. Format results into rmarkdown tables. Generate forest plots. Publication bias analyses and plotting. Automatic reporting.
@@ -13,16 +13,11 @@ Imports:
     metaSEM (>= 1.2.0),
     dplyr (>= 0.7.8),
     tibble (>= 1.4.2),
-    methods (>= 3.5.1),
     ggplot2 (>= 3.1.0),
     stats (>= 3.5.1),
-    metafor (>= 2.0-0),
     Hmisc (>= 4.2-0),
-    Conigrave,
     papaja,
     stringr,
-    stringi,
-    future.apply,
     plyr,
     crayon,
     glue,
@@ -43,5 +38,6 @@ Remotes:
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    metafor
 VignetteBuilder: knitr

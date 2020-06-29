@@ -55,3 +55,37 @@ get_matrix_long = function (y, v, cluster, x, data, ...){
                       1:length(x))))
   return(my.long)
 }
+
+
+get_matrix_long2 = function (y, v, x, cluster){
+
+  if (!is.character(cluster)) {
+    cluster <- as.character(cluster)
+  }
+
+  if (any(is.na(cluster))) {
+    stop("Missing values are not allowed in \"cluster\".\n")
+  }
+  my.long <- data.frame(y, v, cluster)
+  if (missing(x)) {
+    no.x <- 0
+    miss.x <- is.na(v)
+  } else {
+    if (is.vector(x)) {
+      no.x <- 1
+    } else {
+      no.x <- ncol(x)
+    }
+    old.labels <- names(my.long)
+    my.long <- data.frame(my.long, x)
+    names(my.long) <- c(old.labels, paste("x", 1:no.x, sep = ""))
+    miss.x <- apply(is.na(cbind(v, x)), 1, any)
+  }
+  my.long <- my.long[!miss.x, ]
+  my.long <- my.long[order(my.long$cluster), ]
+  my.long$time <-
+    c(unlist(sapply(split(my.long$y, as.character(my.long$cluster)),
+                    function(x)
+                      1:length(x))))
+  return(my.long)
+}

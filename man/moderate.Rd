@@ -10,7 +10,8 @@ moderate(
   moderators = NULL,
   binary_intercept = 0,
   continuous_intercept = NULL,
-  remove_empty_slopes = T
+  remove_empty_slopes = T,
+  call_only = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ moderate(
 \item{continuous_intercept}{a numeric. Constrain the intercept for matricies with continuous elements}
 
 \item{remove_empty_slopes}{a bool. If true, removes empty columns from matricies.}
+
+\item{call_only}{If TRUE, returns the call passed to meta3_ninja}
 }
 \value{
 a meta_ninja \(until I rename it\)

@@ -4,10 +4,12 @@
 \alias{final_matrix_singular}
 \title{get_final_matrix}
 \usage{
-final_matrix_singular(model_call)
+final_matrix_singular(model_call, predictor_matrix, dat)
 }
 \arguments{
 \item{model_call}{the call of a matrix}
+
+\item{matrix}{the matrix}
 }
 \description{
 Evaluates models to see if sufficient information is available to moderate.
