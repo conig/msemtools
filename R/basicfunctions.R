@@ -583,7 +583,7 @@ final_matrix_singular = function(model_call, predictor_matrix, dat) {
  # binary_intercept =0; continuous_intercept = NULL; remove_empty_slopes = T
  # stop::unpack_fns("msemtools")
  # model = meta3(y=logOR, v=v, cluster=Cluster, data=Bornmann07, model.name="3 level model")
- # m_call = msemtools::moderate(model,Discipline, Year, call_only = T)
+ # m_call = msemtools::moderate(model, "This is (a test)" = Discipline, Year, call_only = T)
  # moderators = m_call$mods
  # data = m_call$data
  # call = m_call$call
@@ -626,6 +626,7 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
     #message(x)
     #grab moderator details ----------------------------------
     mod_name = names(moderators[x])
+    is_named = names(moderators[x]) != moderators[[x]]
     mod = moderators[x][[1]]
     mod_string = as.character(enquote(mod))[2]
 
@@ -675,9 +676,10 @@ meta3_ninja = function(call, moderators, binary_intercept = 0, continuous_interc
       new_call$intercept.constraints = model_intercept
     }
 
-    new_call$model.name = mod_name %>%
-      remove_function() #get rid of pesky functions in model.names
-
+    # if(!is_named) {
+      new_call$model.name = mod_name %>%
+        remove_function() #get rid of pesky functions in model.names
+    # }
     return(new_call)
   })
 
