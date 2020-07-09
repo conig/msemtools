@@ -9,6 +9,7 @@
 #' @param fulltext_screened how many were full text screened
 #' @param final how many were included in final extract
 #' @param reasons a named list of reasons list("reason" = 0)
+#' @param synthesis_description Text to describe synthesis
 #' @export
 
 prisma = function(
@@ -18,7 +19,8 @@ prisma = function(
   abstract_screened = 0,
   fulltext_screened = 0,
   final = 0,
-  reasons = list("reason1" = 0, "reason2" = 0)
+  reasons = list("reason1" = 0, "reason2" = 0),
+  synthesis_description = "Studies included in\nquantitative synthesis"
 ){
 
   requireNamespace("webshot", quietly = TRUE)
@@ -53,7 +55,7 @@ digraph boxes_and_circles {
   F[label = 'Full-text articles\nassessed for\neligibility\n(n = ##fulltext_screened##)']
 {rank = same; F G}
   G[label = 'Full-text articles excluded\n(n = ##ft_exclude##)\n\n##reasons##\\r']
-  H[label = 'Studies included in\nquantitative synthesis\n(n = ##final##)']
+  H[label = '##synthesis_description##\n(n = ##final##)']
 
   #add edge statements
   A->C; B->C; C->D;D->F; D->E; F->G; F->H
