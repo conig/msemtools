@@ -5,30 +5,33 @@
 \title{prisma}
 \usage{
 prisma(
-  database = 0,
+  database_records = 0,
   additional_records = 0,
-  duplicates_removed = 0,
+  after_duplicates_removed = 0,
   abstract_screened = 0,
-  ft_screened = 0,
+  fulltext_screened = 0,
   final = 0,
-  reasons = list(reason1 = 0, reason2 = 0)
+  reasons = list(reason1 = 0, reason2 = 0),
+  synthesis_description = "Studies included in\\nquantitative synthesis"
 )
 }
 \arguments{
-\item{database}{n from original database}
+\item{database_records}{n from original database}
 
 \item{additional_records}{how many additional references}
 
-\item{duplicates_removed}{how many after duplicates removed}
+\item{after_duplicates_removed}{how many after duplicates removed}
 
 \item{abstract_screened}{how many were title and abstract screened}
 
-\item{ft_screened}{how many were full text screened}
+\item{fulltext_screened}{how many were full text screened}
 
 \item{final}{how many were included in final extract}
 
 \item{reasons}{a named list of reasons list("reason" = 0)}
+
+\item{synthesis_description}{Text to describe synthesis}
 }
 \description{
-Create a PRISMA diagram for a meta-analyis
+Create a PRISMA diagram for a meta-analysis
 }
