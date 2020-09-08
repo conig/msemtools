@@ -29,7 +29,7 @@ forest_plot(
 \arguments{
 \item{model}{an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.}
 
-\item{...}{moderators to plot}
+\item{...}{moderators to plot character strings only}
 
 \item{xlab}{a string.}
 

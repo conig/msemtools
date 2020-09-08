@@ -4,14 +4,14 @@
 \alias{plot.meta_ninja}
 \title{meta_ninja plot method}
 \usage{
-\method{plot}{meta_ninja}(x, y, ...)
+\method{plot}{meta_ninja}(x, ...)
 }
 \arguments{
 \item{x}{model to print}
 
-\item{y}{not used.}
-
 \item{...}{additional arguments passed to ninjaForest.}
+
+\item{y}{not used.}
 }
 \description{
 meta_ninja plot method

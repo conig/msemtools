@@ -29,7 +29,7 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' This function is used for plotting
 #'
 #' @param model an object belonging to the class 'meta_ninja'. These objects are created by the function 'meta3_moderation'.
-#' @param ... moderators to plot
+#' @param ... moderators to plot character strings only
 #' @param xlab a string.
 #' @param effect_label a string. If provided relabels "effect size" in facetting.
 #' @param transform a function. If supplied effect sizes are transformed by this function
@@ -49,7 +49,7 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @param font A string. The name of a font family. Defaults to serif
 #' @export forest_plot
 #' @importFrom dplyr filter select %>% mutate
-#' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh scale_x_continuous facet_grid geom_vline ylab element_text
+#' @import ggplot2
 
 #test arguments:
 #xlab = "effect size"; baseline_name = "All" ; transform = function(x) papyr::logit2prob(x) ; factor.levels = NULL; vline = 0; cluster = NULL; author = NULL; year = NULL; moderator.shape = 23;moderator.size = 3.2;summary.shape = 23;summary.size = 4;font = "serif";diamond = T; moderator_diamond = F
@@ -78,6 +78,7 @@ forest_plot = function(model,
     stop("must be provided objects of class 'meta-ninja")
   }
 
+  mods = unlist(list(...))
 
   #find missing variables
   if("meta" %in% class(model)){
@@ -92,9 +93,7 @@ forest_plot = function(model,
     vi = model$models[[1]]$call$v
   }
 
-  data = data_name %>%
-    parse(text = .) %>%
-    eval
+  data = eval(parse(text = data_name))
 
   if (is.null(year)) {
     year = find_year(data)
@@ -111,7 +110,7 @@ forest_plot = function(model,
 
   } else{
 
-    dat = coef(model,!!! rlang::quos(..., .named = TRUE))
+    dat = coef(model, mods)
 
     if("numeric" %in% dat$type) warning("Only categorical moderators will be plotted")
 

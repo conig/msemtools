@@ -162,10 +162,9 @@ removed_mod_note = function(x,
 
 #' meta_ninja plot method
 #' @param x model to print
-#' @param y not used.
 #' @param ... additional arguments passed to ninjaForest.
 #' @export
-plot.meta_ninja = function(x, y, ...) {
+plot.meta_ninja = function(x, ...) {
   forest_plot(x, ...)
 }
 
