@@ -8,7 +8,6 @@ prisma(
   database_records = 0,
   additional_records = 0,
   after_duplicates_removed = 0,
-  abstract_screened = 0,
   fulltext_screened = 0,
   final = 0,
   reasons = list(reason1 = 0, reason2 = 0),
@@ -21,8 +20,6 @@ prisma(
 \item{additional_records}{how many additional references}
 
 \item{after_duplicates_removed}{how many after duplicates removed}
-
-\item{abstract_screened}{how many were title and abstract screened}
 
 \item{fulltext_screened}{how many were full text screened}
 

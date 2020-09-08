@@ -5,7 +5,6 @@
 #' @param database_records n from original database
 #' @param additional_records how many additional references
 #' @param after_duplicates_removed how many after duplicates removed
-#' @param abstract_screened how many were title and abstract screened
 #' @param fulltext_screened how many were full text screened
 #' @param final how many were included in final extract
 #' @param reasons a named list of reasons list("reason" = 0)
@@ -16,7 +15,6 @@ prisma = function(
   database_records = 0,
   additional_records = 0,
   after_duplicates_removed = 0,
-  abstract_screened = 0,
   fulltext_screened = 0,
   final = 0,
   reasons = list("reason1" = 0, "reason2" = 0),
@@ -33,6 +31,7 @@ reasons <- as.character(paste(glue::glue("{names(reasons)}: {unlist(reasons)}"),
 
 
 ft_exclude = fulltext_screened - final
+abstract_screened = after_duplicates_removed
 abstract_excluded = abstract_screened - fulltext_screened
 
 if(ft_exclude != reasons_total) warning("The numbers of full-text excluded and reasons do not add up to the same number")
