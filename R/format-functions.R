@@ -10,6 +10,7 @@
 #' @param p_digits a scalar. The number of digits to round p to.
 #' @param leading.zero a bool. If TRUE, p-values will have leading zeros
 #' @param ci_sep separator for confidence intervals
+#' @param include_i2 A bool, should i2 be included next to baseline?
 #' @export format_nicely
 #' @import data.table
 #' @importFrom dplyr select rename
@@ -26,7 +27,8 @@ format_nicely = function(x,
                          escape.pc = F,
                          p_digits = 3,
                          leading.zero = FALSE,
-                         ci_sep = ", ") {
+                         ci_sep = ", ",
+                         include_i2 = FALSE) {
   if (!"meta_ninja" %in% class(x)) {
     stop(
       "'format_nicely' only works with objects of class meta_ninja. See Fn meta3_moderation",
@@ -124,7 +126,10 @@ format_nicely = function(x,
   df$`ANOVA p-value` = df$`ANOVA p-value` %>%
     papyr::round_p(p_digits, stars= 0.05, leading.zero = F)
 
+  if(include_i2){
   df$Moderator[1] = paste0(df$Moderator[1], " (","$I^2_{(2;3)}$: ",papyr::digits(df$I2_2[1], round),"; ",papyr::digits(df$I2_3[1],round),")")
+  }
+
   df$I2_2 = NULL
   df$I2_3 = NULL
   df$R2_2 = papyr::digits(df$R2_2, round)
