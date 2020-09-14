@@ -28,7 +28,7 @@ format_nicely = function(x,
                          p_digits = 3,
                          leading.zero = FALSE,
                          ci_sep = ", ",
-                         include_i2 = FALSE) {
+                         include_i2 = TRUE) {
   if (!"meta_ninja" %in% class(x)) {
     stop(
       "'format_nicely' only works with objects of class meta_ninja. See Fn meta3_moderation",
