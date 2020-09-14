@@ -150,7 +150,11 @@ character_matrix = function(x, levels = NULL, pattern = ",") {
   if (!(is.factor(x))) {
     x = factor(x)
   }
-  if(all(is.na(x))) return(x)
+  if(all(is.na(x))){
+    x = as.matrix(rep(1, length(x)))
+    colnames(x) = "NA"
+    return(x)
+  }  # return singular result
 
   split = x %>%
     stringr::str_split(pattern) %>% #split based on pattern
@@ -180,7 +184,7 @@ character_matrix = function(x, levels = NULL, pattern = ",") {
   levels_length_same <- length(matrix_levels) == ncol(out)
 
   if (levels_length_same & all(matrix_levels %in% colnames(out))) {
-    out = out[, matrix_levels] #reorder matrix if possible
+    out = out[, matrix_levels, drop = FALSE] #reorder matrix if possible
   }
 
   if (!is.null(levels)) {
