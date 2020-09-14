@@ -150,6 +150,7 @@ character_matrix = function(x, levels = NULL, pattern = ",") {
   if (!(is.factor(x))) {
     x = factor(x)
   }
+  if(all(is.na(x))) return(x)
 
   split = x %>%
     stringr::str_split(pattern) %>% #split based on pattern
