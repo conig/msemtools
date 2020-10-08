@@ -10,8 +10,6 @@
 \item{x}{model to print}
 
 \item{...}{additional arguments passed to ninjaForest.}
-
-\item{y}{not used.}
 }
 \description{
 meta_ninja plot method

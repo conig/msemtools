@@ -14,7 +14,8 @@ format_nicely(
   escape.pc = F,
   p_digits = 3,
   leading.zero = FALSE,
-  ci_sep = ", "
+  ci_sep = ", ",
+  include_i2 = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ format_nicely(
 \item{leading.zero}{a bool. If TRUE, p-values will have leading zeros}
 
 \item{ci_sep}{separator for confidence intervals}
+
+\item{include_i2}{A bool, should i2 be included next to baseline?}
 }
 \description{
 format_nicely

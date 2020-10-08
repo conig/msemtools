@@ -6,6 +6,10 @@
 
 threePSM = function(model, ...){
 
+if("meta_ninja" %in% class(model)){
+  model = model$models[[1]]
+}
+
 result <- weightr::weightfunct(
     effect = model$data$y,
     v = model$data$v,

@@ -4,7 +4,14 @@
 \alias{report}
 \title{report}
 \usage{
-report(meta_ninja, ..., rmarkdown = T, digits = 2, transform = NULL)
+report(
+  meta_ninja,
+  ...,
+  rmarkdown = T,
+  digits = 2,
+  transform = NULL,
+  threePSM = FALSE
+)
 }
 \arguments{
 \item{meta_ninja}{the meta_ninja object}
