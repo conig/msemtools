@@ -41,25 +41,3 @@ test_that("Categorical moderation works", {
   testthat::expect_equal(as.numeric(coefficients(m_mod)[1:4]), msem$table$estimate[3:6]) # slopes
 
 })
-
-test_that("3PSM report works", {
-  require(metaSEM)
-  #metaSEM approach
-  dat = metaSEM::Bornmann07
-  x = cbind(dat$Discipline == "Physical sciences",
-            dat$Discipline == "Life sciences/biology",
-            dat$Discipline == "Social sciences/humanities",
-            dat$Discipline == "Multidisciplinary") %>%
-    data.frame %>%
-    sapply(as.numeric)
-  m = meta3(y=logOR, v=v, cluster=Cluster, data=Bornmann07,
-            model.name="3 level model")
-  m_mod = meta3(y=logOR, v=v, x = x, cluster=Cluster, data=Bornmann07,
-                model.name="3 level model", intercept.constraints = 0)
-
-  msem = m %>%
-    moderate(Discipline)
-
-  testthat::expect_equal(class(report(msem, threePSM = TRUE, rmarkdown = FALSE)), "character")
-
-})
