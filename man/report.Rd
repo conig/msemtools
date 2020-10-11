@@ -23,6 +23,8 @@ report(
 \item{digits}{the number of digits to return}
 
 \item{transform}{you can supply a function to transform baseline pooled estimates}
+
+\item{threePSM}{adds publication bias with 3psm}
 }
 \description{
 Constructs written reports about the contents of models

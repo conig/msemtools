@@ -177,9 +177,19 @@ summary.meta_ninja = function(object, ...) {
   out$Moderator[1] = "Baseline"
   out$Moderator = ifelse(out$indent_, paste0('__',out$Moderator), out$Moderator)
   out = out %>%
-    select(- indent_)
+    dplyr::select(- indent_)
+  class(out) = c("ninja_summary", "data.frame")
   out
+}
 
+#' print.ninja_summary
+#' @param object
+#' @param ...
+#' @export
+
+print.ninja_summary = function(object, ...){
+  names(object) = gsub("\\$|\\_|\\{|\\}|\\\\","", names(object))
+  print.data.frame(object, right = FALSE, ...)
 }
 
 #' meta_ninja as.data.frame method
