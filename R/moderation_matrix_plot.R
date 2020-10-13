@@ -48,8 +48,9 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
    dplyr:: mutate(model_p = tidyr::replace_na(model_p, 0)) %>%  # Baseline p is NA. I want it to act as sig.
     na.omit()
 
-
-  sig_dat  <- final_dat[, .(p = mean(model_p, na.rm = T), y = 0, cluster = NA) , by = c("outcome", "moderation")]
+  setkey(final_dat, outcome, moderation)
+  sig_dat  <- final_dat[CJ(outcome,moderation, unique = TRUE), .(p = mean(model_p, na.rm = T), y = 0, cluster = NA) , by = .EACHI]
+  sig_dat$p[is.na(sig_dat$p)] = 1
   # sig_dat = final_dat %>% # this table summarises moderation p values
   #   dplyr::group_by(outcome, moderation) %>%
   #   dplyr::summarise(p = mean(model_p, na.rm = T), y = 0, cluster = NA) %>% # empty y and cluster vars set up for ggplot2
@@ -68,7 +69,7 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
               fill = "black",
               xmin = -Inf, xmax = Inf,
               ymin = -Inf, ymax = Inf,
-              alpha = 0.15, inherit.aes = F) + # inherit.aes caused factors to lose order.
+              alpha = 0.05, inherit.aes = F) + # inherit.aes caused factors to lose order.
     ggplot2::theme_bw() + geom_vline(xintercept = null_value, linetype = 2) + # add in vertical line at 0
     ggplot2::geom_point() + geom_errorbarh(height = .1)+
     ggplot2::facet_grid( # grid by moderation and outcome
@@ -83,6 +84,13 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
 
 }
 
+# models <- list(
+# "Path 1" = lm.lp_mod,
+# "Path 2" = lm.lo_mod,
+# "Path 3" = lp.lo_mod,
+# "Path 4" = lp.fo_mod,
+# "Path 6" = lm.fo_mod)
+
 # library(metaSEM); library(msemtools)
 #
 # mod1 = meta3(drink_yi, drink_vi, study_id, data = msemtools::conigrave20) %>%
@@ -91,6 +99,6 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
 # mod2 = meta3(risk_short_yi, risk_short_vi, study_id, data = msemtools::conigrave20) %>%
 #   moderate(Gender, Age, Cohort)
 # #
-# moderation_matrix("Current drinker" =  mod1,
+# msemtools:::moderation_matrix("Current drinker" =  mod1,
 #                   "Short term risk" =  mod2)
 # summary(mod1)
