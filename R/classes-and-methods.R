@@ -10,6 +10,9 @@
 #                             [-_-]~"
     m
   )
+  if(!"metaSEM" %in% .packages()){
+  suppressPackageStartupMessages(attachNamespace("metaSEM"))
+  }
 }
 #Define classes
 setClass(
