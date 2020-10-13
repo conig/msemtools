@@ -181,6 +181,7 @@ summary.meta_ninja = function(object, ...) {
   out$Moderator = ifelse(out$indent_, paste0('__',out$Moderator), out$Moderator)
   out = out %>%
     dplyr::select(- indent_)
+  names(out) = gsub("::","\\_",names(out))
   class(out) = c("ninja_summary", "data.frame")
   out
 }
