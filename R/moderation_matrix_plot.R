@@ -43,7 +43,15 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
   graph_dat$moderation = factor(graph_dat$moderation, levels = mod_levels)
   graph_dat = graph_dat[!is.na(graph_dat$moderation),]
   graph_dat$outcome = factor(graph_dat$outcome)
-  graph_dat$cluster = factor(graph_dat$cluster)
+  # ------- fix cluster order
+
+  cluster_levels <- unique(graph_dat$cluster)
+  cluster_levels <- cluster_levels[cluster_levels != "Baseline"]
+  cluster_levels <- c(cluster_levels, "Baseline")
+
+  graph_dat$cluster = factor(graph_dat$cluster, levels = cluster_levels)
+
+  # prepare significance -------
 
   final_dat = graph_dat %>% # give baseline a p value
    dplyr:: mutate(model_p = tidyr::replace_na(model_p, 0)) %>%  # Baseline p is NA. I want it to act as sig.
@@ -105,10 +113,15 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
 # mod2 = meta3(risk_short_yi, risk_short_vi, study_id, data = msemtools::conigrave20) %>%
 #   moderate(Gender, Age, Cohort)
 #
+# mod3 = meta3(risk_long_yi, risk_long_vi, study_id, data = msemtools::conigrave20) %>%
+#   moderate(Gender, Age, Cohort)
+#
 # models = list("Current drinker" =  mod1,
-#               "Short term risk" =  mod2)
+#               "Short-term risk" =  mod2,
+#               "Long-term risk"  =  mod3)
 # #
-# moderation_matrix("Short term risk" =  mod2,
-#   "Current drinker" =  mod1
+# moderation_matrix("Current drinker" =  mod1,
+#                   "Short-term risk" =  mod2,
+#                   "Long-term risk"  =  mod3
 #                   )
 # summary(mod1)
