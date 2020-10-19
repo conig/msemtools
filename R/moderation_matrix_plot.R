@@ -26,7 +26,7 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
     lower = metafor::transf.ztor(lower),
     upper = metafor::transf.ztor(upper),
     cluster, moderation,
-    outcome, type,
+    outcome = factor(outcome, levels = names(models)), type,
     model_p)]
 
   graph_dat = DL
@@ -37,7 +37,8 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
   }else{
     mod_levels = moderators
   }
-  mod_levels = c(mod_levels, "Baseline")
+  graph_dat$moderation[graph_dat$moderation == "Baseline"] = ""
+  mod_levels = c(mod_levels, "")
 
   graph_dat$moderation = factor(graph_dat$moderation, levels = mod_levels)
   graph_dat = graph_dat[!is.na(graph_dat$moderation),]
@@ -69,8 +70,8 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
               fill = "black",
               xmin = -Inf, xmax = Inf,
               ymin = -Inf, ymax = Inf,
-              alpha = 0.05, inherit.aes = F) + # inherit.aes caused factors to lose order.
-    ggplot2::theme_bw() + geom_vline(xintercept = null_value, linetype = 2) + # add in vertical line at 0
+              alpha = 0.15, inherit.aes = F) + # inherit.aes caused factors to lose order.
+    geom_vline(xintercept = null_value, linetype = 2) + # add in vertical line at 0
     ggplot2::geom_point() + geom_errorbarh(height = .1)+
     ggplot2::facet_grid( # grid by moderation and outcome
       rows = vars(moderation),
@@ -80,7 +81,11 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
     ) +
     labs(y = " ", x = effect_size) + theme(text = element_text(family = "serif")) +
     scale_x_continuous(labels = function(x) gsub("0\\.",".",x)) +
-    scale_y_discrete(labels = c("Baseline" = expression(bold(Baseline)), parse = T))
+    scale_y_discrete(labels = c("Baseline" = expression(bold(Baseline)), parse = T)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(strip.text.y = ggplot2::element_text(angle = 0),
+                   strip.background.y = ggplot2::element_blank(),
+                   text = ggplot2::element_text(family = "serif"))
 
 }
 
@@ -92,13 +97,18 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
 # "Path 6" = lm.fo_mod)
 
 # library(metaSEM); library(msemtools)
+# library(data.table); library(tidyverse)
 #
 # mod1 = meta3(drink_yi, drink_vi, study_id, data = msemtools::conigrave20) %>%
 #   moderate(Gender, Age, Cohort)
 #
 # mod2 = meta3(risk_short_yi, risk_short_vi, study_id, data = msemtools::conigrave20) %>%
 #   moderate(Gender, Age, Cohort)
+#
+# models = list("Current drinker" =  mod1,
+#               "Short term risk" =  mod2)
 # #
-# msemtools:::moderation_matrix("Current drinker" =  mod1,
-#                   "Short term risk" =  mod2)
+# moderation_matrix("Short term risk" =  mod2,
+#   "Current drinker" =  mod1
+#                   )
 # summary(mod1)
