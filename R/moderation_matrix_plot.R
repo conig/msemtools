@@ -5,11 +5,12 @@
 #' @param effect_size a string
 #' @param moderators a list of moderators to include, order retained.
 #' @param null_value a scalar indicating non-sigificance (where the dashed line will be drawn).
+#' @param trans function to transform values
 #' @import ggplot2 data.table
 #' @export
 
 moderation_matrix <- function(..., effect_size = "Effect size", moderators = NULL,
-                              null_value = 0){
+                              null_value = 0, trans = NULL){
 
   models <- list(...)
 
@@ -21,10 +22,14 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
     dat_list[[x]]
   }) %>% do.call(rbind, .)  %>% data.table::data.table()
 
+  if(is.null(trans)){
+    trans = function(x) x
+  }
+
   DL = DL[type != "effect size", .(
-    y = metafor::transf.ztor(est),
-    lower = metafor::transf.ztor(lower),
-    upper = metafor::transf.ztor(upper),
+    y = trans(est),
+    lower = trans(lower),
+    upper = trans(upper),
     cluster, moderation,
     outcome = factor(outcome, levels = names(models)), type,
     model_p)]
