@@ -12,6 +12,7 @@
   )
   if(!"metaSEM" %in% .packages()){
   suppressPackageStartupMessages(attachNamespace("metaSEM"))
+    suppressPackageStartupMessages(attachNamespace("OpenMx"))
   }
 }
 #Define classes

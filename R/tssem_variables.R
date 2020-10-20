@@ -11,19 +11,20 @@
 #' @param ni the name of the column containing the sample size
 #' @import data.table
 # f = readRDS("C:/Users/james/Desktop/temp.rds")
-# yi = "r_yi"
-# vi = "r_vi"
-# var1 = "var1"
-# var2 = "var2"
-# data = f
-# cluster = "paper_id"
-# transform = metafor::transformf.ztor
-# ni = "total_n"
+yi = "yi"
+vi = "vi"
+var1 = "var1"
+var2 = "var2"
+cluster = "studyno"
+transform = metafor::transformf.ztor
+ni = "total_participants_n"
 
 cormat_list = function(yi, vi, ni, var1, var2, cluster, data, transform = NULL){
 
   data = data.table::data.table(data)
-
+  inspect_vars = data[,c(yi,vi,var1,var2,cluster), with = FALSE]
+  missing = unlist(lapply(1:nrow(inspect_vars), function(x) any(is.na(inspect_vars[x,]))))
+  data = data[!missing, ]
   vars <- unique(c(data[,var1], data[,var2]))
 
   make_matrix = function(vars) {
