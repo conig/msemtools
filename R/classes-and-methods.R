@@ -187,8 +187,8 @@ summary.meta_ninja = function(object, ...) {
 }
 
 #' print.ninja_summary
-#' @param object
-#' @param ...
+#' @param object ninja object
+#' @param ... other arguments
 #' @export
 
 print.ninja_summary = function(object, ...){

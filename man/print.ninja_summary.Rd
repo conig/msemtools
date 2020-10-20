@@ -6,6 +6,11 @@
 \usage{
 \method{print}{ninja_summary}(object, ...)
 }
+\arguments{
+\item{object}{ninja object}
+
+\item{...}{other arguments}
+}
 \description{
 print.ninja_summary
 }
