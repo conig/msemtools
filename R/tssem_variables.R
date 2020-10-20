@@ -10,14 +10,6 @@
 #' @param transform a function to transform individual correlations
 #' @param ni the name of the column containing the sample size
 #' @import data.table
-# f = readRDS("C:/Users/james/Desktop/temp.rds")
-yi = "yi"
-vi = "vi"
-var1 = "var1"
-var2 = "var2"
-cluster = "studyno"
-transform = metafor::transformf.ztor
-ni = "total_participants_n"
 
 cormat_list = function(yi, vi, ni, var1, var2, cluster, data, transform = NULL){
 
