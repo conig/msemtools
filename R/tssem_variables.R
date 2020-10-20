@@ -7,7 +7,7 @@
 #' @param var1 the name of the column containing the second variable
 #' @param cluster the name of the clustering variable
 #' @param data data.frame
-#' @param trans a function to transform individual correlations
+#' @param transform a function to transform individual correlations
 #' @param ni the name of the column containing the sample size
 #' @import data.table
 # f = readRDS("C:/Users/james/Desktop/temp.rds")
@@ -17,10 +17,10 @@
 # var2 = "var2"
 # data = f
 # cluster = "paper_id"
-# trans = metafor::transf.ztor
+# transform = metafor::transformf.ztor
 # ni = "total_n"
 
-cormat_list = function(yi, vi, ni, var1, var2, cluster, data, trans = NULL){
+cormat_list = function(yi, vi, ni, var1, var2, cluster, data, transform = NULL){
 
   data = data.table::data.table(data)
 
@@ -35,7 +35,7 @@ cormat_list = function(yi, vi, ni, var1, var2, cluster, data, trans = NULL){
     m
   }
 
-  get_matrix = function(id, vars, data, trans = NULL){
+  get_matrix = function(id, vars, data, transform = NULL){
     m = make_matrix(vars)
     dat = data[which(data[,cluster, with = FALSE] == id),]
 
@@ -63,8 +63,8 @@ cormat_list = function(yi, vi, ni, var1, var2, cluster, data, trans = NULL){
 
         res <- stats::weighted.mean(y, 1/v)
 
-        if(!is.null(trans)){
-          res <- trans(res)
+        if(!is.null(transform)){
+          res <- transform(res)
         }
         m[row,col] = res
       }
@@ -79,7 +79,7 @@ cormat_list = function(yi, vi, ni, var1, var2, cluster, data, trans = NULL){
   unique_ids = unique(unlist(data[,cluster, with = FALSE]))
 
   dat_list = list()
-  dat_list$data = lapply(unique_ids, function(x) get_matrix(x, vars, data, trans))
+  dat_list$data = lapply(unique_ids, function(x) get_matrix(x, vars, data, transform))
   get_n = function(id, ni){
     ceiling(mean(unlist(data[unlist(data[,cluster, with = FALSE]) == id, ni, with = FALSE]),na.rm = TRUE))
   }

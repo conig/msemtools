@@ -8,7 +8,8 @@ moderation_matrix(
   ...,
   effect_size = "Effect size",
   moderators = NULL,
-  null_value = 0
+  null_value = 0,
+  trans = NULL
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ moderation_matrix(
 \item{moderators}{a list of moderators to include, order retained.}
 
 \item{null_value}{a scalar indicating non-sigificance (where the dashed line will be drawn).}
+
+\item{trans}{function to transform values}
 }
 \description{
 Plots a moderation matrix
