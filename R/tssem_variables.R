@@ -123,6 +123,7 @@ tssem1_table = function(model){
   r_mat[] = paste0(r_mat,s_mat) #add in significance stars
   diag(r_mat) = "-" # add in diagonal
   r_mat[lower.tri(r_mat)] = gsub("0\\.",".",r_mat[lower.tri(r_mat)]) #get rid of leading zeros
+  r_mat = data.frame(r_mat)
   rownames(r_mat) = paste0(seq_along(rownames(r_mat)),". ", rownames(r_mat)) #change rownames
   colnames(r_mat) = seq_along(rownames(r_mat)) #change colnames
   r_mat
