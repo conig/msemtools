@@ -134,8 +134,8 @@ The p-value demonstrates that the baseline model is significantly
 improved by including gender as a moderator.
 
 To get the specific values we can call summary on this object.
-Additionally, we can request a tranformation to something a little bit
-easier to interpret that log-odds.
+Additionally, we can request a transformation to something which is
+easier to interpret than log-odds.
 
 ``` r
 logit2prob = function(logit){
@@ -172,12 +172,6 @@ forest plot
 plot(moderation_object, "Gender", transform = logit2prob)
 ```
 
-    ## year was not manually specified, using: 'Year'.
-
-    ## author was not manually specified, using: 'author'.
-
-    ## Warning: Unknown or uninitialised column: `year`.
-
 ![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 Author and year were automatically detected by looking for clues like
@@ -187,7 +181,7 @@ formatting
 ----------
 
 If we want to add more moderators we just throw them into the moderation
-argument with commas
+function as argument separated by commas.
 
 ``` r
 moderation_object2 = current_d.0 %>% 
@@ -218,6 +212,20 @@ summary(moderation_object2,
   knitr::kable()
 ```
 
+| Moderator         | k   | n   | Proportion \[95% CI\] | Estimate | *S**E* | *R*<sub>(2)</sub><sup>2</sup> | *R*<sub>(3)</sub><sup>2</sup> | *p*        |
+|:------------------|:----|:----|:----------------------|:---------|:-------|:------------------------------|:------------------------------|:-----------|
+| Baseline          | 37  | 99  | 0.59 \[0.53, 0.65\]   | 0.36     | 0.13   | \-                            | \-                            | \-         |
+| Gender            | 31  | 93  | \-                    | \-       | \-     | 0.60                          | 0.00                          | \< 0.001\* |
+| \_\_Mostly male   | 16  | 39  | 0.69 \[0.61, 0.77\]   | 0.80     | 0.19   | \-                            | \-                            | \-         |
+| \_\_Mixed gender  | 12  | 12  | 0.52 \[0.40, 0.64\]   | 0.09     | 0.25   | \-                            | \-                            | \-         |
+| \_\_Mostly female | 19  | 42  | 0.47 \[0.38, 0.56\]   | -0.11    | 0.19   | \-                            | \-                            | \-         |
+| Age               | 18  | 41  | \-                    | \-       | \-     | 0.18                          | 0.00                          | \< 0.001\* |
+| \_\_15-24 years   | 9   | 17  | 0.50 \[0.38, 0.62\]   | 0.00     | 0.25   | \-                            | \-                            | \-         |
+| \_\_25-34 years   | 11  | 29  | 0.39 \[0.28, 0.50\]   | -0.47    | 0.24   | \-                            | \-                            | \-         |
+| \_\_35-49 years   | 11  | 18  | 0.65 \[0.48, 0.78\]   | 0.61     | 0.34   | \-                            | \-                            | \-         |
+| \_\_50+           | 4   | 5   | 0.49 \[0.32, 0.66\]   | -0.03    | 0.36   | \-                            | \-                            | \-         |
+| Cohort            | 37  | 99  | \-                    | \-       | \-     | 0.03                          | 0.09                          | 0.15       |
+
 Describing moderated tables
 ---------------------------
 
@@ -227,6 +235,16 @@ descriptions which can be rendered in rmarkdown.
 ``` r
 report(moderation_object2, rmarkdown = FALSE, transf = logit2prob)
 ```
+
+\[1\] “Thirty-seven studies (99 effects) reported data which could be
+pooled. Inspecting the Q statistic revealed significant heterogeneity
+*Q*(98) = 5518.62, *p* \< 0.001. The pooled effect size was 0.59 \[95%
+CI 0.53, 0.65\]. The heterogeneity at level 2 was 55.59%. The
+heterogeneity at level 3 was 43.36%. The covariates which significantly
+moderated the baseline model were ‘Gender’
+(*R*<sub>(2)</sub><sup>2</sup> = 59.82%; *R*<sub>(3)</sub><sup>2</sup> =
+0.00%), and ‘Age’ (*R*<sub>(2)</sub><sup>2</sup> = 17.58%;
+*R*<sub>(3)</sub><sup>2</sup> = 0.00%).”
 
 Funnel plots
 ------------
