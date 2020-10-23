@@ -276,7 +276,7 @@ Moderation matrix
 -----------------
 
 Where there are multiple outcomes with the same moderators, it can be
-useful to compare all outcomes and moderators simultaneously. A
+useful to visually compare all outcomes and moderators simultaneously. A
 moderation matrix function is supplied for this.
 
 ``` r
