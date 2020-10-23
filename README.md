@@ -280,7 +280,11 @@ useful to compare all outcomes and moderators simultaneously. A
 moderation matrix function is supplied for this.
 
 ``` r
-mods <- msemtools::moderation_instructions(Gender, Age, Cohort, State)
+mods <-
+  msemtools::moderation_instructions(Gender,
+                                     Age,
+                                     Cohort,
+                                     "Australian State" = State)
 
 mod1 <- meta3(drink_yi, drink_vi, study_id, data = conigrave20) %>% 
   moderate(moderators = mods)
