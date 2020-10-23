@@ -1,6 +1,6 @@
 The purpose of ‘msemtools’ (metaSEM tools) is to help run meta-analyses
-with metaSEM efficiently. The project is new and is in beta. Please
-report any bugs
+with metaSEM efficiently. This project should be considered to be in
+Beta. Please report any issues.
 
 Installation
 ------------
@@ -8,147 +8,180 @@ Installation
 To install msemtools run the following code:
 
 ``` r
-#install.packages("devtools")
-#devtools::install_github("JConigrave/msemtools")
+#install.packages("remotes")
+remotes::install_github("conig/msemtools")
 ```
 
 Running analyses
 ----------------
 
-This packages is a shell around the metaSEM package. It does not perform
-any calculations itself, but rather converts your instructions into
-metaSEM commands, and then saves the results in a nicely formatted way.
-Currently only meta3 is supported without the ability to set
-constraints.
+This packages is a wrapper around the metaSEM package. It does not
+perform any calculations itself, but rather converts your instructions
+into metaSEM syntax. Resultant models are returned along with formatted
+output. Currently only meta3 is supported.
 
-I’ll demonstrate how to use it with Marsh’s data included in the metaSEM
-package
+Example
+=======
+
+To demonstrate this software, I use the included dataset conigrave20.
+This data is from a meta-analysis looking at Indigenous Australian
+drinking patterns. The outcomes are the log-odds of being a current
+drinker, being at short-term risk, and long-term risk from drinking.
 
 ``` r
-library(dplyr)
-library(metaSEM)
 library(msemtools)
-example_data <- metaSEM::Bornmann07 %>% 
-  as_tibble
-head(example_data)
-```
-
-    ## # A tibble: 6 x 9
-    ##      Id Study      Cluster   logOR      v  Year Type   Discipline   Country
-    ##   <int> <chr>        <int>   <dbl>  <dbl> <int> <fct>  <fct>        <fct>  
-    ## 1     1 Ackers (2~       1 -0.401  0.0139  1996 Fello~ Physical sc~ Europe 
-    ## 2     2 Ackers (2~       1 -0.0573 0.0343  1996 Fello~ Physical sc~ Europe 
-    ## 3     3 Ackers (2~       1 -0.299  0.0339  1996 Fello~ Physical sc~ Europe 
-    ## 4     4 Ackers (2~       1  0.361  0.0340  1996 Fello~ Physical sc~ Europe 
-    ## 5     5 Ackers (2~       1 -0.333  0.0128  1996 Fello~ Social scie~ Europe 
-    ## 6     6 Ackers (2~       1 -0.0717 0.0136  1996 Fello~ Physical sc~ Europe
-
-We need to do some basic prep for this data: In this dataset data for
-‘year’ is held in its own column as well as the Study column. This will
-ruin our plot. I fix this by removing everything in parentheses in the
-Study column.
-
-``` r
-example_data$Study =  gsub("\\s*\\([^\\)]+\\)","",as.character(example_data$Study))
 ```
 
 Running a basic model with metaSEM
 ----------------------------------
 
-As the effect sizes are already set up for this dataset, we can start
-running models. Here is the basic pooled effect size:
+To run a metaSEM model, you need an effect size, corresponding sampling
+variance, and information about how effect sizes are clustered.
 
 ``` r
-model0 <- meta3(
-  y = logOR,
-  v = v,
-  cluster = Cluster,
-  data = example_data,
-  model.name = "3 level model"
+current_d.0 <- meta3(
+  y = drink_yi,
+  v = drink_vi,
+  cluster = study_id,
+  data = conigrave20,
+  model.name = "Current drinker"
 )
 
-summary(model0)
+summary(current_d.0)
 ```
 
     ## 
     ## Call:
-    ## meta3(y = logOR, v = v, cluster = Cluster, data = example_data, 
-    ##     model.name = "3 level model")
+    ## meta3(y = drink_yi, v = drink_vi, cluster = study_id, data = conigrave20, 
+    ##     model.name = "Current drinker")
     ## 
-    ## 95% confidence intervals: z statistic approximation
+    ## 95% confidence intervals: z statistic approximation (robust=FALSE)
     ## Coefficients:
-    ##             Estimate  Std.Error     lbound     ubound z value Pr(>|z|)  
-    ## Intercept -0.1007784  0.0401327 -0.1794371 -0.0221198 -2.5111  0.01203 *
-    ## Tau2_2     0.0037965  0.0027210 -0.0015367  0.0091297  1.3952  0.16295  
-    ## Tau2_3     0.0141352  0.0091445 -0.0037877  0.0320580  1.5458  0.12216  
+    ##            Estimate Std.Error    lbound    ubound z value  Pr(>|z|)    
+    ## Intercept 0.3644346 0.1340253 0.1017499 0.6271193  2.7191  0.006545 ** 
+    ## Tau2_2    0.4459826 0.0887495 0.2720368 0.6199284  5.0252 5.029e-07 ***
+    ## Tau2_3    0.3478567 0.1764483 0.0020244 0.6936891  1.9714  0.048674 *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Q statistic on the homogeneity of effect sizes: 221.2809
-    ## Degrees of freedom of the Q statistic: 65
+    ## Q statistic on the homogeneity of effect sizes: 5518.62
+    ## Degrees of freedom of the Q statistic: 98
     ## P value of the Q statistic: 0
     ## 
     ## Heterogeneity indices (based on the estimated Tau2):
     ##                               Estimate
-    ## I2_2 (Typical v: Q statistic)   0.1568
-    ## I2_3 (Typical v: Q statistic)   0.5839
+    ## I2_2 (Typical v: Q statistic)   0.5559
+    ## I2_3 (Typical v: Q statistic)   0.4336
     ## 
-    ## Number of studies (or clusters): 21
-    ## Number of observed statistics: 66
+    ## Number of studies (or clusters): 37
+    ## Number of observed statistics: 99
     ## Number of estimated parameters: 3
-    ## Degrees of freedom: 63
-    ## -2 log likelihood: 25.80256 
+    ## Degrees of freedom: 96
+    ## -2 log likelihood: 244.0044 
     ## OpenMx status1: 0 ("0" or "1": The optimization is considered fine.
     ## Other values may indicate problems.)
 
-The intercept tells us that the average logit was -0.1, there was some
-heterogeneity between studies (I2\_3).
+We’ve produced the baseline model. This model shows us the pooled
+log-odds of current drinkers. The intercept shows that for included
+studies, the pooled log-odds of drinking was 0.36 \[95%CI 0.10 - 0.63\].
+
+I2\_2 shows the proportion of heterogeneity within cluster (study\_id).
+I2\_3 shows the heterogeneity between studies.
+
+You can see that the total heterogeneity is extremely high \~ 1.
 
 Moderation with msemtools
 -------------------------
 
-To run moderation with msemtools, covariates must be set up as factors.
-Let’s look at Country
+metaSEM allows users to test for the effect of moderators. To do this, a
+categorical moderator (e.g. gender) must be converted to a matrix of
+dummy variables. Msemtools automates this process.
 
 ``` r
-#set up factors
-is.factor(example_data$Country)
+m <- msemtools::character_matrix(conigrave20$Gender)
+cbind.data.frame(m, conigrave20$Gender)[1:5,]
 ```
 
-    ## [1] TRUE
+    ##   Mostly male Mixed gender Mostly female conigrave20$Gender
+    ## 1           0            1             0       Mixed gender
+    ## 2           1            0             0        Mostly male
+    ## 3           0            0             1      Mostly female
+    ## 4           1            0             0        Mostly male
+    ## 5           0            0             1      Mostly female
 
-This is already a factor so we’re ready to go.
+But this happens internally so you don’t need to worry about it. Just
+provide the baseline mode, and tell msemtools what variable you want to
+moderate by.
 
 ``` r
-moderation_object = model0 %>% 
-  moderate(Country)
+moderation_object = current_d.0 %>% 
+  moderate(Gender)
 moderation_object
 ```
 
     ## Moderation results:
     ## 
-    ## I2(2): 15.7%
-    ## I2(3): 58.4%
-    ## 
-    ##   moderation  k  n R2_2 R2_3 p.value
-    ## 1    Country 21 66 0.12 0.66   0.02*
-    ## 
+    ## I2(2): 55.6%
+    ## I2(3): 43.4%
+    ## -------------------------------------
+    ##   moderation  k  n R2_2 R2_3  p.value
+    ## -------------------------------------
+    ## 1     Gender 31 93  0.6    0 < 0.001*
+    ## -------------------------------------
     ## All models converged.
 
-We can now plot easily
+The p-value demonstrates that the baseline model is significantly
+improved by including gender as a moderator.
+
+To get the specific values we can call summary on this object.
+Additionally, we can request a tranformation to something a little bit
+easier to interpret that log-odds.
+
+``` r
+logit2prob = function(logit){
+  odds <- exp(logit)
+  prob <- odds / (1 + odds)
+  return(prob)
+}
+
+summary(moderation_object,
+        transf = logit2prob,
+        t.name = "Proportion [95% CI]")
+```
+
+    ##   Moderator       k  n  Proportion [95% CI] Estimate SE   R^2(2) R^2(3)
+    ## 1 Baseline        37 99 0.59 [0.53, 0.65]   0.36     0.13 -      -     
+    ## 2 Gender          31 93 -                   -        -    0.60   0.00  
+    ## 3 __Mostly male   16 39 0.69 [0.61, 0.77]   0.80     0.19 -      -     
+    ## 4 __Mixed gender  12 12 0.52 [0.40, 0.64]   0.09     0.25 -      -     
+    ## 5 __Mostly female 19 42 0.47 [0.38, 0.56]   -0.11    0.19 -      -     
+    ##   p       
+    ## 1 -       
+    ## 2 < 0.001*
+    ## 3 -       
+    ## 4 -       
+    ## 5 -
+
+We can see that samples with more males had higher proportions of
+current drinkers. We can also easily plot this results.
 
 forest plot
 -----------
 
 ``` r
-moderation_object %>% plot(author = "Study")
+plot(moderation_object, "Gender", transform = logit2prob)
 ```
 
     ## year was not manually specified, using: 'Year'.
 
+    ## author was not manually specified, using: 'author'.
+
+    ## Warning: Unknown or uninitialised column: `year`.
+
 ![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
-If author has et al in it, we would not have to manually specify it.
+Author and year were automatically detected by looking for clues like
+“et al”. But you can also manually specify them.
 
 formatting
 ----------
@@ -157,110 +190,59 @@ If we want to add more moderators we just throw them into the moderation
 argument with commas
 
 ``` r
-moderation_object2 = model0 %>% 
-  moderate(Discipline, Country, Type)
+moderation_object2 = current_d.0 %>% 
+  moderate(Gender, Age, Cohort)
 
 moderation_object2
 ```
 
     ## Moderation results:
     ## 
-    ## I2(2): 15.7%
-    ## I2(3): 58.4%
-    ## 
-    ##   moderation  k  n R2_2 R2_3 p.value
-    ## 1 Discipline 21 66 0.00 0.50    0.13
-    ## 2    Country 21 66 0.12 0.66   0.02*
-    ## 3       Type 21 66 0.07 0.79 < 0.01*
-    ## 
+    ## I2(2): 55.6%
+    ## I2(3): 43.4%
+    ## -------------------------------------
+    ##   moderation  k  n R2_2 R2_3  p.value
+    ## -------------------------------------
+    ## 1     Gender 31 93 0.60 0.00 < 0.001*
+    ## 2        Age 18 41 0.18 0.00 < 0.001*
+    ## 3     Cohort 37 99 0.03 0.09    0.15 
+    ## -------------------------------------
     ## All models converged.
 
 We can then format this table with another function
 
 ``` r
-moderation_object2 %>% 
-  format_nicely
+summary(moderation_object2,
+        transf = logit2prob,
+        t.name = "Proportion [95% CI]") %>% 
+  knitr::kable()
 ```
-
-| Moderator                                            | k   | n   | Estimate (95% CI)    | SE   | R2\_2 | R2\_3 | p           | indent\_ |
-|:-----------------------------------------------------|:----|:----|:---------------------|:-----|:------|:------|:------------|:---------|
-| Baseline (I<sup>2</sup><sub>(2;3)</sub>: 0.16; 0.58) | 21  | 66  | -0.10 (-0.18, -0.02) | 0.04 | \-    | \-    | \-          | FALSE    |
-| Discipline                                           | 21  | 66  | \-                   | \-   | 0.00  | 0.50  | 0.13        | FALSE    |
-| Country                                              | 21  | 66  | \-                   | \-   | 0.12  | 0.66  | 0.02\*      | FALSE    |
-| United States                                        | 4   | 12  | 0.00 (-0.11, 0.12)   | 0.06 | \-    | \-    | \-          | TRUE     |
-| Canada                                               | 1   | 3   | -0.13 (-0.33, 0.07)  | 0.10 | \-    | \-    | \-          | TRUE     |
-| Australia                                            | 5   | 13  | -0.02 (-0.20, 0.16)  | 0.09 | \-    | \-    | \-          | TRUE     |
-| United Kingdom                                       | 4   | 10  | 0.06 (-0.10, 0.21)   | 0.08 | \-    | \-    | \-          | TRUE     |
-| Europe                                               | 7   | 28  | -0.22 (-0.32, -0.12) | 0.05 | \-    | \-    | \-          | TRUE     |
-| Type                                                 | 21  | 66  | \-                   | \-   | 0.07  | 0.79  | &lt; 0.01\* | FALSE    |
-| Grant                                                | 13  | 40  | -0.01 (-0.08, 0.07)  | 0.04 | \-    | \-    | \-          | TRUE     |
-| Fellowship                                           | 11  | 26  | -0.20 (-0.28, -0.12) | 0.04 | \-    | \-    | \-          | TRUE     |
-
-An indent column can be used to send formatting instructions to word.
-
-an extra column can help here msemtools::to\_apa
 
 Describing moderated tables
 ---------------------------
 
 A method is provided to convert moderated tables to paragraph
-descriptions which can be rendeded in rmarkdown.
-
-For an example we will use moderation\_object2.
+descriptions which can be rendered in rmarkdown.
 
 ``` r
-as.character(moderation_object2)
+report(moderation_object2, rmarkdown = FALSE, transf = logit2prob)
 ```
-
-Inspecting the Q statistic revealed significant heterogeneity (Q(df =
-`r summary(moderation_object2$models$Baseline)$Q.stat$Q.df`) =
-`r summary(moderation_object2$models$Baseline)$Q.stat$Q %>% papertools::digits(2)`,
-*p* =
-`r summary(moderation_object2$models$Baseline)$Q.stat$pval %>% papertools::round_p(2)`).
-`r moderation_object2$table$k[1] %>% papertools::as_word(T)` studies
-(`r moderation_object2$table$n[1] %>% papertools::as_word(F)` effects)
-presented data which could be pooled. The estimated population average
-and 95% Wald CI were
-`r papertools::glue_bracket(moderation_object2$table$estimate[1],moderation_object2$table$lbound[1],moderation_object2$table$ubound[1])`.
-The heterogeneity at level 2 was
-`r moderation_object2$table$I2_2[1] %>% '*'(100) %>% papertools::digits(2)`%.
-The heterogeneity at level 3 was
-`r moderation_object2$table$I2_3[1] %>% '*'(100) %>% papertools::digits(2)`%.
-The covariates which significantly moderated the baseline model were
-‘country’(R<sup>2</sup><sub>(2)</sub> =
-`r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%;
-R<sup>2</sup><sub>(3)</sub> =
-`r moderation_object2$table %>% filter(model.name == 'Country') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%),
-and ‘type’(R<sup>2</sup><sub>(2)</sub> =
-`r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_2) %>% '*'(100) %>% papertools::digits(2)`%;
-R<sup>2</sup><sub>(3)</sub> =
-`r moderation_object2$table %>% filter(model.name == 'Type') %>% select(R2_3) %>% '*'(100) %>% papertools::digits(2)`%).
-
-Which evaluates to:
-
-Twenty one studies (sixty six effects) presented data which could be
-pooled. The estimated population average and 95% Wald CI were -0.10
-(-0.18, -0.02). The heterogeneity at level 2 was 15.68%. The
-heterogeneity at level 3 was 58.39%. The covariates which significantly
-moderated the baseline model were ‘country’ and ‘type’. ‘Country’
-explained 12.09% of heterogeneity within studies (level 2), and 66.06%
-between studies (level 3). ‘Type’ explained 6.93% of heterogeneity
-within studies (level 2), and 79.43% between studies (level 3).
 
 Funnel plots
 ------------
 
-Finally, a function is provided to create a funnel plot from metaSEM
-models. An egger’s asymmetry test is also automatically reported to try
-and detect publication bias.
+A function is provided to create a funnel plot from metaSEM models. An
+egger’s asymmetry test is also automatically reported to try and detect
+publication bias.
 
 ``` r
-model0 %>% funnel_plot(density = T)
+moderation_object2 %>%
+  funnel_plot(density = T)
 ```
 
     ## $plot
 
-![](README_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
     ## 
     ## $reg_test
@@ -270,4 +252,38 @@ model0 %>% funnel_plot(density = T)
     ## model:     mixed-effects meta-regression model
     ## predictor: standard error
     ## 
-    ## test for funnel plot asymmetry: z = -1.9925, p = 0.0463
+    ## test for funnel plot asymmetry: z = 0.4681, p = 0.6397
+
+Moderation matrix
+-----------------
+
+Where there are multiple outcomes with the same moderators, it can be
+useful to compare all outcomes and moderators simultaneously. A
+moderation matrix function is supplied for this.
+
+``` r
+mods <- msemtools::moderation_instructions(Gender, Age, Cohort, State)
+
+mod1 <- meta3(drink_yi, drink_vi, study_id, data = conigrave20) %>% 
+  moderate(moderators = mods)
+mod2 <- meta3(risk_short_yi, risk_short_vi, study_id, data = conigrave20) %>% 
+  moderate(moderators = mods)
+mod3 <- meta3(risk_long_yi, risk_long_vi, study_id, data = conigrave20) %>% 
+  moderate(moderators = mods)
+```
+
+``` r
+moderation_matrix(
+  "Current drinkers" = mod1,
+  "Short-term risk"  = mod2,
+  "Long-term risk"   = mod3,
+  transf = logit2prob,
+  null_value = .5,
+  effect_size = "Proportion"
+)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+The grey squares indicate models which did not significantly improve
+upon the fit of the baseline model.
