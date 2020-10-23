@@ -171,31 +171,21 @@ format_nicely = function(x,
 #' @param note a charcter.
 #' @param escape a bool. Sent to papaja::apa_table, defaults to false.
 #' @param escape.pc a bool. If True, \% symbols will be escaped in header, captions and notes.
-#' @param docx a bool. If True, formats table superscripts for docx, otherwise for pdf.
 #' @param ... additional functions can be deliverd to papaja::apa_table
 #' @importFrom papaja apa_table
 #' @importFrom dplyr %>%
 #' @export to_apa
 
 to_apa = function(x, caption, note,escape = F,
-                  escape.pc = FALSE,docx = T, ...){
+                  escape.pc = FALSE, ...){
   if("meta_ninja" %in% class(x)){
     x = format_nicely(x)
   }
-# if(docx){
-#   names(x)[names(x) %in% c("R2_2","R2_3")] = c("R^2^~(2)~","R^2^~(3)~")
-#   #x$Moderator = gsub("\\(I2_2 =","(I^2^~(2)~ =",x$Moderator)
-#   #x$Moderator = gsub("I2_3 =","I^2^~(3)~",x$Moderator)
-#
-# }else{
-#   names(x)[names(x) %in% c("I2","R2")] = c("I\\textsuperscript{2}", "R\\textsuperscript{2}")
-# }
   if (escape.pc) {
   names(x) = gsub("\\%", "\\\\%", names(x))
   caption = gsub("\\%", "\\\\%", caption)
   note = gsub("\\%", "\\\\%", note)
   }
-
 
   indents = x$indent_
   x$indent_ = NULL
