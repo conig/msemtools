@@ -4,6 +4,6 @@
 .Ruserdata
 README.rmd
 inst/doc
-doc
+doc$
 Meta
 docs

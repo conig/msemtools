@@ -1,0 +1,236 @@
+---
+output: pdf_document
+vignette: >
+  %\VignetteIndexEntry{msemtools}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+header-includes:
+  - \usepackage{threeparttable}
+  - \usepackage{booktabs}
+  - \usepackage{float}
+---
+
+# Moderated univariate meta-analysis in MetaSEM
+
+For metaSEM you generally create a different model per moderation (e.g. age, gender, education). You can think of each moderated model as a regression with a predictor. A regression without predictors (just the intercept) just tells you the mean (the baseline model).
+
+To give the basic flow of what we're doing with metaSEM you can check out an analogy with regression:
+
+Let's use mtcars and miles per galon (mpg)
+
+## Baseline model
+
+```{r}
+mean(mtcars$mpg)
+```
+
+The baseline model's intercept just gets you the mean of mpg
+
+```{r}
+baseline <-lm(mpg ~ 1 , data = mtcars)
+coef(baseline)
+```
+
+## Moderated model
+
+The moderated model gives you the relationship between another variable and miles per galon.
+E.g. the number of cylanders a car has.
+
+Here are the average mpg per cylander
+
+```{r message = FALSE}
+library(dplyr)
+mtcars %>% 
+  group_by(cyl) %>% 
+  summarise(avg_mpg = mean(mpg))
+```
+
+Here's the same information using a regression (analagous to a moderated meta-analsis):
+
+```{r}
+moderated_model <-lm(mpg ~ 1 + factor(cyl) , data = mtcars)
+summary(moderated_model)
+```
+
+The intercept is the average mpg at the reference level (cyl == 4). We can see that when cyl == 6, mpg is 6.92 points lower than the reference level. When it's 8, it's lower again. These values when added to the intercept match our averages calculated above.
+
+## Check that moderated model improves baseline
+
+We can then compare the moderated model to the baseline to see if it explains more variance.
+
+```{r}
+anova(baseline, moderated_model)
+```
+
+Given the p-value is tiny, we can see the moderated model improves on the baseline model.
+
+# metaSEM
+
+We do a similar process with meta-analytic models. I'll use a dataset in the metaSEM package you can play with.
+
+In this dataset we are looking at the odds of women vs men getting grants. log-odds are the effect size (negative log-odds is less likely, positive log-odds is more likely). We use log-odds as they can be averaged together, whereas odds cannot.
+
+```{r}
+dat <- metaSEM::Bornmann07
+```
+
+## Baseline model
+
+```{r, message=FALSE}
+library(metaSEM)
+baseline <- meta3(y = logOR, v = v, cluster = Cluster, data = dat)
+summary(baseline)
+```
+
+The intercept (just like in the regression example) tells us the average log-odds for women getting grants. We can convert this to odds by taking its exponential
+
+```{r}
+exp(coef(baseline)[1])
+```
+
+For every man that gets a grant, only .9 women get one.
+
+## Moderated model
+
+We can introduce predictor variables to  our model to see if other variables are related to the odds of getting grants (just like regression).
+For example, perhaps the discipline of a grant proposal affects the odds of women vs men being successful?
+
+### Under the hood
+
+For the lm function, you just needed to tell R the variable and it creates the underlying matrices used in calculations. E.g. for mpg ~ cyl this is (more or less) what r did before doing calculations
+
+```{r}
+cyl6 <- as.numeric(mtcars$cyl == 6)
+cyl8 <- as.numeric(mtcars$cyl == 8)
+pred_matrix = cbind(cyl6, cyl8)
+
+matrix <- cbind(y = mtcars$mpg, intercept = 1, cyl6, cyl8)
+matrix[1:5,]
+```
+
+R then uses this matrix to work out the regression slopes for each of the predictors (including for the intercept).
+
+In metaSEM you have to construct the matrix of the predictors yourself. metaSEM then stitches the outcome, clustering variables, and your predictor matrix together. This final matrix is used with the OpenMx package to get model results.
+
+### Creating the predictor matrix for metaSEM
+
+These are the disciplines in our dataset
+
+```{r}
+unique(dat$Discipline)
+```
+
+We leave off the first discipline ("Physical") because if a grant isn't in any of the other disciplines, it must be in the physical sciences. Adding an extra column with redundant information would give us really confusing results. What we're doing by leaving off the first level is the same as what is done in regression using categorical variables.
+
+```{r}
+Physical <- as.numeric(dat$Discipline == 'Physical sciences')
+Social <- as.numeric(dat$Discipline == 'Social sciences/humanities')
+Life <- as.numeric(dat$Discipline == 'Life sciences/biology')
+Multi <- as.numeric(dat$Discipline == 'Multidisciplinary')
+
+moderator_matrix <- cbind(Social, Life, Multi)
+moderator_matrix[1:5,] # I just show the first five rows.
+```
+
+We then give that predictor matrix to metaSEM to perform the meta-regression.
+
+```{r}
+moderated_model <- meta3(y = logOR, v = v, x = moderator_matrix, cluster = Cluster, data = dat)
+summary(moderated_model)
+```
+
+We can see the log-odds of physical sciences was -.02 (the intercept), Slope 1 to 3 are social sciences through multi-discipline. The slopes show the difference between physical science to a given level.
+
+We can see this model's fit is not significantly better than the baseline model (discipline may not affect how likely women are to get grants).
+
+```{r}
+anova(moderated_model, baseline)
+```
+
+If we wanted to just see the values for the slope without a reference level we could have just supplied all four categories and set the intercept to equal zero:
+
+```{r}
+moderator_matrix <- cbind(Physical, Social, Life, Multi)
+moderated_model <- meta3(y = logOR, v = v, x = moderator_matrix,
+                         intercept.constraints = 0, cluster = Cluster, data = dat)
+summary(moderated_model)
+```
+
+Note slope 1 and the previous model's intercept are identical. Slopes 2:4 are changed as they are no longer relative to slope 1. They are relative to the intercept which we constrained to be zero (in other words they just give you the log odds for each of those disciplines).
+
+# msemtools
+
+All msemtools is, is a wrapper for metaSEM.
+
+It is not on CRAN, it's currently github-only.
+Install it like this:
+
+```{r eval = FALSE}
+remotes::install_github("conig/msemtools")
+```
+
+msemtools makes the moderator matrices for you, renames the slopes and formats things to make life easier.
+
+E.g.
+
+```{r}
+library(msemtools)
+
+mod_res <- baseline %>% 
+  moderate(Discipline)
+mod_res
+```
+
+We can see immediately that disciple is not a significant moderator.
+We can get the slopes like this:
+
+```{r}
+mod_res %>% 
+  summary(hide.insig = FALSE)
+```
+
+The way it does this is by automatically creating the matrices based on the predictors you give it. It them supplies the predictors to the metaSEM.
+
+E.g.
+
+```{r}
+msemtools::character_matrix(dat$Discipline)[1:5,]
+```
+
+
+One nice feature of msemtools is it helps you test multiple moderated models all in one step without having to set up all the matrices:
+
+```{r}
+res2 <- baseline %>% 
+  moderate(Discipline, Type, Year, Country)
+res2
+```
+
+The results should never be different to metaSEM (if they are, you've found a bug - let me know!), your code should just be more efficient.
+
+```{r}
+summary(res2, hide.insig = FALSE)
+```
+
+Also if you're willing to play with LaTeX, or the github package 'papaja' you can automatically create moderator tables (in PDF or word). Note if you're not using papaja you'll need to add this to the YAML header to make this table in PDF documents:
+
+```{r eval=FALSE}
+header-includes:
+  - \usepackage{threeparttable}
+  - \usepackage{booktabs}
+  - \usepackage{float}
+```
+
+
+\newpage
+
+```{r}
+res2 %>% 
+  format_nicely() %>% 
+  to_apa(caption = "Moderator analysis results",
+         note = "p-values are from likelihood ratio tests comparing the baseline model to moderated models")
+```
+
+
+
+
