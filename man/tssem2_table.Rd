@@ -16,7 +16,7 @@ tssem2_table(
 \arguments{
 \item{wls}{a wls model}
 
-\item{...}{recode variable names}
+\item{...}{recode variable names, new_name = old_name}
 
 \item{transf}{transform function to apply to results}
 

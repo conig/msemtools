@@ -205,7 +205,7 @@ tssem2_table = function(wls, ..., transf = NULL, t.name = NULL, estimate = "Esti
     out
   }
 
-  reg$SE = papyr::digits(reg$SE,2)
+  reg$SE = papyr::digits(reg$SE, 2)
   reg$z = papyr::digits(reg$z, 2)
   reg$p = papyr::round_p(reg$p)
 
