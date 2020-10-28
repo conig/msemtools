@@ -222,7 +222,7 @@ tssem2_table = function(wls, ..., transf = NULL, t.name = NULL, estimate = "Esti
 #' @param x wls model
 #' @export
 
-report_tssem2 <- function(x, pattern = "The model had {assessment} fit $\\chi$({df}) = {chi}; $p$ = {p} (RMSEA = {RMSEA}, TLI = {TLI}, CFI = {CFI})") {
+report_tssem2 <- function(x, pattern = "The model had {assessment} fit $\\chi^2$({df}) = {chi}; $p$ = {p} (RMSEA = {RMSEA}, TLI = {TLI}, CFI = {CFI})") {
   if(!is(x, "wls")) {
     stop("Can only be used with wls objects")
   }
