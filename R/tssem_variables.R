@@ -215,3 +215,52 @@ tssem2_table = function(wls, ..., transf = NULL, t.name = NULL, estimate = "Esti
 
 
 }
+
+#' report_tssem2
+#'
+#' Report fit of tssem2
+#' @param x wls model
+#' @export
+
+report_tssem2 <- function(x, pattern = "The model had {assessment} fit $\\chi$({df}) = {chi}; $p$ = {p} (RMSEA = {RMSEA}, TLI = {TLI}, CFI = {CFI})") {
+  if(!is(x, "wls")) {
+    stop("Can only be used with wls objects")
+  }
+  x <- summary(x)
+  l = as.list(x$stat)
+  names(l) = rownames(x$stat)
+
+  if (l$`DF of target model` == 0) {
+    mess = "The model had zero degrees of freedom and so had perfect fit."
+    return(mess)
+  }
+
+  RMSEA <- l$RMSEA
+  RMSEA_cat <- dplyr::case_when(RMSEA <= 0.05  ~ 1,
+                                RMSEA <= 0.1 ~ 2,
+                                RMSEA > 0.1  ~ 3)
+  TLI <- l$TLI
+  TLI_cat <- dplyr::case_when(TLI > 0.95  ~ 1,
+                              TLI >= 0.80 ~ 2,
+                              TLI < 0.80  ~ 3)
+  CFI <- l$CFI
+  CFI_cat <- dplyr::case_when(CFI > 0.95  ~ 1,
+                              CFI >= 0.80 ~ 2,
+                              CFI < 0.80  ~ 3)
+
+  assessment <- round(mean(c(TLI_cat, RMSEA_cat, CFI_cat)),0)
+  assessment <- c("excellent", "acceptable", "poor")[assessment]
+
+  chi = papyr::digits(l$`Chi-square of target model`,2)
+  df = papyr::digits(l$`DF of target model`,0)
+  p = papyr::round_p(l$`p value of target model`)
+
+  RMSEA = papyr::digits(RMSEA, 3)
+  TLI = papyr::digits(TLI, 3)
+  CFI = papyr::digits(CFI, 3)
+
+
+  mess <- glue::glue(pattern)
+  mess
+}
+
