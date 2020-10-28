@@ -9,7 +9,7 @@ report(
   ...,
   rmarkdown = T,
   digits = 2,
-  transform = NULL,
+  transf = NULL,
   threePSM = FALSE
 )
 }
@@ -22,9 +22,7 @@ report(
 
 \item{digits}{the number of digits to return}
 
-\item{transform}{you can supply a function to transform baseline pooled estimates}
-
-\item{threePSM}{adds publication bias with 3psm}
+\item{transf}{you can supply a function to transform baseline pooled estimates}
 }
 \description{
 Constructs written reports about the contents of models

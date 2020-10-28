@@ -129,3 +129,89 @@ tssem1_table = function(model){
   r_mat
 }
 
+#' tssem2_table
+#'
+#' Tabulate tssem2 regressions
+#' @param wls a wls model
+#' @param ... recode variable names, new_name = old_name
+#' @param estimate string, name for estimate variable
+#' @param transf transform function to apply to results
+#' @param t.name name for transformed results
+#' @export
+
+tssem2_table = function(wls, ..., transf = NULL, t.name = NULL, estimate = "Estimate", round = 2){
+
+  epi <- list(...)
+
+  reg <- summary(wls)$coefficients
+  vars <- colnames(wls$Cov)
+  temp_vars <- paste0("v", 1:length(vars))
+
+
+  reg <- tibble::rownames_to_column(reg)
+
+  for(i in seq_along(vars)){
+    reg$rowname = gsub(vars[i],temp_vars[i],reg$rowname)
+  }
+
+  # allow recodes -------------------------
+
+  if(length(epi) > 0){
+    for(i in seq_along(epi)){
+      vars[grepl(epi[i],vars)] = names(epi[i])
+    }
+  }
+
+  # ---------------------------------------
+
+
+  colnames(reg) = c("Predictor", "Estimate","SE","lbound","ubound","z", "p")
+
+  if(!is.null(transf)){
+    reg$Estimate <- round(transf(reg$Estimate),2)
+    reg$lbound <- round(transf(reg$lbound),2)
+    reg$ubound <- round(transf(reg$ubound),2)
+    reg$transf <- glue::glue("{reg$Estimate} [{reg$lbound}, {reg$ubound}]")
+    reg = reg[,c(1, 8, 2:7)]
+  }else{
+    est <- round(reg$Estimate,2)
+    lower <- round(reg$lbound,2)
+    upper <- round(reg$ubound,2)
+    reg$Estimate <- glue::glue("{est} [{lower}, {upper}]")
+  }
+
+  reg$lbound = NULL
+  reg$ubound = NULL
+
+  reg$outcome = gsub("on.*","",reg$Predictor)
+  reg$outcome[grepl("with", reg$Predictor)] = "Covariances"
+  reg$Predictor = gsub(".*on","", reg$Predictor)
+
+  repLace <- function(x) {
+    n <- which(sapply(temp_vars, function(i)
+      grepl(i, x)))
+
+    if(sum(n) == 0){
+      return("Covariances")
+    }
+
+    if(length(n) > 1) {
+      one <- vars[n[1]]
+      two <- vars[n[2]]
+      out <- paste(one, "with", two)
+    }else{
+      out <- vars[n]
+    }
+    out
+  }
+
+  reg$SE = papyr::digits(reg$SE,2)
+  reg$z = papyr::digits(reg$z, 2)
+  reg$p = papyr::round_p(reg$p)
+
+  reg$Predictor <- sapply(reg$Predictor, repLace)
+  reg$outcome <- sapply(reg$outcome, repLace)
+  papyr:::to_rowhead(reg, outcome)
+
+
+}

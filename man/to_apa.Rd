@@ -4,7 +4,7 @@
 \alias{to_apa}
 \title{to_apa}
 \usage{
-to_apa(x, caption, note, escape = F, escape.pc = FALSE, docx = T, ...)
+to_apa(x, caption, note, escape = F, escape.pc = FALSE, ...)
 }
 \arguments{
 \item{x}{a pretty_ninja}
@@ -16,8 +16,6 @@ to_apa(x, caption, note, escape = F, escape.pc = FALSE, docx = T, ...)
 \item{escape}{a bool. Sent to papaja::apa_table, defaults to false.}
 
 \item{escape.pc}{a bool. If True, \% symbols will be escaped in header, captions and notes.}
-
-\item{docx}{a bool. If True, formats table superscripts for docx, otherwise for pdf.}
 
 \item{...}{additional functions can be deliverd to papaja::apa_table}
 }

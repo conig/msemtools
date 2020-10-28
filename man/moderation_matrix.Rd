@@ -9,7 +9,7 @@ moderation_matrix(
   effect_size = "Effect size",
   moderators = NULL,
   null_value = 0,
-  transform = NULL,
+  transf = NULL,
   leading_zero = TRUE
 )
 }
@@ -22,7 +22,7 @@ moderation_matrix(
 
 \item{null_value}{a scalar indicating non-sigificance (where the dashed line will be drawn).}
 
-\item{transform}{function to transform values}
+\item{transf}{function to transform values}
 
 \item{leading_zero}{when true, leading zeros are allowed on the x-axis}
 }
