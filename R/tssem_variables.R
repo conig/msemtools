@@ -168,15 +168,15 @@ tssem2_table = function(wls, ..., transf = NULL, t.name = NULL, estimate = "Esti
   colnames(reg) = c("Predictor", "Estimate","SE","lbound","ubound","z", "p")
 
   if(!is.null(transf)){
-    reg$Estimate <- round(transf(reg$Estimate),2)
-    reg$lbound <- round(transf(reg$lbound),2)
-    reg$ubound <- round(transf(reg$ubound),2)
+    reg$Estimate <- papyr::digits(transf(reg$Estimate),2)
+    reg$lbound <- papyr::digits(transf(reg$lbound),2)
+    reg$ubound <- papyr::digits(transf(reg$ubound),2)
     reg$transf <- glue::glue("{reg$Estimate} [{reg$lbound}, {reg$ubound}]")
     reg = reg[,c(1, 8, 2:7)]
   }else{
-    est <- round(reg$Estimate,2)
-    lower <- round(reg$lbound,2)
-    upper <- round(reg$ubound,2)
+    est <- papyr::digits(reg$Estimate,2)
+    lower <- papyr::digits(reg$lbound,2)
+    upper <- papyr::digits(reg$ubound,2)
     reg$Estimate <- glue::glue("{est} [{lower}, {upper}]")
   }
 
