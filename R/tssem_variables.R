@@ -222,7 +222,7 @@ tssem2_table = function(wls, ..., transf = NULL, t.name = NULL, estimate = "Esti
 #' @param x wls model
 #' @export
 
-report_tssem2 <- function(x, pattern = "The model had {assessment} fit $\\chi^2$({df}) = {chi}; $p$ = {p}; RMSEA = {RMSEA}; TLI = {TLI}; CFI = {CFI}") {
+report_tssem2 <- function(x, pattern = "The model had {assessment} fit $\\chi^2$({df}) = {chi}; $p$ = {p}; RMSEA = {RMSEA}; SRMR = {SRMR}; TLI = {TLI}") {
   if(!is(x, "wls")) {
     stop("Can only be used with wls objects")
   }
@@ -236,20 +236,30 @@ report_tssem2 <- function(x, pattern = "The model had {assessment} fit $\\chi^2$
   }
 
   RMSEA <- l$RMSEA
-  RMSEA_cat <- dplyr::case_when(RMSEA <= 0.05  ~ 1,
-                                RMSEA <= 0.1 ~ 2,
-                                RMSEA > 0.1  ~ 3)
+  RMSEA_cat <- dplyr::case_when(RMSEA <= 0.01  ~ 1, # excellent (MacCallum, Browne, Sugawara)
+                                RMSEA <= 0.05  ~ 2, # good
+                                RMSEA <= 0.08  ~ 3, # mediocre
+                                RMSEA > 0.08   ~ 4) # poor
   TLI <- l$TLI
-  TLI_cat <- dplyr::case_when(TLI > 0.95  ~ 1,
-                              TLI >= 0.80 ~ 2,
-                              TLI < 0.80  ~ 3)
+  TLI_cat <- dplyr::case_when(TLI > 0.95  ~ 1, # excellent
+                              TLI >= .95  ~ 2, # good
+                              TLI >= 0.9  ~ 3, # mediocre
+                              TLI <  0.9  ~ 4) # poor
   CFI <- l$CFI
-  CFI_cat <- dplyr::case_when(CFI > 0.95  ~ 1,
-                              CFI >= 0.80 ~ 2,
-                              CFI < 0.80  ~ 3)
+  CFI_cat <- dplyr::case_when(CFI > 0.95  ~ 1, # excellent
+                              CFI >= .95  ~ 2, # good
+                              CFI >= 0.9  ~ 3, # mediocre
+                              CFI <  0.9  ~ 4) # poor
+  SRMR <- l$SRMR
+  SRMR_cat <- dplyr::case_when(SRMR <= 0.04  ~ 1, # excellent (MacCallum, Browne, Sugawara)
+                               SRMR <= 0.08  ~ 2, # good
+                               SRMR <= 0.1   ~ 3, # mediocre
+                               SRMR > .1     ~ 4) # poor
 
-  assessment <- round(mean(c(TLI_cat, RMSEA_cat, CFI_cat)),0)
-  assessment <- c("excellent", "acceptable", "poor")[assessment]
+
+
+  assessment <- round(mean(c(TLI_cat, RMSEA_cat, SRMR_cat)),0)
+  assessment <- c("excellent", "good","mediocre", "poor")[assessment]
 
   chi = papyr::digits(l$`Chi-square of target model`,2)
   df = papyr::digits(l$`DF of target model`,0)
@@ -258,7 +268,7 @@ report_tssem2 <- function(x, pattern = "The model had {assessment} fit $\\chi^2$
   RMSEA = papyr::digits(RMSEA, 3)
   TLI = papyr::digits(TLI, 3)
   CFI = papyr::digits(CFI, 3)
-
+  SRMR = papyr::digits(SRMR,3)
 
   mess <- glue::glue(pattern)
   mess
