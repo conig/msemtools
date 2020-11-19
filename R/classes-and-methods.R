@@ -243,8 +243,6 @@ coef.meta_ninja = function(object,...){
 
   tab = tab[tab$moderation %in% mods, ]
 
-  tab$model.name[tab$year == 1] = "Pooled estimate"
-
   summary_final = dplyr::select(
     tab,
     moderation,

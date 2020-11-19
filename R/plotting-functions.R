@@ -186,7 +186,7 @@ forest_plot = function(model,
   # ------------------------------------------------------------------- plotting
 
   plot = ggplot(dat, aes(
-    y = stats::reorder(cluster, year),
+    y = stats::reorder(cluster, as.numeric(as.character(year))),
     x = est,
     xmin = lower,
     xmax = upper,
