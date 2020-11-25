@@ -7,7 +7,7 @@
 report_tssem2(
   x,
  
-    pattern = "The model had {assessment} fit $\\\\chi$({df}) = {chi}; $p$ = {p} (RMSEA = {RMSEA}, TLI = {TLI}, CFI = {CFI})"
+    pattern = "The model had {assessment} fit $\\\\chi^2$({df}) = {chi}; $p$ = {p}; RMSEA = {RMSEA}; SRMR = {SRMR}; TLI = {TLI}"
 )
 }
 \arguments{

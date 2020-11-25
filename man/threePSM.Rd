@@ -4,12 +4,14 @@
 \alias{threePSM}
 \title{threePSM}
 \usage{
-threePSM(model, ...)
+threePSM(model, ..., transf = NULL)
 }
 \arguments{
 \item{model}{the meta3 model}
 
 \item{...}{arguments passed to weight::weightfunct}
+
+\item{transf}{function to transform adjusted estimate}
 }
 \description{
 Perform a weight-function model to test whether the pvalue of estimates affects population estimates

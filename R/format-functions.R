@@ -384,11 +384,14 @@ get_val = function(x, value, m = NULL, digits = Inf, transform = NULL){
   call = match.call()
   #return(call)
 
-  x = eval(call$x)
+  x = eval(call$x, envir = sys.parent())
+  # print(class(x))
+  # print(call)
+
+  if(class(x) != "meta_ninja") stop("get_model_value() only works for objects of class meta_ninja")
 
   if(is.null(call$value)) call$value = names(x$table)
 
-  if(class(x) != "meta_ninja") stop("get_model_value() only works for objects of class meta_ninja")
 
   output = x$table
   mods = get_moderators(x)

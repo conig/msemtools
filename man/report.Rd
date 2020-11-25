@@ -7,7 +7,7 @@
 report(
   meta_ninja,
   ...,
-  rmarkdown = T,
+  rmarkdown = FALSE,
   digits = 2,
   transf = NULL,
   threePSM = FALSE

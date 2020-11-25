@@ -75,22 +75,25 @@ report_i2 = function(x, rmarkdown = FALSE, digits = 2){
   return(mess)
 }
 
-report_3psm = function(x, rmarkdown = FALSE, digits = 2, transf = NULL){
+report_3psm = function(x, digits = 2, transf = NULL){
   call = match.call()
   envir = sys.parent()
   if(class(x) != "name") x <- call$x
-  chi2 = rmarkdown_wrap(glue::glue('papyr::digits(with(msemtools:::threePSM({x}), chisq), digits)'), rmarkdown = rmarkdown, envir = envir)
-  df = rmarkdown_wrap(glue::glue('with(msemtools:::threePSM({x}), df)'), rmarkdown = rmarkdown, envir = envir)
-  p = rmarkdown_wrap(glue::glue('papyr::round_p(with(msemtools:::threePSM({x}), pvalue))'), rmarkdown = rmarkdown, envir = envir)
-  real_p = rmarkdown_wrap(glue::glue('with(msemtools:::threePSM({x}), pvalue)'), rmarkdown = FALSE, envir = envir)
+  x = eval(x, envir = envir)
 
-  adjusted_result = rmarkdown_wrap(glue::glue('with(msemtools:::threePSM({x}, transf = transf), adjusted_result)'), rmarkdown = rmarkdown, envir = envir)
+  chi2 = papyr::digits(with(msemtools:::threePSM({x}), chisq), digits)
+  df = with(msemtools:::threePSM({x}), df)
+  p = papyr::round_p(with(msemtools:::threePSM({x}), pvalue))
+  real_p = with(msemtools:::threePSM({x}), pvalue)
+
   was_message = ifelse(real_p < 0.05, "was", "was not")
 
   mess = glue::glue("Evidence of potential publication bias {was_message} detected $\\chi^2$({df}) = {chi2}, $p$ = {p}.")
   if(real_p <0.05){
+
+    adjusted_result = msemtools:::PET_PEESE(x, transf = transf)
     mess2 = glue::glue("The estimate adjusted for publication bias was {adjusted_result}.")
-    #mess = paste(mess, mess2)
+    mess = paste(mess, mess2)
     }
   mess
 }
@@ -173,7 +176,7 @@ mess = list(
 )
 
 if(threePSM){
-  mess$threePSM = report_3psm(call$meta_ninja, rmarkdown = rmarkdown, digits = 2)
+  mess$threePSM = report_3psm(call$meta_ninja, digits = 2)
 }
 
 mess = paste(mess[filt], collapse = " ")
