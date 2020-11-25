@@ -27,7 +27,7 @@ est = papyr::digits(transf(adj_t$estimate[1]),2)
 lower = papyr::digits(transf(adj_t$ci.lb[1]), 2)
 upper = papyr::digits(transf(adj_t$ci.ub[1]), 2)
 
-adjusted_result = glue::glue("{est} [95% CI {upper}, {lower}]")
+adjusted_result = glue::glue("{est} [95% CI {lower}, {upper}]")
 
 apa = glue::glue("$\\chi^2$({df}) = {papyr::digits(lrchisq,2)}, $p$ = {papyr::round_p(pvalue)}")
 
