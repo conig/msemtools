@@ -89,7 +89,7 @@ report_3psm = function(x, rmarkdown = FALSE, digits = 2, transf = NULL){
 
   mess = glue::glue("Evidence of potential publication bias {was_message} detected $\\chi^2$({df}) = {chi2}, $p$ = {p}.")
   if(real_p <0.05){
-    mess2 =  glue::glue("The estimate adjusted for publication bias was {adjusted_result}.")
+    mess2 = glue::glue("The estimate adjusted for publication bias was {adjusted_result}.")
     mess = paste(mess, mess2)
     }
   mess
