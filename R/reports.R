@@ -176,7 +176,7 @@ mess = list(
 )
 
 if(threePSM){
-  mess$threePSM = report_3psm(call$meta_ninja, digits = 2)
+  mess$threePSM = report_3psm(call$meta_ninja, digits = 2, transf = transf)
 }
 
 mess = paste(mess[filt], collapse = " ")
