@@ -85,9 +85,13 @@ report_3psm = function(x, rmarkdown = FALSE, digits = 2, transf = NULL){
   real_p = rmarkdown_wrap(glue::glue('with(msemtools:::threePSM({x}), pvalue)'), rmarkdown = FALSE, envir = envir)
 
   adjusted_result = rmarkdown_wrap(glue::glue('with(msemtools:::threePSM({x}, transf = transf), adjusted_result)'), rmarkdown = rmarkdown, envir = envir)
-  was_message = ifelse(p < 0.05, "was", "was not")
+  was_message = ifelse(real_p < 0.05, "was", "was not")
 
-  mess = glue::glue("Evidence of potential publication bias {was_message} detected $\\chi^2$({df}) = {chi2}, $p$ = {p}. The estimate adjusted for publication bias was {adjusted_result}.")
+  mess = glue::glue("Evidence of potential publication bias {was_message} detected $\\chi^2$({df}) = {chi2}, $p$ = {p}.")
+  if(real_p <0.05){
+    mess2 =  glue::glue("The estimate adjusted for publication bias was {adjusted_result}.")
+    mess = paste(mess, mess2)
+    }
   mess
 }
 
