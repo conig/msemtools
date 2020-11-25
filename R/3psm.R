@@ -3,8 +3,9 @@
 #' Perform a weight-function model to test whether the pvalue of estimates affects population estimates
 #' @param model the meta3 model
 #' @param ... arguments passed to weight::weightfunct
+#' @param transf function to transform adjusted estimate
 
-threePSM = function(model, ...){
+threePSM = function(model, ..., transf = NULL){
 
 if("meta_ninja" %in% class(model)){
   model = model$models[[1]]
@@ -19,14 +20,22 @@ result <- weightr::weightfunct(
 df <- length(result[[2]]$par) - length(result[[1]]$par)
 lrchisq <- 2 * (abs(result[[1]]$value - result[[2]]$value))
 pvalue <- 1 - stats::pchisq(lrchisq, df)
-adjusted_table = threePSM_table(result)
+adj_t = threePSM_table(result)
+
+if(is.null(transf)) transf <- function(x) x
+est = papyr::digits(transf(adj_t$estimate[1]),2)
+lower = papyr::digits(transf(adj_t$ci.lb[1]), 2)
+upper = papyr::digits(transf(adj_t$ci.ub[1]), 2)
+
+adjusted_result = glue::glue("{est} [95% CI {upper}, {lower}]")
 
 apa = glue::glue("$\\chi^2$({df}) = {papyr::digits(lrchisq,2)}, $p$ = {papyr::round_p(pvalue)}")
 
 list(chisq = lrchisq,
      df = df,
      pvalue = pvalue,
-     adjusted_table = adjusted_table,
+     adjusted_table = adj_t,
+     adjusted_result = adjusted_result,
      apa = apa,
      raw = result)
 }

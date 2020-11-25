@@ -2,21 +2,38 @@
 
 
 
-report_q = function(x, rmarkdown = FALSE, digits = 2){
-call = match.call()
-envir = sys.parent()
-if(class(x) != "name") x <- call$x
- stat_q = rmarkdown_wrap(glue::glue('get_val({x}, "Q", digits = {digits})'), rmarkdown = rmarkdown, envir = envir)
- stat_df = rmarkdown_wrap(glue::glue('get_val({x}, "Q_df", digits = 0)'), rmarkdown = rmarkdown, envir = envir)
- stat_p = rmarkdown_wrap(glue::glue('papyr::round_p(get_val({x}, "Q_p"),3)'), rmarkdown = rmarkdown, envir = envir)
+report_q = function(x,
+                    rmarkdown = FALSE,
+                    digits = 2) {
+  call = match.call()
+  envir = sys.parent()
+  if (class(x) != "name")
+    x <- call$x
+  stat_q = rmarkdown_wrap(
+    glue::glue('get_val({x}, "Q", digits = {digits})'),
+    rmarkdown = rmarkdown,
+    envir = envir
+  )
+  stat_df = rmarkdown_wrap(
+    glue::glue('get_val({x}, "Q_df", digits = 0)'),
+    rmarkdown = rmarkdown,
+    envir = envir
+  )
+  stat_p = rmarkdown_wrap(
+    glue::glue('papyr::round_p(get_val({x}, "Q_p"),3)'),
+    rmarkdown = rmarkdown,
+    envir = envir
+  )
 
- if(stat_p < 0.05){
-   mess = glue::glue("Inspecting the Q statistic revealed significant heterogeneity $Q$({stat_df}) = {stat_q}, $p$ {stat_p}.")
- }else{
- mess = glue::glue("Evidence for heterogeneity was not found $Q$({stat_df}) = {stat_q}, $p$ = {stat_p}.")
- }
+  if (stat_p < 0.05) {
+    mess = glue::glue(
+      "Inspecting the Q statistic revealed significant heterogeneity $Q$({stat_df}) = {stat_q}, $p$ {stat_p}."
+    )
+  } else{
+    mess = glue::glue("Evidence for heterogeneity was not found $Q$({stat_df}) = {stat_q}, $p$ = {stat_p}.")
+  }
 
- return(mess)
+  return(mess)
 
 }
 
@@ -41,9 +58,9 @@ report_baseline = function(x, rmarkdown = FALSE, digits = 2, transf = NULL){
   if(class(x) != "name") x <- call$x
   if(class(transf) != "name") transf <- call$transf
 
-  stat_est = rmarkdown_wrap(glue::glue('get_val({x}, estimate, digits = {digits}, transform = {deparse(transf)})'), rmarkdown = rmarkdown, envir = envir)
-  stat_lower = rmarkdown_wrap(glue::glue('get_val({x}, lbound, digits = {digits}, transform = {deparse(transf)})'), rmarkdown = rmarkdown, envir = envir)
-  stat_upper = rmarkdown_wrap(glue::glue('get_val({x}, ubound, digits = {digits}, transform = {deparse(transf)})'), rmarkdown = rmarkdown, envir = envir)
+  stat_est = rmarkdown_wrap(glue::glue('get_val({x}, estimate, digits = {digits}, transf = {deparse(transf)})'), rmarkdown = rmarkdown, envir = envir)
+  stat_lower = rmarkdown_wrap(glue::glue('get_val({x}, lbound, digits = {digits}, transf = {deparse(transf)})'), rmarkdown = rmarkdown, envir = envir)
+  stat_upper = rmarkdown_wrap(glue::glue('get_val({x}, ubound, digits = {digits}, transf = {deparse(transf)})'), rmarkdown = rmarkdown, envir = envir)
   mess = glue::glue("The pooled effect size was {stat_est} [95% CI {stat_lower}, {stat_upper}].")
   return(mess)
 }
@@ -58,18 +75,19 @@ report_i2 = function(x, rmarkdown = FALSE, digits = 2){
   return(mess)
 }
 
-report_3psm = function(x, rmarkdown = FALSE, digits = 2){
+report_3psm = function(x, rmarkdown = FALSE, digits = 2, transf = NULL){
   call = match.call()
   envir = sys.parent()
   if(class(x) != "name") x <- call$x
-  chi2 = rmarkdown_wrap(glue::glue('with({x}, chisq)'), rmarkdown = rmarkdown, envir = envir)
-  df = rmarkdown_wrap(glue::glue('with({x}, df)'), rmarkdown = rmarkdown, envir = envir)
-  p = rmarkdown_wrap(glue::glue('papyr::round_p(with({x}, p)'), rmarkdown = rmarkdown, envir = envir)
-  real_p = rmarkdown_wrap(glue::glue('with({x}, p'), rmarkdown = FALSE, envir = envir)
+  chi2 = rmarkdown_wrap(glue::glue('papyr::digits(with(msemtools:::threePSM({x}), chisq), digits)'), rmarkdown = rmarkdown, envir = envir)
+  df = rmarkdown_wrap(glue::glue('with(msemtools:::threePSM({x}), df)'), rmarkdown = rmarkdown, envir = envir)
+  p = rmarkdown_wrap(glue::glue('papyr::round_p(with(msemtools:::threePSM({x}), pvalue))'), rmarkdown = rmarkdown, envir = envir)
+  real_p = rmarkdown_wrap(glue::glue('with(msemtools:::threePSM({x}), pvalue)'), rmarkdown = FALSE, envir = envir)
 
+  adjusted_result = rmarkdown_wrap(glue::glue('with(msemtools:::threePSM({x}, transf = transf), adjusted_result)'), rmarkdown = rmarkdown, envir = envir)
   was_message = ifelse(p < 0.05, "was", "was not")
 
-  mess = glue::glue("Evidence for publication bias {was_message} detected $\\chi^2$({df}) = {chi2}, $p$ = {p}")
+  mess = glue::glue("Evidence of potential publication bias {was_message} detected $\\chi^2$({df}) = {chi2}, $p$ = {p}. The estimate adjusted for publication bias was {adjusted_result}.")
   mess
 }
 
@@ -127,11 +145,13 @@ return(mess)
 #' @param transf you can supply a function to transform baseline pooled estimates
 #' @export report
 
-report = function(meta_ninja,..., rmarkdown = T, digits = 2, transf = NULL, threePSM = FALSE){
+report = function(meta_ninja,..., rmarkdown = FALSE, digits = 2, transf = NULL, threePSM = FALSE){
 call = match.call()
 
 elip = sapply(substitute(list(...)),deparse)[-1]
 options = c("n","q","baseline","i2","moderators")
+if(threePSM) options = c(options, "threePSM")
+
 filt = tidyselect::vars_select(options, elip)
 if(length(filt) == 0) filt = options
 
@@ -142,13 +162,15 @@ mess = list(
     call$meta_ninja,
     rmarkdown = rmarkdown,
     digits = 2,
-    transf = call$transf
+    transf = transf
   ),
   i2 = report_i2(call$meta_ninja, rmarkdown = rmarkdown, digits = 2),
   moderators = report_moderators(call$meta_ninja, rmarkdown = rmarkdown, digits = 2)
 )
 
-
+if(threePSM){
+  mess$threePSM = report_3psm(call$meta_ninja, rmarkdown = rmarkdown, digits = 2)
+}
 
 mess = paste(mess[filt], collapse = " ")
 mess = gsub("call\\$transform","NULL",mess)
