@@ -60,3 +60,43 @@ PET_PEESE = function(m, transf = NULL, digits = 2, alpha = .1, type = c("PET-PEE
 
 }
 
+#' prop_stronger
+#'
+#' Wrapper for MetaUtility prop_stronger
+
+prop_stronger = function(m, q, transf = NULL, tail = "above",
+                       R = 500, method = "calibrated"){
+
+  requireNamespace(package = "MetaUtility", quietly = TRUE)
+
+  if(is(m, "meta_ninja")){
+    m <- m$models[[1]]
+  }
+  if(is.null(transf)) transf <- function(x) x
+
+  info = extractData(m)
+  est = transf(info$estimate)
+  se = transf(info$SE)
+  t2 = info$t2 + info$t2_3
+
+  dat = tibble::tibble(eval(m$call$data))[, c(as.character(m$call$y), as.character(m$call$v))]
+  names(dat) = c("yi","vi")
+  dat$yi = transf(dat$yi)
+  dat$vi = transf(dat$vi)
+  dat <- na.omit(dat)
+  prop_call <- list(
+    q = q,
+    M = est,
+    se.M = se,
+    t2 = t2,
+    dat = dat,
+    tail = tail,
+    estimate.method = method,
+    ci.method = method,
+    R = R
+  )
+
+  do.call(MetaUtility::prop_stronger, prop_call)
+
+}
+

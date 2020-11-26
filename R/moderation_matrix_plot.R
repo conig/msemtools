@@ -56,6 +56,7 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
   cluster_levels <- c(cluster_levels, "Baseline")
 
   graph_dat$cluster = factor(graph_dat$cluster, levels = cluster_levels)
+  graph_dat$cluster = forcats::fct_rev(graph_dat$cluster)
 
   # prepare significance -------
 
@@ -94,7 +95,7 @@ moderation_matrix <- function(..., effect_size = "Effect size", moderators = NUL
       space = "free_y"
     ) +
     labs(y = " ", x = effect_size) + theme(text = element_text(family = "serif")) +
-    scale_y_discrete(labels = c("Baseline" = expression(bold(Baseline)), parse = T)) +
+    ggplot2::scale_y_discrete(labels = c("Baseline" = expression(bold(Baseline)), parse = T)) +
     ggplot2::theme_bw() +
     ggplot2::theme(strip.text.y = ggplot2::element_text(angle = 0),
                    strip.background.y = ggplot2::element_blank(),
