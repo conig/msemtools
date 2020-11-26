@@ -88,7 +88,7 @@ prop_stronger = function(m, q, transf = NULL, tail = "above",
     q = q,
     M = est,
     se.M = se,
-    t2 = t2,
+    #t2 = t2,
     dat = dat,
     tail = tail,
     estimate.method = method,
@@ -96,7 +96,10 @@ prop_stronger = function(m, q, transf = NULL, tail = "above",
     R = R
   )
 
-  do.call(MetaUtility::prop_stronger, prop_call)
+  out <- suppressMessages(do.call(MetaUtility::prop_stronger, prop_call))
 
+  out <- out[,c("est","se","lo","hi","bt.mn")]
+  out$formatted = glue::glue("{papyr::digits(out$est * 100,1)}% [95% CI {papyr::digits(out$lo * 100,1)}, {papyr::digits(out$hi * 100,1)}]")
+  out
 }
 
