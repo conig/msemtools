@@ -71,7 +71,7 @@ report_i2 = function(x, rmarkdown = FALSE, digits = 2){
   if(class(x) != "name") x <- call$x
   stat_i2_2 = rmarkdown_wrap(glue::glue('papyr::digits(get_val({x}, I2_2) * 100)'), rmarkdown = rmarkdown, envir = envir)
   stat_i2_3 = rmarkdown_wrap(glue::glue('papyr::digits(get_val({x}, I2_3) *100)'), rmarkdown = rmarkdown, envir = envir)
-  mess = glue::glue("The heterogeneity at level 2 was {stat_i2_2}%. The heterogeneity at level 3 was {stat_i2_3}%.")
+  mess = glue::glue("The within and between cluster heterogeneity was {stat_i2_2}% and {stat_i2_3}% respectively.")
   return(mess)
 }
 

@@ -2,13 +2,14 @@
 
 
 .onAttach <- function(libname, pkgname) {
-  m = get_haiku()
+ # m = get_haiku()
   packageStartupMessage(
 #     "A ninja's swift gaze...
 # Dark stones, shrouded in concern...
 # leaves fall silently.
 #                             [-_-]~"
-    m
+    #m
+    message("msemtools is deprecated and no longer supported. Please check out {metaKIN} for a replacement https://github.com/conig/metaKIN/")
   )
   if(!"metaSEM" %in% .packages()){
   suppressPackageStartupMessages(attachNamespace("metaSEM"))

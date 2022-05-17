@@ -73,6 +73,8 @@ cormat_list = function(yi, vi, ni, var1, var2, cluster, data, transform = NULL){
 
   dat_list = list()
   dat_list$data = lapply(unique_ids, function(x) get_matrix(x, vars, data, transform))
+  names(dat_list$data) <- unique_ids
+
   get_n = function(id, ni){
     ceiling(mean(unlist(data[unlist(data[,cluster, with = FALSE]) == id, ni, with = FALSE]),na.rm = TRUE))
   }
