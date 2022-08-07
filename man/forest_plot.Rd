@@ -16,6 +16,7 @@ forest_plot(
   vline = NULL,
   author = NULL,
   year = NULL,
+  order_magnitude = FALSE,
   include_weights = FALSE,
   moderator.shape = 23,
   moderator.size = 3,
@@ -48,6 +49,8 @@ forest_plot(
 \item{author}{the name of the author column}
 
 \item{year}{the name of the year column}
+
+\item{order_magnitude}{a bool. If true, effect sizes are ordered by magnitude}
 
 \item{include_weights}{a bool. If true, effect sizes become transparent proportional to their weight}
 

@@ -40,7 +40,7 @@ PET_PEESE = function(m, transf = NULL, digits = 2, alpha = .1, type = c("PET-PEE
 
   if(type == "PET-PEESE") {
     adj_m <- eval(pet_call)
-    pet_p <- extractData(adj_m)$slope_p
+    pet_p <- summary(adj_m)$coefficients["Intercept","Pr(>|z|)"]
     if (pet_p < alpha) {
       adj_m <- eval(peese_call)
     }

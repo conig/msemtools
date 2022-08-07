@@ -8,6 +8,7 @@ PET_PEESE(
   m,
   transf = NULL,
   digits = 2,
+  alpha = 0.1,
   type = c("PET-PEESE", "PET", "PEESE"),
   pattern = "{est} [95\% CI {lower}, {upper}]"
 )
@@ -16,6 +17,8 @@ PET_PEESE(
 \item{transf}{function with which to transform results}
 
 \item{digits}{number of digits for rounding}
+
+\item{alpha}{the alpha threshold used in PET-PEESE. Defaults to 0.1 (10% as per Stanley 2017)}
 
 \item{type}{Should PET-PEESE, PET or PEESE be used?}
 

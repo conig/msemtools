@@ -39,6 +39,7 @@ add_diamond = function(plot, data, fill = "grey20", colour = NA) {
 #' @param vline a scalar. Dictates the x-intercept (the dashed line).
 #' @param author the name of the author column
 #' @param year the name of the year column
+#' @param order_magnitude a bool. If true, effect sizes are ordered by magnitude
 #' @param include_weights a bool. If true, effect sizes become transparent proportional to their weight
 #' @param moderator.shape a scalar ggplot2 geom_point shape value
 #' @param moderator.size a scalar. ggplot2 geom_point size value
@@ -65,6 +66,7 @@ forest_plot = function(model,
                        vline = NULL,
                        author = NULL,
                        year = NULL,
+                       order_magnitude = FALSE,
                        include_weights = FALSE,
                        moderator.shape = 23,
                        moderator.size = 3,
@@ -117,6 +119,9 @@ forest_plot = function(model,
 
   } # if statement end
 
+  dat <- data.table::data.table(dat)
+  dat[, cluster_mean := weighted.mean(est, (1/(SE^2)), na.rm = TRUE) , by = "cluster"]
+
   key <- data.table::data.table(data)[,c(cluster, year, author), with = FALSE]
   names(key) = c("cluster","year","author")
   key$cluster = as.character(key$cluster)
@@ -143,8 +148,6 @@ forest_plot = function(model,
 
   dat$year[is.na(dat$year)] = dat$order[is.na(dat$year)]
 
-  dat = dat[order(dat$year),]
-
   effects = dat[dat$type == "effect size",]
 
   dat$cluster[dat$type == "effect size"] = paste(effects$author, effects$year)
@@ -167,6 +170,15 @@ forest_plot = function(model,
       vline = 0
     }
   }
+
+  if(order_magnitude){
+    dat$year[dat$setting == "Effect sizes"] <-
+      order(dat$cluster_mean[dat$setting == "Effect sizes"]) + nrow(dat[setting != "Effect sizes"])
+  }
+
+  dat = dat[order(dat$year),]
+
+
 
   dat$position = 1:nrow(dat)
 
